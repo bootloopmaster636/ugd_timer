@@ -56,7 +56,7 @@ class Home extends ConsumerWidget {
               Flexible(
                 flex: 3,
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(40, 40, 40, 0),
+                  margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.08, 40, 0),
                   constraints: const BoxConstraints(maxWidth: 768),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
