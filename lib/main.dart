@@ -26,7 +26,7 @@ class App extends ConsumerWidget {
         colorSchemeSeed: ref.watch(TimerProvider).currentAccent,
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       home: const Home(),
     );
   }

@@ -32,16 +32,24 @@ class TimerManager extends ChangeNotifier {
   }
 
   void changeAccent() async {
-    if (_displayTimer.inSeconds >= _duration.inSeconds * 0.75) {
+    if (_displayTimer.inSeconds >= _duration.inSeconds * 0.8) {
       _currentAccent = Colors.blue;
       notifyListeners();
       return;
-    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.5) {
+    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.6) {
+      _currentAccent = Colors.cyan;
+      notifyListeners();
+      return;
+    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.4) {
       _currentAccent = Colors.green;
       notifyListeners();
       return;
-    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.25) {
+    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.3) {
       _currentAccent = Colors.yellow;
+      notifyListeners();
+      return;
+    } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.2) {
+      _currentAccent = Colors.orange;
       notifyListeners();
       return;
     } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.1) {
@@ -60,7 +68,9 @@ class TimerManager extends ChangeNotifier {
         changeAccent();
         notifyListeners();
       } else {
+        _displayTimer = const Duration(seconds: 0);
         timer.cancel();
+        notifyListeners();
       }
     });
   }
