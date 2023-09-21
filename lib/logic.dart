@@ -9,6 +9,7 @@ class TimerManager extends ChangeNotifier {
   Duration _endAt = const Duration(seconds: 0); // for the time where countdown ends
   Duration _assistTimer = const Duration(seconds: 0); // for the time where people can ask
   bool _timerIsRunning = false;
+  String _title = "";
 
   void setEndTimer(TimeOfDay? newEndTimer) {
     _endAt = Duration(hours: newEndTimer!.hour, minutes: newEndTimer.minute, seconds: 0);
@@ -18,6 +19,11 @@ class TimerManager extends ChangeNotifier {
 
   void setAssistTimer(Duration newAssistTimer) {
     _assistTimer = newAssistTimer;
+    notifyListeners();
+  }
+
+  void setTitle(String title) {
+    _title = title;
     notifyListeners();
   }
 
@@ -84,4 +90,6 @@ class TimerManager extends ChangeNotifier {
   Duration get assistTimer => _assistTimer;
 
   bool get timerIsRunning => _timerIsRunning;
+
+  String get title => _title;
 }

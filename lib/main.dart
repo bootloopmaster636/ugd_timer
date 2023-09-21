@@ -69,7 +69,7 @@ class Home extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Praktikum modul 2 - Matriks".toUpperCase(),
+                        ref.watch(TimerProvider).title.toUpperCase(),
                         style: const TextStyle(fontSize: 24),
                       ),
                       const SizedBox(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ugd_timer/main.dart';
 
+final _titleController = TextEditingController();
+
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
 
@@ -21,12 +23,33 @@ class SettingsView extends ConsumerWidget {
             children: [
               Card(
                 child: ListTile(
+                  title: Text("Set timer title"),
+                  subtitle: Container(
+                    margin: const EdgeInsets.only(bottom: 8.0, right: 36),
+                    child: TextField(
+                      controller: _titleController,
+                      onChanged: (s) {
+                        ref.read(TimerProvider.notifier).setTitle(s);
+                        _titleController.text = s;
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Card(
+                child: ListTile(
                   title: const Text("Select end time"),
                   subtitle: Text(
-                      "Will end at ${ref.watch(TimerProvider).endAt.inHours} : ${ref.watch(TimerProvider).endAt.inMinutes.remainder(60)}"),
+                      "timer ends at ${ref.watch(TimerProvider).endAt.inHours.toString().padLeft(2, '0')} : ${ref.watch(TimerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () async => ref.read(TimerProvider.notifier).setEndTimer(await ShowTimePickerDialog(context)),
                 ),
+              ),
+              SizedBox(
+                height: 16,
               ),
               FilledButton(onPressed: () => Navigator.pop(context), child: const Text("Back to timer page")),
             ],
@@ -39,6 +62,7 @@ class SettingsView extends ConsumerWidget {
 
 Future<TimeOfDay?> ShowTimePickerDialog(BuildContext context) async {
   final time = await showTimePicker(
+    initialEntryMode: TimePickerEntryMode.inputOnly,
     context: context,
     initialTime: TimeOfDay.now(),
   );
