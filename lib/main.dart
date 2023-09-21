@@ -70,9 +70,9 @@ class Home extends ConsumerWidget {
                     children: [
                       Text(
                         "Praktikum modul 2 - Matriks".toUpperCase(),
-                        style: TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 24),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 36,
                       ),
                       Text(
@@ -81,23 +81,23 @@ class Home extends ConsumerWidget {
                         "${ref.watch(TimerProvider).displayTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
                         overflow: TextOverflow.fade,
                         maxLines: 1,
-                        style: TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
                       ),
                       Card(
                         color: Theme.of(context).colorScheme.secondaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(FontAwesomeIcons.upload),
-                              SizedBox(
+                              const Icon(FontAwesomeIcons.upload),
+                              const SizedBox(
                                 width: 8,
                               ),
                               Text(
                                 "${ref.watch(TimerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
                                 "${ref.watch(TimerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
-                                style: TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -117,7 +117,7 @@ class Home extends ConsumerWidget {
                             width: 8,
                           ),
                           OutlinedButton(
-                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsView())),
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsView())),
                             child: const Text("Settings"),
                           ),
                         ],
@@ -141,14 +141,14 @@ class Home extends ConsumerWidget {
                         size: 64,
                         color: Theme.of(context).colorScheme.onTertiaryContainer,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 8,
                       ),
                       RichText(
                         text: TextSpan(
                           text: "Dapat bertanya asisten?\n",
                           style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 20),
-                          children: [
+                          children: const [
                             TextSpan(text: "XX menit", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
                           ],
                         ),

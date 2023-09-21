@@ -16,7 +16,7 @@ class SettingsView extends ConsumerWidget {
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          constraints: BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(maxWidth: 400),
           child: ListView(
             children: [
               Card(
