@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ugd_timer/logic.dart';
 import 'package:ugd_timer/settings.dart';
 
 void main() {
   runApp(const ProviderScope(child: App()));
 }
 
-class App extends StatelessWidget {
+final TimerProvider = ChangeNotifierProvider((ref) => TimerManager());
+
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Timer UGD',
       theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
+        colorSchemeSeed: ref.watch(TimerProvider).currentAccent,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorSchemeSeed: Colors.blue,
+        colorSchemeSeed: ref.watch(TimerProvider).currentAccent,
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       home: const Home(),
     );
   }
@@ -53,7 +56,7 @@ class Home extends ConsumerWidget {
               Flexible(
                 flex: 3,
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                  margin: const EdgeInsets.fromLTRB(40, 40, 40, 0),
                   constraints: const BoxConstraints(maxWidth: 768),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
@@ -66,32 +69,35 @@ class Home extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Praktikum modul 6 - linked list 1".toUpperCase(),
+                        "Praktikum modul 2 - Matriks".toUpperCase(),
                         style: TextStyle(fontSize: 24),
                       ),
                       SizedBox(
                         height: 36,
                       ),
-                      const Text(
-                        "HH : MM : SS",
+                      Text(
+                        "${ref.watch(TimerProvider).displayTimer.inHours.toString().padLeft(2, '0')} : "
+                        "${ref.watch(TimerProvider).displayTimer.inMinutes.remainder(60).toString().padLeft(2, '0')} : "
+                        "${ref.watch(TimerProvider).displayTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
                         overflow: TextOverflow.fade,
                         maxLines: 1,
                         style: TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
                       ),
                       Card(
                         color: Theme.of(context).colorScheme.secondaryContainer,
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.watch_later_outlined),
+                              Icon(FontAwesomeIcons.upload),
                               SizedBox(
                                 width: 8,
                               ),
                               Text(
-                                "HH : MM",
-                                style: TextStyle(fontSize: 24),
+                                "${ref.watch(TimerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
+                                "${ref.watch(TimerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
+                                style: TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -104,8 +110,8 @@ class Home extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(
-                            onPressed: () => print("Timer toggle start/reset"),
-                            child: const Text("Start/Reset"),
+                            onPressed: () => ref.read(TimerProvider).toggleTimer(),
+                            child: const Text("Start/Freeze"),
                           ),
                           const SizedBox(
                             width: 8,
@@ -132,7 +138,7 @@ class Home extends ConsumerWidget {
                     children: [
                       Icon(
                         FontAwesomeIcons.person,
-                        size: 48,
+                        size: 64,
                         color: Theme.of(context).colorScheme.onTertiaryContainer,
                       ),
                       SizedBox(
@@ -141,9 +147,9 @@ class Home extends ConsumerWidget {
                       RichText(
                         text: TextSpan(
                           text: "Dapat bertanya asisten?\n",
-                          style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 16),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 20),
                           children: [
-                            TextSpan(text: "XX menit", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                            TextSpan(text: "XX menit", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
                           ],
                         ),
                       )
