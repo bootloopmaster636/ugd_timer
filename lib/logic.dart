@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class TimerManager extends ChangeNotifier {
   Color _currentAccent = Colors.blue;
   Duration _displayTimer = const Duration(seconds: 0); // for displaying the countdown
-  Duration _duration = const Duration(seconds: 0); // for displaying the countdown
+  Duration _duration = const Duration(seconds: 0); // for duration between start and end of countdown
   Duration _endAt = const Duration(seconds: 0); // for the time where countdown ends
   Duration _assistTimer = const Duration(seconds: 0); // for the time where people can ask
   bool _timerIsRunning = false;
