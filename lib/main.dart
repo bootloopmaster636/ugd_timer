@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ugd_timer/settings.dart';
 
 void main() {
   runApp(const ProviderScope(child: App()));
@@ -64,6 +65,13 @@ class Home extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Text(
+                        "Praktikum modul 6 - linked list 1".toUpperCase(),
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      SizedBox(
+                        height: 36,
+                      ),
                       const Text(
                         "HH : MM : SS",
                         overflow: TextOverflow.fade,
@@ -96,15 +104,15 @@ class Home extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(
-                            onPressed: () => print("Timer toggle start/stop"),
-                            child: const Text("Start/Stop"),
+                            onPressed: () => print("Timer toggle start/reset"),
+                            child: const Text("Start/Reset"),
                           ),
                           const SizedBox(
                             width: 8,
                           ),
                           OutlinedButton(
-                            onPressed: () => print("Launch Timer settings"),
-                            child: const Text("Timer settigns"),
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsView())),
+                            child: const Text("Settings"),
                           ),
                         ],
                       )
