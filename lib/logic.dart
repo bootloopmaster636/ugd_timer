@@ -14,6 +14,8 @@ class TimerManager extends ChangeNotifier {
   Duration _assistTimer =
       const Duration(seconds: 0); // for the time where people can ask
   bool _timerIsRunning = false;
+  bool _isSet = false;
+
   String _title = "";
 
   Color get currentAccent => _currentAccent;
@@ -58,6 +60,7 @@ class TimerManager extends ChangeNotifier {
         hours: newAssistTimer!.hour,
         minutes: newAssistTimer.minute,
         seconds: 0);
+    _isSet = true;
     notifyListeners();
   }
 
@@ -115,18 +118,24 @@ class TimerManager extends ChangeNotifier {
     print("Timer started");
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timerIsRunning &&
-          _displayTimer.inSeconds >= 0 &&
-          _assistTimer.inSeconds >= 0) {
-        _displayTimer = _displayTimer - const Duration(seconds: 1);
-        _assistTimer = _assistTimer - const Duration(seconds: 1);
-
-        changeAccent();
-        notifyListeners();
-      } else {
+      if (_displayTimer == const Duration(seconds: 0) || !_timerIsRunning) {
         _displayTimer = const Duration(seconds: 0);
         _assistTimer = const Duration(seconds: 0);
+        _endAt = const Duration(seconds: 0);
+        _isSet = false;
+
         timer.cancel();
+        notifyListeners();
+
+        return;
+      }
+
+      if (_timerIsRunning) {
+        _displayTimer = _displayTimer - const Duration(seconds: 1);
+        _assistTimer -=
+            _isSet ? const Duration(seconds: 1) : const Duration(seconds: 0);
+
+        changeAccent();
         notifyListeners();
       }
     });
