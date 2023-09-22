@@ -82,7 +82,7 @@ class MainScreen extends ConsumerWidget {
           child: Container(
             margin: EdgeInsets.fromLTRB(
                 40, MediaQuery.of(context).size.height * 0.08, 40, 0),
-            constraints: const BoxConstraints(maxWidth: 768),
+            constraints: const BoxConstraints(maxWidth: 960),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -122,7 +122,7 @@ class MainScreen extends ConsumerWidget {
                           "${ref.watch(timerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
                           "${ref.watch(timerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
                           style: const TextStyle(
-                              fontSize: 29, fontWeight: FontWeight.w600),
+                              fontSize: 28, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -136,7 +136,19 @@ class MainScreen extends ConsumerWidget {
                   children: [
                     FilledButton(
                       onPressed: () => ref.read(timerProvider).toggleTimer(),
-                      child: const Text("Start/Freeze"),
+                      child: Row(children: [
+                        Icon(FontAwesomeIcons.play,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            size: 16),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Icon(
+                          FontAwesomeIcons.pause,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          size: 16,
+                        ),
+                      ]),
                     ),
                     const SizedBox(
                       width: 8,
@@ -146,7 +158,7 @@ class MainScreen extends ConsumerWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const SettingsView())),
-                      child: const Text("Settings"),
+                      child: const Icon(FontAwesomeIcons.gear, size: 16),
                     ),
                   ],
                 )
@@ -166,7 +178,7 @@ class MainScreen extends ConsumerWidget {
               children: [
                 Icon(
                   FontAwesomeIcons.person,
-                  size: 64,
+                  size: 84,
                   color: Theme.of(context).colorScheme.onTertiaryContainer,
                 ),
                 const SizedBox(
@@ -178,13 +190,13 @@ class MainScreen extends ConsumerWidget {
                     style: TextStyle(
                         color:
                             Theme.of(context).colorScheme.onTertiaryContainer,
-                        fontSize: 20),
+                        fontSize: 28),
                     children: [
                       TextSpan(
                           text:
                               "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit ${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 28)),
+                              fontWeight: FontWeight.bold, fontSize: 36)),
                     ],
                   ),
                 )
@@ -219,7 +231,7 @@ class DisplayTimer extends ConsumerWidget {
       "${ref.watch(timerProvider).displayTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
       overflow: TextOverflow.fade,
       maxLines: 1,
-      style: const TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 128, fontWeight: FontWeight.bold),
     );
   }
 }
