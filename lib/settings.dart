@@ -85,9 +85,14 @@ class SettingsView extends ConsumerWidget {
 
 Future<TimeOfDay?> ShowTimePickerDialog(BuildContext context) async {
   final time = await showTimePicker(
-    initialEntryMode: TimePickerEntryMode.inputOnly,
-    context: context,
-    initialTime: const TimeOfDay(hour: 0, minute: 0),
-  );
+      initialEntryMode: TimePickerEntryMode.inputOnly,
+      context: context,
+      initialTime: const TimeOfDay(hour: 0, minute: 0),
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      });
   return time;
 }

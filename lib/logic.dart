@@ -132,8 +132,9 @@ class TimerManager extends ChangeNotifier {
 
       if (_timerIsRunning) {
         _displayTimer = _displayTimer - const Duration(seconds: 1);
-        _assistTimer -=
-            _isSet ? const Duration(seconds: 1) : const Duration(seconds: 0);
+        _assistTimer -= _isSet && _assistTimer > const Duration(seconds: 0)
+            ? const Duration(seconds: 1)
+            : const Duration(seconds: 0);
 
         changeAccent();
         notifyListeners();
