@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,25 +8,24 @@ void main() {
   runApp(const ProviderScope(child: App()));
 }
 
-final TimerProvider = ChangeNotifierProvider((ref) => TimerManager());
+final timerProvider = ChangeNotifierProvider((ref) => TimerManager());
 
 class App extends ConsumerWidget {
   const App({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Timer UGD',
       theme: ThemeData(
-        colorSchemeSeed: ref.watch(TimerProvider).currentAccent,
+        colorSchemeSeed: ref.watch(timerProvider).currentAccent,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorSchemeSeed: ref.watch(TimerProvider).currentAccent,
+        colorSchemeSeed: ref.watch(timerProvider).currentAccent,
         useMaterial3: true,
       ),
-      themeMode: ref.watch(TimerProvider).currentThemeMode,
+      themeMode: ref.watch(timerProvider).currentThemeMode,
       home: const Home(),
     );
   }
@@ -38,7 +36,7 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return const Scaffold(
       body: Stack(
         alignment: Alignment.topCenter,
         children: [Background(), MainScreen()],
@@ -95,13 +93,13 @@ class MainScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  ref.watch(TimerProvider).title.toUpperCase(),
+                  ref.watch(timerProvider).title.toUpperCase(),
                   style: const TextStyle(fontSize: 24),
                 ),
                 const SizedBox(
                   height: 36,
                 ),
-                DisplayTimer(),
+                const DisplayTimer(),
                 Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Padding(
@@ -114,8 +112,8 @@ class MainScreen extends ConsumerWidget {
                           width: 8,
                         ),
                         Text(
-                          "${ref.watch(TimerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
-                          "${ref.watch(TimerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
+                          "${ref.watch(timerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
+                          "${ref.watch(timerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
                           style: const TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -129,7 +127,7 @@ class MainScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () => ref.read(TimerProvider).toggleTimer(),
+                      onPressed: () => ref.read(timerProvider).toggleTimer(),
                       child: const Text("Start/Freeze"),
                     ),
                     const SizedBox(
@@ -198,9 +196,9 @@ class DisplayTimer extends ConsumerWidget {
     //   ],
     // );
     return Text(
-      "${ref.watch(TimerProvider).displayTimer.inHours.toString().padLeft(2, '0')} : "
-      "${ref.watch(TimerProvider).displayTimer.inMinutes.remainder(60).toString().padLeft(2, '0')} : "
-      "${ref.watch(TimerProvider).displayTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
+      "${ref.watch(timerProvider).displayTimer.inHours.toString().padLeft(2, '0')} : "
+      "${ref.watch(timerProvider).displayTimer.inMinutes.remainder(60).toString().padLeft(2, '0')} : "
+      "${ref.watch(timerProvider).displayTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
       overflow: TextOverflow.fade,
       maxLines: 1,
       style: const TextStyle(fontSize: 96, fontWeight: FontWeight.bold),

@@ -23,32 +23,32 @@ class SettingsView extends ConsumerWidget {
             children: [
               Card(
                 child: ListTile(
-                  title: Text("Set timer title"),
+                  title: const Text("Set timer title"),
                   subtitle: Container(
                     margin: const EdgeInsets.only(bottom: 8.0, right: 36),
                     child: TextField(
                       controller: _titleController,
                       onChanged: (s) {
-                        ref.read(TimerProvider.notifier).setTitle(s);
+                        ref.read(timerProvider.notifier).setTitle(s);
                         _titleController.text = s;
                       },
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Card(
                 child: ListTile(
                   title: const Text("Select end time"),
                   subtitle: Text(
-                      "timer ends at ${ref.watch(TimerProvider).endAt.inHours.toString().padLeft(2, '0')} : ${ref.watch(TimerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}"),
+                      "timer ends at ${ref.watch(timerProvider).endAt.inHours.toString().padLeft(2, '0')} : ${ref.watch(timerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}"),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () async => ref.read(TimerProvider.notifier).setEndTimer(await ShowTimePickerDialog(context)),
+                  onTap: () async => ref.read(timerProvider.notifier).setEndTimer(await ShowTimePickerDialog(context)),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               FilledButton(onPressed: () => Navigator.pop(context), child: const Text("Back to timer page")),
