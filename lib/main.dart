@@ -144,7 +144,7 @@ class MainScreen extends ConsumerWidget {
                           width: 8,
                         ),
                         Icon(
-                          FontAwesomeIcons.pause,
+                          FontAwesomeIcons.stop,
                           color: Theme.of(context).colorScheme.onPrimary,
                           size: 16,
                         ),
