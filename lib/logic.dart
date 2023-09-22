@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class TimerManager extends ChangeNotifier {
   Color _currentAccent = Colors.blue;
+  ThemeMode _currentThemeMode = ThemeMode.system;
   Duration _displayTimer = const Duration(seconds: 0); // for displaying the countdown
   Duration _duration = const Duration(seconds: 0); // for duration between start and end of countdown
   Duration _endAt = const Duration(seconds: 0); // for the time where countdown ends
@@ -12,6 +13,8 @@ class TimerManager extends ChangeNotifier {
   String _title = "";
 
   Color get currentAccent => _currentAccent;
+
+  ThemeMode get currentThemeMode => _currentThemeMode;
 
   Duration get displayTimer => _displayTimer;
 
@@ -71,7 +74,6 @@ class TimerManager extends ChangeNotifier {
     } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.2) {
       _currentAccent = Colors.orange;
       notifyListeners();
-      return;
     } else if (_displayTimer.inSeconds >= _duration.inSeconds * 0.1) {
       _currentAccent = Colors.red;
       notifyListeners();

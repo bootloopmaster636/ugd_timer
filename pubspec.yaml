@@ -38,6 +38,7 @@ dependencies:
   flutter_riverpod: ^2.4.0
   font_awesome_flutter: ^10.5.0
   animate_gradient: ^0.0.2+1
+  animated_flip_counter: ^0.2.6
 
 dev_dependencies:
   flutter_test:
