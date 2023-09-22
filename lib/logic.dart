@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 class TimerManager extends ChangeNotifier {
   Color _currentAccent = Colors.blue;
   final ThemeMode _currentThemeMode = ThemeMode.system;
-  Duration _displayTimer = const Duration(seconds: 0); // for displaying the countdown
-  Duration _duration = const Duration(seconds: 0); // for duration between start and end of countdown
-  Duration _endAt = const Duration(seconds: 0); // for the time where countdown ends
-  Duration _assistTimer = const Duration(seconds: 0); // for the time where people can ask
+  Duration _displayTimer =
+      const Duration(seconds: 0); // for displaying the countdown
+  Duration _duration = const Duration(
+      seconds: 0); // for duration between start and end of countdown
+  Duration _endAt =
+      const Duration(seconds: 0); // for the time where countdown ends
+  Duration _assistTimer =
+      const Duration(seconds: 0); // for the time where people can ask
   bool _timerIsRunning = false;
   String _title = "";
 
@@ -28,14 +32,32 @@ class TimerManager extends ChangeNotifier {
 
   String get title => _title;
 
-  void setEndTimer(TimeOfDay? newEndTimer) {
-    _endAt = Duration(hours: newEndTimer!.hour, minutes: newEndTimer.minute, seconds: 0);
-    print("End hour: ${_endAt.inHours}, End minute: ${_endAt.inMinutes.remainder(60)}");
+  void setDisplayTimer(TimeOfDay? newDisplayTimer) {
+    _displayTimer = Duration(
+      hours: newDisplayTimer!.hour,
+      minutes: newDisplayTimer.minute,
+      seconds: 0,
+    );
     notifyListeners();
   }
 
-  void setAssistTimer(Duration newAssistTimer) {
-    _assistTimer = newAssistTimer;
+  void setEndTimer(Duration newEndTimer) {
+    _endAt = newEndTimer +
+        Duration(
+            hours: DateTime.now().hour,
+            minutes: DateTime.now().minute,
+            seconds: DateTime.now().second);
+
+    print(
+        "End hour: ${_endAt.inHours}, End minute: ${_endAt.inMinutes.remainder(60)}");
+    notifyListeners();
+  }
+
+  void setAssistTimer(TimeOfDay? newAssistTimer) {
+    _assistTimer = Duration(
+        hours: newAssistTimer!.hour,
+        minutes: newAssistTimer.minute,
+        seconds: 0);
     notifyListeners();
   }
 
@@ -45,11 +67,19 @@ class TimerManager extends ChangeNotifier {
   }
 
   void toggleTimer() {
+    if (_displayTimer.inSeconds == 0) {
+      return;
+    }
+
     if (_timerIsRunning) {
       _timerIsRunning = false;
     } else {
       _timerIsRunning = true;
-      _duration = _endAt - Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute, seconds: DateTime.now().second);
+      _duration = _endAt -
+          Duration(
+              hours: DateTime.now().hour,
+              minutes: DateTime.now().minute,
+              seconds: DateTime.now().second);
       timerCounterdown();
     }
   }
@@ -85,12 +115,17 @@ class TimerManager extends ChangeNotifier {
     print("Timer started");
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timerIsRunning && _displayTimer.inSeconds >= 0) {
-        _displayTimer = _endAt - Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute, seconds: DateTime.now().second);
+      if (_timerIsRunning &&
+          _displayTimer.inSeconds >= 0 &&
+          _assistTimer.inSeconds >= 0) {
+        _displayTimer = _displayTimer - const Duration(seconds: 1);
+        _assistTimer = _assistTimer - const Duration(seconds: 1);
+
         changeAccent();
         notifyListeners();
       } else {
         _displayTimer = const Duration(seconds: 0);
+        _assistTimer = const Duration(seconds: 0);
         timer.cancel();
         notifyListeners();
       }

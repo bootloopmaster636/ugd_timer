@@ -80,14 +80,21 @@ class MainScreen extends ConsumerWidget {
         Flexible(
           flex: 3,
           child: Container(
-            margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.08, 40, 0),
+            margin: EdgeInsets.fromLTRB(
+                40, MediaQuery.of(context).size.height * 0.08, 40, 0),
             constraints: const BoxConstraints(maxWidth: 768),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+                color:
+                    Theme.of(context).colorScheme.background.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: const [BoxShadow(color: Color.fromARGB(30, 0, 40, 80), blurRadius: 8, offset: Offset(0, 4))]),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color.fromARGB(30, 0, 40, 80),
+                      blurRadius: 8,
+                      offset: Offset(0, 4))
+                ]),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +121,8 @@ class MainScreen extends ConsumerWidget {
                         Text(
                           "${ref.watch(timerProvider).endAt.inHours.toString().padLeft(2, '0')} : "
                           "${ref.watch(timerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}",
-                          style: const TextStyle(fontSize: 29, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                              fontSize: 29, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -134,7 +142,10 @@ class MainScreen extends ConsumerWidget {
                       width: 8,
                     ),
                     OutlinedButton(
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsView())),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SettingsView())),
                       child: const Text("Settings"),
                     ),
                   ],
@@ -163,10 +174,17 @@ class MainScreen extends ConsumerWidget {
                 ),
                 RichText(
                   text: TextSpan(
-                    text: "Dapat bertanya asisten?\n",
-                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 20),
-                    children: const [
-                      TextSpan(text: "XX menit", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                    text: "Dapat bertanya asisten dalam\n",
+                    style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                        fontSize: 20),
+                    children: [
+                      TextSpan(
+                          text:
+                              "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit ${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 28)),
                     ],
                   ),
                 )
