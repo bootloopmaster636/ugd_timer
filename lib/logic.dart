@@ -11,6 +11,20 @@ class TimerManager extends ChangeNotifier {
   bool _timerIsRunning = false;
   String _title = "";
 
+  Color get currentAccent => _currentAccent;
+
+  Duration get displayTimer => _displayTimer;
+
+  Duration get duration => _duration;
+
+  Duration get endAt => _endAt;
+
+  Duration get assistTimer => _assistTimer;
+
+  bool get timerIsRunning => _timerIsRunning;
+
+  String get title => _title;
+
   void setEndTimer(TimeOfDay? newEndTimer) {
     _endAt = Duration(hours: newEndTimer!.hour, minutes: newEndTimer.minute, seconds: 0);
     print("End hour: ${_endAt.inHours}, End minute: ${_endAt.inMinutes.remainder(60)}");
@@ -80,16 +94,4 @@ class TimerManager extends ChangeNotifier {
       }
     });
   }
-
-  Color get currentAccent => _currentAccent;
-
-  Duration get displayTimer => _displayTimer;
-
-  Duration get endAt => _endAt;
-
-  Duration get assistTimer => _assistTimer;
-
-  bool get timerIsRunning => _timerIsRunning;
-
-  String get title => _title;
 }

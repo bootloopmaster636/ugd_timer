@@ -1,3 +1,5 @@
+import 'package:animate_gradient/animate_gradient.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,15 +43,14 @@ class Home extends ConsumerWidget {
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.tertiaryContainer],
-            )),
+          AnimateGradient(
+            primaryColors: [Theme.of(context).colorScheme.secondaryContainer, Theme.of(context).colorScheme.tertiaryContainer],
+            secondaryColors: [Theme.of(context).colorScheme.tertiaryContainer, Theme.of(context).colorScheme.secondaryContainer],
+            primaryBegin: Alignment.topRight,
+            primaryEnd: Alignment.bottomRight,
+            secondaryBegin: Alignment.bottomLeft,
+            secondaryEnd: Alignment.topRight,
+            duration: const Duration(milliseconds: 5000),
           ),
           Column(
             children: [
