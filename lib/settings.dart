@@ -45,13 +45,36 @@ class SettingsView extends ConsumerWidget {
                   subtitle: Text(
                       "timer ends at ${ref.watch(timerProvider).endAt.inHours.toString().padLeft(2, '0')} : ${ref.watch(timerProvider).endAt.inMinutes.remainder(60).toString().padLeft(2, '0')}"),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () async => ref.read(timerProvider.notifier).setEndTimer(await ShowTimePickerDialog(context)),
+                  onTap: () async {
+                    ref
+                        .read(timerProvider.notifier)
+                        .setDisplayTimer(await ShowTimePickerDialog(context));
+                    ref
+                        .read(timerProvider.notifier)
+                        .setEndTimer(ref.watch(timerProvider).displayTimer);
+                  },
                 ),
               ),
               const SizedBox(
                 height: 16,
               ),
-              FilledButton(onPressed: () => Navigator.pop(context), child: const Text("Back to timer page")),
+              Card(
+                child: ListTile(
+                  title: const Text("Select assist time"),
+                  subtitle: Text(
+                      "assist available after ${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} Minutes"),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () async => ref
+                      .read(timerProvider.notifier)
+                      .setAssistTimer(await ShowTimePickerDialog(context)),
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Back to timer page")),
             ],
           ),
         ),
@@ -62,9 +85,14 @@ class SettingsView extends ConsumerWidget {
 
 Future<TimeOfDay?> ShowTimePickerDialog(BuildContext context) async {
   final time = await showTimePicker(
-    initialEntryMode: TimePickerEntryMode.inputOnly,
-    context: context,
-    initialTime: TimeOfDay.now(),
-  );
+      initialEntryMode: TimePickerEntryMode.inputOnly,
+      context: context,
+      initialTime: const TimeOfDay(hour: 0, minute: 0),
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      });
   return time;
 }
