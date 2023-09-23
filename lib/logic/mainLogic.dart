@@ -1,22 +1,28 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:ugd_timer/logic/display.dart';
 
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
+  Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
   Duration _bonusTimer = const Duration(minutes: 0, seconds: 0);
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
+  final DisplayEtc _dispEtc = DisplayEtc("", Colors.lightBlue, ThemeMode.system);
 
 // ============== Time getter =============
   bool get isRunning => _isRunning;
 
-  Duration get displayTimer => _mainTimer;
+  Duration get mainTimerFreezed => _mainTimerFreezed;
+
+  Duration get mainTimer => _mainTimer;
 
   Duration get assistTimer => _assistTimer;
 
   Duration get bonusTimer => _bonusTimer;
+
+  DisplayEtc get dispEtc => _dispEtc;
 
   TimeOfDay get endAt => _endAt;
 
@@ -24,6 +30,7 @@ class TimerController extends ChangeNotifier {
   void setMainTimer({TimeOfDay? timeFromPicker, bool? reset}) {
     if (reset == null || reset == false) {
       _mainTimer = Duration(hours: timeFromPicker!.hour, minutes: timeFromPicker.minute, seconds: 0);
+      _mainTimerFreezed = Duration(hours: timeFromPicker.hour, minutes: timeFromPicker.minute, seconds: 0);
     } else {
       _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
@@ -50,46 +57,39 @@ class TimerController extends ChangeNotifier {
 
   // ============= Timer manager module  =============
   void decrementMainTimer() async {
-    _mainTimer = const Duration(seconds: -1);
+    _mainTimer -= const Duration(seconds: 1);
   }
 
   void decrementAssistTimer() async {
-    _assistTimer -= const Duration(seconds: -1);
+    _assistTimer -= const Duration(seconds: 1);
   }
 
   void decrementBonusTimer() async {
-    _bonusTimer -= const Duration(seconds: -1);
+    _bonusTimer -= const Duration(seconds: 1);
   }
 
   void makeEndAt() async {
     Duration now = Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
-    int newHour, newMinute;
+    Duration res = mainTimer + now;
 
-    // TODO: fix this (might be) buggy prevent clock overflow logic
-    //set nre hour
-    newHour = now.inHours + _mainTimer.inHours;
-    if (newHour >= 24) {
-      newHour -= 24;
-    }
+    //set new hour
+    int hour = res.inHours % 24;
+    // set new minute
+    int minute = res.inMinutes % 60;
 
-    //set new minute
-    newMinute = now.inMinutes.remainder(60) + _mainTimer.inMinutes.remainder(60);
-    if (newMinute >= 60) {
-      newMinute -= 60;
-      newHour += 1;
-    }
-
-    _endAt = TimeOfDay(hour: newHour, minute: newMinute);
+    _endAt = TimeOfDay(hour: hour, minute: minute);
   }
 
   // ========== Timer manager ===========
   void startTimer() async {
     _isRunning = true;
     startCountdown();
+    notifyListeners();
   }
 
   void pauseTimer() async {
     _isRunning = false;
+    notifyListeners();
   }
 
   void stopAndResetTimer() {
@@ -97,20 +97,35 @@ class TimerController extends ChangeNotifier {
     setMainTimer(reset: true);
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
+    _endAt = const TimeOfDay(hour: 0, minute: 0);
     notifyListeners();
   }
 
   void startCountdown() async {
+    makeEndAt();
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_isRunning && _mainTimer.inSeconds > 0) {
         decrementMainTimer();
-        decrementAssistTimer();
-        decrementBonusTimer();
+        if (_assistTimer.inSeconds > 0) decrementAssistTimer();
+        if (_bonusTimer.inSeconds > 0) decrementBonusTimer();
+        _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
       } else if (!_isRunning && _mainTimer.inSeconds > 0) {
         timer.cancel();
       } else {
         stopAndResetTimer();
       }
+      notifyListeners();
     });
+  }
+
+  // ============= App config interface =============
+  void setTitle(String s) {
+    _dispEtc.setTitle(s);
+    notifyListeners();
+  }
+
+  void changeThemeMode(String s) {
+    _dispEtc.changeThemeMode(s);
+    notifyListeners();
   }
 }
