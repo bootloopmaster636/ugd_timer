@@ -10,6 +10,10 @@ class SettingsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Duration mainTimer = ref.watch(timerProvider).mainTimer;
+    Duration assistTimer = ref.watch(timerProvider).assistTimer;
+    Duration bonusTimer = ref.watch(timerProvider).bonusTimer;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
@@ -53,7 +57,7 @@ class SettingsView extends ConsumerWidget {
                 child: ListTile(
                   title: const Text("Select timer duration"),
                   subtitle: Text(
-                      "timer duration is ${ref.watch(timerProvider).mainTimer.inMinutes.toString()} minutes"),
+                      "timer duration is ${mainTimer.inMinutes.toString()} minutes"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () async {
                     ref.read(timerProvider.notifier).setMainTimer(
@@ -68,7 +72,7 @@ class SettingsView extends ConsumerWidget {
                 child: ListTile(
                   title: const Text("Select assist time"),
                   subtitle: Text(
-                      "assistant will be available after ${ref.watch(timerProvider).assistTimer.inMinutes.toString()} minutes"),
+                      "assistant will be available after ${assistTimer.inMinutes.toString()} minutes"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () async => ref
                       .read(timerProvider.notifier)
@@ -83,7 +87,7 @@ class SettingsView extends ConsumerWidget {
                 child: ListTile(
                   title: const Text("Select bonus"),
                   subtitle: Text(
-                      "bonus should be submitted below ${ref.watch(timerProvider).bonusTimer.inMinutes.toString()} minutes after timer starts"),
+                      "bonus should be submitted below ${bonusTimer.inMinutes.toString()} minutes after timer starts"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () async => ref
                       .read(timerProvider.notifier)
