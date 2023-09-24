@@ -83,14 +83,21 @@ class MainScreen extends ConsumerWidget {
         Flexible(
           flex: 3,
           child: Container(
-            margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.08, 40, 0),
+            margin: EdgeInsets.fromLTRB(
+                40, MediaQuery.of(context).size.height * 0.08, 40, 0),
             constraints: const BoxConstraints(maxWidth: 960),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+                color:
+                    Theme.of(context).colorScheme.background.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: const [BoxShadow(color: Color.fromARGB(30, 0, 40, 80), blurRadius: 8, offset: Offset(0, 4))]),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color.fromARGB(30, 0, 40, 80),
+                      blurRadius: 8,
+                      offset: Offset(0, 4))
+                ]),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,7 +124,8 @@ class MainScreen extends ConsumerWidget {
                         Text(
                           "${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')} : "
                           "${ref.watch(timerProvider).endAt.minute.toString().padLeft(2, '0')}",
-                          style: TextStyle(fontSize: 4.h, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: 4.h, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -131,7 +139,8 @@ class MainScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     OutlinedButton(
-                      onPressed: () => ref.read(timerProvider).stopAndResetTimer(),
+                      onPressed: () =>
+                          ref.read(timerProvider).stopAndResetTimer(),
                       child: const Icon(FontAwesomeIcons.stop, size: 16),
                     ),
                     const SizedBox(
@@ -139,7 +148,8 @@ class MainScreen extends ConsumerWidget {
                     ),
                     ref.watch(timerProvider).isRunning
                         ? FilledButton(
-                            onPressed: () => ref.read(timerProvider).pauseTimer(),
+                            onPressed: () =>
+                                ref.read(timerProvider).pauseTimer(),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Icon(
@@ -149,7 +159,8 @@ class MainScreen extends ConsumerWidget {
                             ),
                           )
                         : FilledButton(
-                            onPressed: () => ref.read(timerProvider).startTimer(),
+                            onPressed: () =>
+                                ref.read(timerProvider).startTimer(),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Icon(FontAwesomeIcons.play, size: 16),
@@ -159,7 +170,10 @@ class MainScreen extends ConsumerWidget {
                       width: 16,
                     ),
                     OutlinedButton(
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsView())),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SettingsView())),
                       child: const Icon(FontAwesomeIcons.gear, size: 16),
                     ),
                   ],
@@ -188,12 +202,16 @@ class MainScreen extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: "Dapat bertanya asisten dalam\n",
-                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 2.8.h),
+                    style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                        fontSize: 2.8.h),
                     children: [
                       TextSpan(
                           text:
-                              "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit ${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h)),
+                              "${ref.watch(timerProvider).assistTimer.inMinutes.toString()} menit ${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString()} detik",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 4.h)),
                     ],
                   ),
                 ),
@@ -211,12 +229,16 @@ class MainScreen extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: "Sisa waktu bonus\n",
-                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer, fontSize: 2.8.h),
+                    style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                        fontSize: 2.8.h),
                     children: [
                       TextSpan(
                           text:
-                              "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit ${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h)),
+                              "${ref.watch(timerProvider).bonusTimer.inMinutes.toString()} menit ${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString()} detik",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 4.h)),
                     ],
                   ),
                 )

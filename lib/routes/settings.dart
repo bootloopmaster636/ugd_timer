@@ -24,7 +24,9 @@ class SettingsView extends ConsumerWidget {
             children: [
               const Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text("Timer configuration", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                child: Text("Timer configuration",
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(
                 height: 6,
@@ -50,10 +52,12 @@ class SettingsView extends ConsumerWidget {
               Card(
                 child: ListTile(
                   title: const Text("Select timer duration"),
-                  subtitle: Text("timer duration is ${ref.watch(timerProvider).mainTimer.inMinutes.toString().padLeft(2, '0')} minutes"),
+                  subtitle: Text(
+                      "timer duration is ${ref.watch(timerProvider).mainTimer.inMinutes.toString()} minutes"),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () async {
-                    ref.read(timerProvider.notifier).setMainTimer(timeFromPicker: await ShowTimePickerDialog(context));
+                    ref.read(timerProvider.notifier).setMainTimer(
+                        timeFromPicker: await ShowTimePickerDialog(context));
                   },
                 ),
               ),
@@ -64,9 +68,12 @@ class SettingsView extends ConsumerWidget {
                 child: ListTile(
                   title: const Text("Select assist time"),
                   subtitle: Text(
-                      "assistant will be available after ${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} minutes"),
+                      "assistant will be available after ${ref.watch(timerProvider).assistTimer.inMinutes.toString()} minutes"),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () async => ref.read(timerProvider.notifier).setAssistTimer(timeFromPicker: await ShowTimePickerDialog(context)),
+                  onTap: () async => ref
+                      .read(timerProvider.notifier)
+                      .setAssistTimer(
+                          timeFromPicker: await ShowTimePickerDialog(context)),
                 ),
               ),
               const SizedBox(
@@ -76,9 +83,12 @@ class SettingsView extends ConsumerWidget {
                 child: ListTile(
                   title: const Text("Select bonus"),
                   subtitle: Text(
-                      "bonus should be submitted below ${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} minutes after timer starts"),
+                      "bonus should be submitted below ${ref.watch(timerProvider).bonusTimer.inMinutes.toString()} minutes after timer starts"),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () async => ref.read(timerProvider.notifier).setBonusTimer(timeFromPicker: await ShowTimePickerDialog(context)),
+                  onTap: () async => ref
+                      .read(timerProvider.notifier)
+                      .setBonusTimer(
+                          timeFromPicker: await ShowTimePickerDialog(context)),
                 ),
               ),
               const SizedBox(
@@ -86,7 +96,9 @@ class SettingsView extends ConsumerWidget {
               ),
               const Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text("App Settings", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                child: Text("App Settings",
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(
                 height: 6,
@@ -96,12 +108,15 @@ class SettingsView extends ConsumerWidget {
                   title: const Text("Select application theme mode"),
                   subtitle: Text("Light attract bugs!"),
                   trailing: DropdownButton<String>(
-                    value: ref.watch(timerProvider).dispEtc.currentThemeMode == ThemeMode.light
+                    value: ref.watch(timerProvider).dispEtc.currentThemeMode ==
+                            ThemeMode.light
                         ? "Light"
-                        : ref.watch(timerProvider).dispEtc.currentThemeMode == ThemeMode.dark
+                        : ref.watch(timerProvider).dispEtc.currentThemeMode ==
+                                ThemeMode.dark
                             ? "Dark"
                             : "System",
-                    items: themeModeNames.map<DropdownMenuItem<String>>((String value) {
+                    items: themeModeNames
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -116,7 +131,9 @@ class SettingsView extends ConsumerWidget {
               const SizedBox(
                 height: 20,
               ),
-              FilledButton(onPressed: () => Navigator.pop(context), child: const Text("Back to timer page")),
+              FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Back to timer page")),
             ],
           ),
         ),
