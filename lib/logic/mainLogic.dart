@@ -107,6 +107,10 @@ class TimerController extends ChangeNotifier {
 
   // ========== Timer manager ===========
   void startTimer() async {
+    if (_mainTimer.inSeconds == 0) {
+      return;
+    }
+
     _isRunning = true;
     startCountdown();
     notifyListeners();
@@ -128,6 +132,7 @@ class TimerController extends ChangeNotifier {
 
   void startCountdown() async {
     makeEndAt();
+
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_isRunning && _mainTimer.inSeconds > 0) {
         decrementTimer("main");
