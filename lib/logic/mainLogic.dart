@@ -9,7 +9,8 @@ class TimerController extends ChangeNotifier {
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
   Duration _bonusTimer = const Duration(minutes: 0, seconds: 0);
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
-  final DisplayEtc _dispEtc = DisplayEtc("", Colors.lightBlue, ThemeMode.system);
+  final DisplayEtc _dispEtc =
+      DisplayEtc("", Colors.lightBlue, ThemeMode.system);
 
 // ============== Time getter =============
   bool get isRunning => _isRunning;
@@ -29,8 +30,14 @@ class TimerController extends ChangeNotifier {
   // ============= Time setter ==============
   void setMainTimer({TimeOfDay? timeFromPicker, bool? reset}) {
     if (reset == null || reset == false) {
-      _mainTimer = Duration(hours: timeFromPicker!.hour, minutes: timeFromPicker.minute, seconds: 0);
-      _mainTimerFreezed = Duration(hours: timeFromPicker.hour, minutes: timeFromPicker.minute, seconds: 0);
+      _mainTimer = Duration(
+          hours: timeFromPicker!.hour,
+          minutes: timeFromPicker.minute,
+          seconds: 0);
+      _mainTimerFreezed = Duration(
+          hours: timeFromPicker.hour,
+          minutes: timeFromPicker.minute,
+          seconds: 0);
     } else {
       _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
@@ -39,7 +46,10 @@ class TimerController extends ChangeNotifier {
 
   void setAssistTimer({TimeOfDay? timeFromPicker, bool? reset}) {
     if (reset == null || reset == false) {
-      _assistTimer = Duration(hours: timeFromPicker!.hour, minutes: timeFromPicker.minute, seconds: 0);
+      _assistTimer = Duration(
+          hours: timeFromPicker!.hour,
+          minutes: timeFromPicker.minute,
+          seconds: 0);
     } else {
       _assistTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
@@ -48,7 +58,10 @@ class TimerController extends ChangeNotifier {
 
   void setBonusTimer({TimeOfDay? timeFromPicker, bool? reset}) {
     if (reset == null || reset == false) {
-      _bonusTimer = Duration(hours: timeFromPicker!.hour, minutes: timeFromPicker.minute, seconds: 0);
+      _bonusTimer = Duration(
+          hours: timeFromPicker!.hour,
+          minutes: timeFromPicker.minute,
+          seconds: 0);
     } else {
       _bonusTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
@@ -56,20 +69,32 @@ class TimerController extends ChangeNotifier {
   }
 
   // ============= Timer manager module  =============
-  void decrementMainTimer() async {
-    _mainTimer -= const Duration(seconds: 1);
-  }
+  void decrementTimer(String timertype) async {
+    switch (timertype) {
+      case "main":
+        _mainTimer -= const Duration(seconds: 1);
 
-  void decrementAssistTimer() async {
-    _assistTimer -= const Duration(seconds: 1);
-  }
+        break;
 
-  void decrementBonusTimer() async {
-    _bonusTimer -= const Duration(seconds: 1);
+      case "assist":
+        if (_assistTimer.inSeconds > 0) {
+          _assistTimer -= const Duration(seconds: 1);
+        }
+
+        break;
+
+      case "bonus":
+        if (_bonusTimer.inSeconds > 0) {
+          _bonusTimer -= const Duration(seconds: 1);
+        }
+
+        break;
+    }
   }
 
   void makeEndAt() async {
-    Duration now = Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
+    Duration now =
+        Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
     Duration res = mainTimer + now;
 
     //set new hour
@@ -82,6 +107,10 @@ class TimerController extends ChangeNotifier {
 
   // ========== Timer manager ===========
   void startTimer() async {
+    if (_mainTimer.inSeconds == 0) {
+      return;
+    }
+
     _isRunning = true;
     startCountdown();
     notifyListeners();
@@ -103,11 +132,12 @@ class TimerController extends ChangeNotifier {
 
   void startCountdown() async {
     makeEndAt();
+
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_isRunning && _mainTimer.inSeconds > 0) {
-        decrementMainTimer();
-        if (_assistTimer.inSeconds > 0) decrementAssistTimer();
-        if (_bonusTimer.inSeconds > 0) decrementBonusTimer();
+        decrementTimer("main");
+        decrementTimer("assist");
+        decrementTimer("bonus");
         _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
       } else if (!_isRunning && _mainTimer.inSeconds > 0) {
         timer.cancel();
