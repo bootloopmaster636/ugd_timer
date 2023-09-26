@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:ugd_timer/logic/display.dart';
+import 'package:ugd_timer/logic/themeAndInfo.dart';
 
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
