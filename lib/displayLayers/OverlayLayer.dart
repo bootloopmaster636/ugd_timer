@@ -273,7 +273,7 @@ class AboutUs extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         const Text(
-          "Made with <3 by bootloopmaster636, Byonicku, and other contributors",
+          "Made with ❤️ by bootloopmaster636, Byonicku, and other contributors",
           textAlign: TextAlign.center,
         ),
         const SizedBox(
