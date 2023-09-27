@@ -178,7 +178,7 @@ class InfoCard extends ConsumerWidget {
               ),
               SizedBox(width: 12 * scaleFactor,),
               RichText(
-                text: TextSpan(text: "Bonus harus dikumpul sebelum\n",
+                text: TextSpan(text: "Sisa waktu bonus\n",
                   style: TextStyle(fontSize: 24 * scaleFactor, color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [TextSpan(
                     text: "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit "
