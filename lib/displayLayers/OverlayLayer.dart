@@ -213,8 +213,8 @@ class TextScaleFactorSection extends ConsumerWidget {
           subtitle: Slider(
             value: ref.watch(displayStateProvider).displayFontScale,
             min: 0.8,
-            max: 1.5,
-            divisions: 8,
+            max: 1.8,
+            divisions: 11,
             onChanged: (value) => ref.read(displayStateProvider).setDisplayFontScale(value),
           ),
           trailing: Text(

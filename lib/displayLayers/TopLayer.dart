@@ -181,8 +181,8 @@ class InfoCard extends ConsumerWidget {
                 text: TextSpan(text: "Bonus harus dikumpul sebelum\n",
                   style: TextStyle(fontSize: 24 * scaleFactor, color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [TextSpan(
-                    text: "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit "
-                        "${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                    text: "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit "
+                        "${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                     style: TextStyle(fontSize: 32 * scaleFactor, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSecondaryContainer),
                   ),
                   ],
