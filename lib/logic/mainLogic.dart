@@ -4,7 +4,7 @@ import 'package:pausable_timer/pausable_timer.dart';
 
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
-  bool _firstStart = true;
+  bool _isSet = false;
   Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
@@ -115,12 +115,14 @@ class TimerController extends ChangeNotifier {
       return;
     }
 
-    if (_firstStart) {
-      _firstStart = false;
-      startCountdown();
-    } else {
+    if (_isSet) {
+      // if timer is already set, then just resume it.
       makeEndAt();
       timer.start();
+    } else {
+      // if timer is not set, then set it and start the countdown.
+      _isSet = true;
+      startCountdown();
     }
 
     _isRunning = true;
@@ -136,7 +138,7 @@ class TimerController extends ChangeNotifier {
   void stopAndResetTimer() {
     timer.cancel();
     _isRunning = false;
-    _firstStart = true;
+    _isSet = false;
     setMainTimer(reset: true);
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
@@ -150,13 +152,16 @@ class TimerController extends ChangeNotifier {
       const Duration(seconds: 1),
       () {
         if (_isRunning && _mainTimer.inSeconds > 0) {
+          _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+
           decrementTimer("main");
           decrementTimer("assist");
           decrementTimer("bonus");
+
+          // To continously repeat this timer till end.
           timer
             ..reset()
             ..start();
-          _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
         } else {
           stopAndResetTimer();
         }
