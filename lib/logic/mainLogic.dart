@@ -1,9 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ugd_timer/logic/themeAndInfo.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
+  bool _firstStart = true;
   Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
@@ -11,6 +12,7 @@ class TimerController extends ChangeNotifier {
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
   final DisplayEtc _dispEtc =
       DisplayEtc("", Colors.lightBlue, ThemeMode.system);
+  late PausableTimer timer;
 
 // ============== Time getter =============
   bool get isRunning => _isRunning;
@@ -41,6 +43,8 @@ class TimerController extends ChangeNotifier {
     } else {
       _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
+
+    makeEndAt();
     notifyListeners();
   }
 
@@ -111,41 +115,54 @@ class TimerController extends ChangeNotifier {
       return;
     }
 
+    if (_firstStart) {
+      _firstStart = false;
+      startCountdown();
+    } else {
+      makeEndAt();
+      timer.start();
+    }
+
     _isRunning = true;
-    startCountdown();
     notifyListeners();
   }
 
   void pauseTimer() async {
     _isRunning = false;
+    timer.pause();
     notifyListeners();
   }
 
   void stopAndResetTimer() {
+    timer.cancel();
     _isRunning = false;
+    _firstStart = true;
     setMainTimer(reset: true);
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
-    _endAt = const TimeOfDay(hour: 0, minute: 0);
     notifyListeners();
   }
 
   void startCountdown() async {
     makeEndAt();
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_isRunning && _mainTimer.inSeconds > 0) {
-        decrementTimer("main");
-        decrementTimer("assist");
-        decrementTimer("bonus");
-        _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
-      } else if (!_isRunning && _mainTimer.inSeconds > 0) {
-        timer.cancel();
-      } else {
-        stopAndResetTimer();
-      }
-      notifyListeners();
-    });
+    timer = PausableTimer(
+      const Duration(seconds: 1),
+      () {
+        if (_isRunning && _mainTimer.inSeconds > 0) {
+          decrementTimer("main");
+          decrementTimer("assist");
+          decrementTimer("bonus");
+          timer
+            ..reset()
+            ..start();
+          _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+        } else {
+          stopAndResetTimer();
+        }
+        notifyListeners();
+      },
+    )..start();
   }
 
   // ============= App config interface =============
