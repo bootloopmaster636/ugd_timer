@@ -1,9 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ugd_timer/logic/themeAndInfo.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
+  bool _isSet = false;
   Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
@@ -11,6 +12,7 @@ class TimerController extends ChangeNotifier {
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
   final DisplayEtc _dispEtc =
       DisplayEtc("", Colors.lightBlue, ThemeMode.system);
+  late PausableTimer timer;
 
 // ============== Time getter =============
   bool get isRunning => _isRunning;
@@ -41,6 +43,8 @@ class TimerController extends ChangeNotifier {
     } else {
       _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
+
+    makeEndAt();
     notifyListeners();
   }
 
@@ -111,41 +115,59 @@ class TimerController extends ChangeNotifier {
       return;
     }
 
+    if (_isSet) {
+      // if timer is already set, then just resume it.
+      makeEndAt();
+      timer.start();
+    } else {
+      // if timer is not set, then set it and start the countdown.
+      _isSet = true;
+      startCountdown();
+    }
+
     _isRunning = true;
-    startCountdown();
     notifyListeners();
   }
 
   void pauseTimer() async {
     _isRunning = false;
+    timer.pause();
     notifyListeners();
   }
 
   void stopAndResetTimer() {
+    timer.cancel();
     _isRunning = false;
+    _isSet = false;
     setMainTimer(reset: true);
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
-    _endAt = const TimeOfDay(hour: 0, minute: 0);
     notifyListeners();
   }
 
   void startCountdown() async {
     makeEndAt();
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_isRunning && _mainTimer.inSeconds > 0) {
-        decrementTimer("main");
-        decrementTimer("assist");
-        decrementTimer("bonus");
-        _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
-      } else if (!_isRunning && _mainTimer.inSeconds > 0) {
-        timer.cancel();
-      } else {
-        stopAndResetTimer();
-      }
-      notifyListeners();
-    });
+    timer = PausableTimer(
+      const Duration(seconds: 1),
+      () {
+        if (_isRunning && _mainTimer.inSeconds > 0) {
+          _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+
+          decrementTimer("main");
+          decrementTimer("assist");
+          decrementTimer("bonus");
+
+          // To continously repeat this timer till end.
+          timer
+            ..reset()
+            ..start();
+        } else {
+          stopAndResetTimer();
+        }
+        notifyListeners();
+      },
+    )..start();
   }
 
   // ============= App config interface =============

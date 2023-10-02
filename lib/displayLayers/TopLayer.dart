@@ -13,8 +13,16 @@ class TopLayer extends ConsumerWidget {
     final displayStateWatcher = ref.watch(displayStateProvider);
     return Animate(
       effects: const [
-        SlideEffect(duration: Duration(milliseconds: 450), curve: Curves.easeOutCubic, begin: Offset(0, 0), end: Offset(0.06, 0)),
-        FadeEffect(duration: Duration(milliseconds: 450), curve: Curves.easeOutCubic, begin: 1.0, end: 0.6),
+        SlideEffect(
+            duration: Duration(milliseconds: 450),
+            curve: Curves.easeOutCubic,
+            begin: Offset(0, 0),
+            end: Offset(0.06, 0)),
+        FadeEffect(
+            duration: Duration(milliseconds: 450),
+            curve: Curves.easeOutCubic,
+            begin: 1.0,
+            end: 0.6),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
       child: Column(
@@ -47,7 +55,8 @@ class TopBar extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     return Container(
       height: 50 * scaleFactor,
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.background.withAlpha(180)),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background.withAlpha(180)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,10 +147,23 @@ class InfoCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-              "Pengumpulan pada pukul ${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).endAt.minute. toString().padLeft(2, '0')}",
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+            "Pengumpulan pada pukul",
+            style: TextStyle(
+              fontSize: 28 * scaleFactor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          SizedBox(height: 56 * scaleFactor,),
+          Text(
+            "${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).endAt.minute.toString().padLeft(2, '0')}",
+            style: TextStyle(
+              fontSize: 48 * scaleFactor,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
+          ),
+          SizedBox(
+            height: 56 * scaleFactor,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,17 +173,29 @@ class InfoCard extends ConsumerWidget {
                 size: 64 * scaleFactor,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
-              SizedBox(width: 24 * scaleFactor,),
+              SizedBox(
+                width: 24 * scaleFactor,
+              ),
               RichText(
-                  text: TextSpan(text: "Dapat bertanya asisten setelah\n",
-                    style: TextStyle(fontSize: 24 * scaleFactor, color: Theme.of(context).colorScheme.onTertiaryContainer),
-                    children: [TextSpan(
-                      text: "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit "
+                text: TextSpan(
+                  text: "Dapat bertanya asisten setelah\n",
+                  style: TextStyle(
+                      fontSize: 24 * scaleFactor,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer),
+                  children: [
+                    TextSpan(
+                      text:
+                          "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit "
                           "${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
-                      style: TextStyle(fontSize: 32 * scaleFactor, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                      ),
-                    ],
-                  ),
+                      style: TextStyle(
+                          fontSize: 32 * scaleFactor,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer),
+                    ),
+                  ],
+                ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40 * scaleFactor),
@@ -176,15 +210,27 @@ class InfoCard extends ConsumerWidget {
                 size: 64 * scaleFactor,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
-              SizedBox(width: 12 * scaleFactor,),
+              SizedBox(
+                width: 12 * scaleFactor,
+              ),
               RichText(
-                text: TextSpan(text: "Sisa waktu bonus\n",
-                  style: TextStyle(fontSize: 24 * scaleFactor, color: Theme.of(context).colorScheme.onTertiaryContainer),
-                  children: [TextSpan(
-                    text: "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit "
-                        "${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
-                    style: TextStyle(fontSize: 32 * scaleFactor, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                  ),
+                text: TextSpan(
+                  text: "Sisa waktu bonus\n",
+                  style: TextStyle(
+                      fontSize: 24 * scaleFactor,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer),
+                  children: [
+                    TextSpan(
+                      text:
+                          "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit "
+                          "${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                      style: TextStyle(
+                          fontSize: 32 * scaleFactor,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer),
+                    ),
                   ],
                 ),
               )
