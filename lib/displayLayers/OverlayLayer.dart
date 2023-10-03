@@ -285,7 +285,7 @@ class AboutUs extends StatelessWidget {
           height: 24,
         ),
         const Text(
-          "Version 0.5.1",
+          "Version 0.5.2",
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
