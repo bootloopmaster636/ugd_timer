@@ -135,6 +135,14 @@ class TimerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleTimer() async {
+    if (_isRunning) {
+      pauseTimer();
+    } else {
+      startTimer();
+    }
+  }
+
   void stopAndResetTimer() {
     timer.cancel();
     _isRunning = false;

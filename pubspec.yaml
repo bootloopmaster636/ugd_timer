@@ -43,6 +43,8 @@ dependencies:
   override_text_scale_factor: ^1.0.2
   url_launcher: ^6.1.14
   pausable_timer: ^2.0.0+1
+  keymap: ^0.0.92
+  flutter_styled_toast: ^2.2.1
 
 dev_dependencies:
   flutter_test:
