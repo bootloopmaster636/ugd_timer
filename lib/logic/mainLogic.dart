@@ -32,6 +32,8 @@ class TimerController extends ChangeNotifier {
 
   bool get isCutOffRunning => _isCutOffRunning;
 
+  bool get isSet => _isSet;
+
   DisplayEtc get dispEtc => _dispEtc;
 
   TimeOfDay get endAt => _endAt;
@@ -51,7 +53,10 @@ class TimerController extends ChangeNotifier {
       _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
     }
 
-    makeEndAt();
+    if (_isSet) {
+      makeEndAt();
+    }
+
     notifyListeners();
   }
 
@@ -209,6 +214,9 @@ class TimerController extends ChangeNotifier {
         } else if (_isCutOff) {
           _mainTimer += _cutOffTimer;
           _cutOffTimer = const Duration(minutes: 0, seconds: 0);
+
+          _dispEtc.currentAccent = Colors.amber;
+
           makeEndAt();
           _isCutOff = false;
           _isCutOffRunning = true;

@@ -11,6 +11,8 @@ class DisplayEtc {
 
   Color get currentAccent => _currentAccent;
 
+  set currentAccent(Color color) => _currentAccent = color;
+
   ThemeMode get currentThemeMode => _currentThemeMode;
 
   void setTitle(String title) {
