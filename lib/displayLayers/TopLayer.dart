@@ -186,7 +186,7 @@ class TimerCard extends ConsumerWidget {
             fontWeight: FontWeight.w600,
             color: (ref.watch(timerProvider).isCutOffRunning) &&
                     (ref.watch(timerProvider).mainTimer.inSeconds % 2 ==
-                        0) //wtf idk how to make this one line
+                        0) //wtf idk how to make this one line?????
                 ? Colors.red
                 : null,
           ),

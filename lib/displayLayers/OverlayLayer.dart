@@ -13,6 +13,7 @@ class OverlayLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final displayStateWatcher = ref.watch(displayStateProvider);
+
     return Animate(
       effects: const [
         SlideEffect(

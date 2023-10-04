@@ -214,8 +214,7 @@ class TimerController extends ChangeNotifier {
         } else if (_isCutOff) {
           _mainTimer += _cutOffTimer;
           _cutOffTimer = const Duration(minutes: 0, seconds: 0);
-
-          _dispEtc.currentAccent = Colors.amber;
+          _dispEtc.accentCutOff();
 
           makeEndAt();
           _isCutOff = false;
