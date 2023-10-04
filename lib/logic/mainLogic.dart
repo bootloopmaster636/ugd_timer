@@ -5,14 +5,17 @@ import 'package:pausable_timer/pausable_timer.dart';
 class TimerController extends ChangeNotifier {
   bool _isRunning = false;
   bool _isSet = false;
+  bool _isCutOff = false;
+  bool _isCutOffRunning = false;
   Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
   Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
   Duration _bonusTimer = const Duration(minutes: 0, seconds: 0);
+  Duration _cutOffTimer = const Duration(minutes: 0, seconds: 0);
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
   final DisplayEtc _dispEtc =
       DisplayEtc("", Colors.lightBlue, ThemeMode.system);
-  late PausableTimer timer;
+  late PausableTimer timer = PausableTimer(const Duration(seconds: 1), () {});
 
 // ============== Time getter =============
   bool get isRunning => _isRunning;
@@ -24,6 +27,10 @@ class TimerController extends ChangeNotifier {
   Duration get assistTimer => _assistTimer;
 
   Duration get bonusTimer => _bonusTimer;
+
+  Duration get cutOffTimer => _cutOffTimer;
+
+  bool get isCutOffRunning => _isCutOffRunning;
 
   DisplayEtc get dispEtc => _dispEtc;
 
@@ -72,6 +79,18 @@ class TimerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setCutOffTimer({TimeOfDay? timeFromPicker, bool? reset}) {
+    if (reset == null || reset == false) {
+      _cutOffTimer = Duration(
+          hours: timeFromPicker!.hour,
+          minutes: timeFromPicker.minute,
+          seconds: 0);
+    } else {
+      _cutOffTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
+    }
+    notifyListeners();
+  }
+
   // ============= Timer manager module  =============
   void decrementTimer(String timertype) async {
     switch (timertype) {
@@ -90,6 +109,13 @@ class TimerController extends ChangeNotifier {
       case "bonus":
         if (_bonusTimer.inSeconds > 0) {
           _bonusTimer -= const Duration(seconds: 1);
+        }
+
+        break;
+
+      case "cutoff":
+        if (_cutOffTimer.inSeconds > 0) {
+          _cutOffTimer -= const Duration(seconds: 1);
         }
 
         break;
@@ -122,6 +148,11 @@ class TimerController extends ChangeNotifier {
     } else {
       // if timer is not set, then set it and start the countdown.
       _isSet = true;
+
+      if (_cutOffTimer.inSeconds > 0) {
+        _isCutOff = true;
+      }
+
       startCountdown();
     }
 
@@ -147,9 +178,12 @@ class TimerController extends ChangeNotifier {
     timer.cancel();
     _isRunning = false;
     _isSet = false;
+    _isCutOff = false;
+    _isCutOffRunning = false;
     setMainTimer(reset: true);
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
+    setCutOffTimer(reset: true);
     notifyListeners();
   }
 
@@ -160,13 +194,24 @@ class TimerController extends ChangeNotifier {
       const Duration(seconds: 1),
       () {
         if (_isRunning && _mainTimer.inSeconds > 0) {
-          _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+          if (!_isCutOffRunning) {
+            _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+          }
 
           decrementTimer("main");
           decrementTimer("assist");
           decrementTimer("bonus");
 
           // To continously repeat this timer till end.
+          timer
+            ..reset()
+            ..start();
+        } else if (_isCutOff) {
+          _mainTimer += _cutOffTimer;
+          _cutOffTimer = const Duration(minutes: 0, seconds: 0);
+          makeEndAt();
+          _isCutOff = false;
+          _isCutOffRunning = true;
           timer
             ..reset()
             ..start();
