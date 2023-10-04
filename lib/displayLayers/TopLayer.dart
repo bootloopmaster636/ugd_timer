@@ -92,26 +92,45 @@ class TopBar extends ConsumerWidget {
               ),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
-              ref.read(timerProvider).toggleTimer();
-              showToast("Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",context:context);
+              if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
+                ref.read(timerProvider).toggleTimer();
+                showToast(
+                  "Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",
+                  context: context,
+                );
+              } else {
+                showToast(
+                  "Timer has not been initialized yet...",
+                  context: context,
+                );
+              }
             },
             child: Container(
               width: 60 * scaleFactor,
               height: 60 * scaleFactor,
               color: Theme.of(context).colorScheme.primary,
               child: Icon(
-                ref.watch(timerProvider).isRunning ? Icons.pause : Icons.play_arrow,
+                ref.watch(timerProvider).isRunning
+                    ? Icons.pause
+                    : Icons.play_arrow,
                 size: 22 * scaleFactor,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
-              ref.read(timerProvider).stopAndResetTimer();
-              showToast("Timer has been reset",context:context);
+              if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
+                ref.read(timerProvider).stopAndResetTimer();
+                showToast("Timer has been reset", context: context);
+              } else {
+                showToast(
+                  "Timer has not been initialized yet...",
+                  context: context,
+                );
+              }
             },
             child: Container(
               width: 60 * scaleFactor,
@@ -138,7 +157,7 @@ class TimerCard extends ConsumerWidget {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     return Container(
       margin: EdgeInsets.only(top: 20 * scaleFactor),
-      width: 800  * scaleFactor,
+      width: 800 * scaleFactor,
       height: 220 * scaleFactor,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.background.withOpacity(0.9),
@@ -180,20 +199,29 @@ class InfoCard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "Pengumpulan pada pukul",
-            style: TextStyle(
-              fontSize: 28 * scaleFactor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).endAt.minute.toString().padLeft(2, '0')}",
-            style: TextStyle(
-              fontSize: 48 * scaleFactor,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    "${ref.watch(timerProvider).isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
+                    style: TextStyle(
+                      fontSize: 28 * scaleFactor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).endAt.minute.toString().padLeft(2, '0')}",
+                    style: TextStyle(
+                      fontSize: 48 * scaleFactor,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           SizedBox(
             height: 56 * scaleFactor,
