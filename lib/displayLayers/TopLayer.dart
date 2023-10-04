@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ugd_timer/main.dart';
 
@@ -14,15 +15,15 @@ class TopLayer extends ConsumerWidget {
     return Animate(
       effects: const [
         SlideEffect(
-            duration: Duration(milliseconds: 450),
-            curve: Curves.easeOutCubic,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.ease,
             begin: Offset(0, 0),
-            end: Offset(0.06, 0)),
+            end: Offset(0.04, 0)),
         FadeEffect(
-            duration: Duration(milliseconds: 450),
-            curve: Curves.easeOutCubic,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.ease,
             begin: 1.0,
-            end: 0.6),
+            end: 0.5),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
       child: Column(
@@ -30,7 +31,7 @@ class TopLayer extends ConsumerWidget {
         children: [
           const TopBar(),
           SizedBox(
-            height: MediaQuery.of(context).size.height - 50 * scaleFactor,
+            height: MediaQuery.of(context).size.height - 60 * scaleFactor,
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +55,7 @@ class TopBar extends ConsumerWidget {
     final scaleFactor = MediaQuery.of(context).textScaleFactor;
     final timerWatcher = ref.watch(timerProvider);
     return Container(
-      height: 50 * scaleFactor,
+      height: 60 * scaleFactor,
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background.withAlpha(180)),
       child: Row(
@@ -66,15 +67,18 @@ class TopBar extends ConsumerWidget {
               ref.read(displayStateProvider).toggleSettingsExpanded();
             },
             child: Container(
-              width: 50 * scaleFactor,
-              height: 50 * scaleFactor,
-              color: Theme.of(context).colorScheme.primary,
+              width: 60 * scaleFactor,
+              height: 60 * scaleFactor,
+              color: Theme.of(context).colorScheme.tertiary,
               child: Icon(
                 Icons.settings_outlined,
-                size: 20 * scaleFactor,
-                color: Theme.of(context).colorScheme.onPrimary,
+                size: 22 * scaleFactor,
+                color: Theme.of(context).colorScheme.onTertiary,
               ),
             ),
+          ),
+          SizedBox(
+            width: (60 * scaleFactor),
           ),
           const SizedBox(
             width: 16,
@@ -84,12 +88,41 @@ class TopBar extends ConsumerWidget {
               timerWatcher.dispEtc.title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 26,
               ),
             ),
           ),
-          SizedBox(
-            width: (50 * scaleFactor) + 16,
+          GestureDetector(
+            onTap: () {
+              ref.read(timerProvider).toggleTimer();
+              showToast("Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",context:context);
+            },
+            child: Container(
+              width: 60 * scaleFactor,
+              height: 60 * scaleFactor,
+              color: Theme.of(context).colorScheme.primary,
+              child: Icon(
+                ref.watch(timerProvider).isRunning ? Icons.pause : Icons.play_arrow,
+                size: 22 * scaleFactor,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              ref.read(timerProvider).stopAndResetTimer();
+              showToast("Timer has been reset",context:context);
+            },
+            child: Container(
+              width: 60 * scaleFactor,
+              height: 60 * scaleFactor,
+              color: Theme.of(context).colorScheme.secondary,
+              child: Icon(
+                Icons.replay,
+                size: 22 * scaleFactor,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ),
           ),
         ],
       ),
@@ -104,17 +137,18 @@ class TimerCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     return Container(
-      margin: EdgeInsets.only(top: 40 * scaleFactor),
-      width: MediaQuery.of(context).size.width * 0.6 * scaleFactor,
-      height: MediaQuery.of(context).size.height * 0.3 * scaleFactor,
+      margin: EdgeInsets.only(top: 20 * scaleFactor),
+      width: 800  * scaleFactor,
+      height: 220 * scaleFactor,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.background.withOpacity(0.9),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
             blurRadius: 8,
-            offset: const Offset(0, 4),
+            spreadRadius: 2,
+            offset: const Offset(0, 1),
           ),
         ],
       ),
