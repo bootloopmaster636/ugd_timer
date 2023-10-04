@@ -52,7 +52,7 @@ class SettingsPanelInside extends ConsumerWidget {
             .of(context)
             .colorScheme
             .background
-            .withOpacity(0.6),
+            .withOpacity(0.8),
       ),
       child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,6 @@ class SettingsPanelInside extends ConsumerWidget {
             physics: const BouncingScrollPhysics(),
             children: const [
               SectionTitle(title: "Timer Control"),
-              TimerControlSection(),
               TitleSection(),
               SectionTitle(title: "Timer Durations"),
               MainTimerSection(),
@@ -96,51 +95,7 @@ class SettingsPanelInside extends ConsumerWidget {
   }
 }
 
-class TimerControlSection extends ConsumerWidget {
-  const TimerControlSection({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Expanded(
-          child: Card(
-            child: ListTile(
-              title: const Text("Timer control"),
-              subtitle: const Text("Start, pause, reset timer"),
-              trailing: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  (ref
-                      .watch(timerProvider)
-                      .isRunning)
-                      ? IconButton(
-                    icon: const Icon(Icons.pause),
-                    onPressed: () => ref.read(timerProvider).pauseTimer(),
-                  )
-                      : IconButton(
-                    icon: const Icon(Icons.play_arrow),
-                    onPressed: () =>
-                        ref.read(timerProvider.notifier).startTimer(),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.replay),
-                    onPressed: () =>
-                        ref.read(timerProvider.notifier).stopAndResetTimer(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 TextEditingController _controller = TextEditingController();
-
 class TitleSection extends ConsumerWidget {
   const TitleSection({super.key});
 
@@ -320,13 +275,16 @@ class AboutUs extends StatelessWidget {
           height: 24,
         ),
         const Text(
-          "Version 0.5.2",
+          "Version 0.5.3",
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const Text(
-          "Made with ❤️ by bootloopmaster636, Byonicku, and other contributors",
-          textAlign: TextAlign.center,
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            "Made with ❤️ by bootloopmaster636, Byonicku, and other contributors",
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(
           height: 8,

@@ -35,7 +35,46 @@ class App extends ConsumerWidget {
         useMaterial3: true,
       ),
       themeMode: ref.watch(timerProvider).dispEtc.currentThemeMode,
-      home: const Screen(),
+      home: const Screen(), //please dont "const" this... it'll bug the app
+    );
+  }
+}
+
+class GlobalKbShortcutManager extends ConsumerWidget {
+  const GlobalKbShortcutManager({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return KeyboardWidget(
+      bindings: [
+        KeyAction(
+          LogicalKeyboardKey.keyS,
+          isControlPressed: true,
+          'Open Settings Panel',
+          () {
+            ref.read(displayStateProvider).toggleSettingsExpanded();
+          },
+        ),
+        KeyAction(
+            LogicalKeyboardKey.keyR, isControlPressed: true, 'Reset Timer', () {
+          ref.read(timerProvider).stopAndResetTimer();
+          showToast("Timer has been reset", context: context);
+        }),
+        KeyAction(
+          LogicalKeyboardKey.space,
+          isControlPressed: true,
+          "Toggle Timer",
+          () {
+            ref.read(timerProvider).toggleTimer();
+            showToast(
+                "Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",
+                context: context);
+          },
+        )
+      ],
+      child: OverrideTextScaleFactor(
+          textScaleFactor: ref.watch(displayStateProvider).displayFontScale,
+          child: const TopLayer()),
     );
   }
 }
@@ -45,39 +84,13 @@ class Screen extends ConsumerWidget {
 
   @override
   Widget build(context, WidgetRef ref) {
-    return KeyboardWidget(
-      bindings: [
-        KeyAction(
-          LogicalKeyboardKey.keyS,
-          'Open Settings Panel',
-          () {
-            ref.read(displayStateProvider).toggleSettingsExpanded();
-          },
-        ),
-        KeyAction(LogicalKeyboardKey.keyR, 'Reset Timer', () {
-          ref.read(timerProvider).stopAndResetTimer();
-            showToast("Timer has been reset",context:context);
-        }),
-        KeyAction(
-          LogicalKeyboardKey.space,
-          "Toggle Timer",
-          () {
-            ref.read(timerProvider).toggleTimer();
-            showToast("Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",context:context);
-          },
-        )
-      ],
-      child: Scaffold(
-        body: Stack(
-          children: [
-            const BottomLayer(),
-            OverrideTextScaleFactor(
-                textScaleFactor:
-                    ref.watch(displayStateProvider).displayFontScale,
-                child: const TopLayer()),
-            const OverlayLayer(),
-          ],
-        ),
+    return const Scaffold(
+      body: Stack(
+        children: [
+          BottomLayer(),
+          GlobalKbShortcutManager(),
+          OverlayLayer(),
+        ],
       ),
     );
   }
