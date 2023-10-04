@@ -16,8 +16,8 @@ class OverlayLayer extends ConsumerWidget {
     return Animate(
       effects: const [
         SlideEffect(
-            duration: Duration(milliseconds: 450),
-            curve: Curves.easeOutCubic,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.ease,
             begin: Offset(-1, 0),
             end: Offset(0, 0))
       ],
@@ -41,50 +41,58 @@ class SettingsPanelInside extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 400,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
       constraints: const BoxConstraints(maxWidth: 500),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      color: Theme.of(context).colorScheme.background.withOpacity(0.6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () =>
-                        ref.read(displayStateProvider).toggleSettingsExpanded(),
-                    child: const Icon(Icons.arrow_back)),
-                const Text(
-                  "Settings",
-                  style: TextStyle(fontSize: 32),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: const [
-                SectionTitle(title: "Timer Control"),
-                TimerControlSection(),
-                TitleSection(),
-                SectionTitle(title: "Timer Durations"),
-                MainTimerSection(),
-                AssistTimerSection(),
-                BonusTimerSection(),
-                SectionTitle(title: "Display"),
-                ThemeModeSection(),
-                TextScaleFactorSection(),
-                AboutUs(),
-              ],
-            ),
-          ),
-        ],
+      decoration: BoxDecoration(
+        color: Theme
+            .of(context)
+            .colorScheme
+            .background
+            .withOpacity(0.6),
       ),
-    );
+      child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextButton(
+                  onPressed: () =>
+                      ref.read(displayStateProvider).toggleSettingsExpanded(),
+                  child: const Icon(Icons.arrow_back)),
+              const Text(
+                "Settings",
+                style: TextStyle(fontSize: 32),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            children: const [
+              SectionTitle(title: "Timer Control"),
+              TimerControlSection(),
+              TitleSection(),
+              SectionTitle(title: "Timer Durations"),
+              MainTimerSection(),
+              AssistTimerSection(),
+              BonusTimerSection(),
+              SectionTitle(title: "Display"),
+              ThemeModeSection(),
+              TextScaleFactorSection(),
+              AboutUs(),
+            ],
+          ),
+        ),
+      ],
+    ),);
   }
 }
 
@@ -104,16 +112,18 @@ class TimerControlSection extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  (ref.watch(timerProvider).isRunning)
+                  (ref
+                      .watch(timerProvider)
+                      .isRunning)
                       ? IconButton(
-                          icon: const Icon(Icons.pause),
-                          onPressed: () => ref.read(timerProvider).pauseTimer(),
-                        )
+                    icon: const Icon(Icons.pause),
+                    onPressed: () => ref.read(timerProvider).pauseTimer(),
+                  )
                       : IconButton(
-                          icon: const Icon(Icons.play_arrow),
-                          onPressed: () =>
-                              ref.read(timerProvider.notifier).startTimer(),
-                        ),
+                    icon: const Icon(Icons.play_arrow),
+                    onPressed: () =>
+                        ref.read(timerProvider.notifier).startTimer(),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.replay),
                     onPressed: () =>
@@ -164,12 +174,17 @@ class MainTimerSection extends ConsumerWidget {
         title: const Text("Main timer"),
         subtitle: const Text("Set the main timer duration"),
         trailing: Text(
-          "${ref.watch(timerProvider).mainTimer.inMinutes} minutes",
+          "${ref
+              .watch(timerProvider)
+              .mainTimer
+              .inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref
-            .read(timerProvider)
-            .setMainTimer(timeFromPicker: await ShowTimePickerDialog(context)),
+        onTap: () async =>
+            ref
+                .read(timerProvider)
+                .setMainTimer(
+                timeFromPicker: await showTimePickerDialog(context)),
       ),
     );
   }
@@ -185,11 +200,15 @@ class AssistTimerSection extends ConsumerWidget {
         title: const Text("Assistant timer"),
         subtitle: const Text("Set the duration where student can ask for help"),
         trailing: Text(
-          "${ref.watch(timerProvider).assistTimer.inMinutes} minutes",
+          "${ref
+              .watch(timerProvider)
+              .assistTimer
+              .inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref.read(timerProvider).setAssistTimer(
-            timeFromPicker: await ShowTimePickerDialog(context)),
+        onTap: () async =>
+            ref.read(timerProvider).setAssistTimer(
+                timeFromPicker: await showTimePickerDialog(context)),
       ),
     );
   }
@@ -205,12 +224,17 @@ class BonusTimerSection extends ConsumerWidget {
         title: const Text("Bonus timer"),
         subtitle: const Text("Submission must be made before this timer ends"),
         trailing: Text(
-          "${ref.watch(timerProvider).bonusTimer.inMinutes} minutes",
+          "${ref
+              .watch(timerProvider)
+              .bonusTimer
+              .inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref
-            .read(timerProvider)
-            .setBonusTimer(timeFromPicker: await ShowTimePickerDialog(context)),
+        onTap: () async =>
+            ref
+                .read(timerProvider)
+                .setBonusTimer(
+                timeFromPicker: await showTimePickerDialog(context)),
       ),
     );
   }
@@ -225,7 +249,9 @@ class TextScaleFactorSection extends ConsumerWidget {
       child: ListTile(
           title: const Text("Text scale factor"),
           subtitle: Slider(
-            value: ref.watch(displayStateProvider).displayFontScale,
+            value: ref
+                .watch(displayStateProvider)
+                .displayFontScale,
             min: 0.8,
             max: 1.8,
             divisions: 11,
@@ -233,7 +259,10 @@ class TextScaleFactorSection extends ConsumerWidget {
                 ref.read(displayStateProvider).setDisplayFontScale(value),
           ),
           trailing: Text(
-            ref.watch(displayStateProvider).displayFontScale.toStringAsFixed(1),
+            ref
+                .watch(displayStateProvider)
+                .displayFontScale
+                .toStringAsFixed(1),
             style: const TextStyle(fontSize: 20),
           )),
     );
@@ -251,13 +280,19 @@ class ThemeModeSection extends ConsumerWidget {
         title: const Text("Application Theme"),
         subtitle: const Text("Select application theme"),
         trailing: DropdownButton<String>(
-          value: ref.watch(timerProvider).dispEtc.currentThemeMode ==
-                  ThemeMode.light
+          value: ref
+              .watch(timerProvider)
+              .dispEtc
+              .currentThemeMode ==
+              ThemeMode.light
               ? "Light"
-              : ref.watch(timerProvider).dispEtc.currentThemeMode ==
-                      ThemeMode.dark
-                  ? "Dark"
-                  : "System",
+              : ref
+              .watch(timerProvider)
+              .dispEtc
+              .currentThemeMode ==
+              ThemeMode.dark
+              ? "Dark"
+              : "System",
           items: themeModeNames.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -297,7 +332,7 @@ class AboutUs extends StatelessWidget {
           height: 8,
         ),
         SizedBox(
-          width: 160,
+          width: 180,
           child: TextButton(
               onPressed: _launchURL,
               child: const Row(
@@ -325,6 +360,7 @@ class AboutUs extends StatelessWidget {
 
 class SectionTitle extends StatelessWidget {
   final String title;
+
   const SectionTitle({super.key, required this.title});
 
   @override
@@ -336,7 +372,7 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-Future<TimeOfDay?> ShowTimePickerDialog(BuildContext context) async {
+Future<TimeOfDay?> showTimePickerDialog(BuildContext context) async {
   final time = await showTimePicker(
       initialEntryMode: TimePickerEntryMode.inputOnly,
       context: context,

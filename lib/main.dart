@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:keymap/keymap.dart';
 import 'package:override_text_scale_factor/override_text_scale_factor.dart';
 import 'logic/displayState.dart';
 import 'logic/mainLogic.dart';
@@ -42,13 +45,39 @@ class Screen extends ConsumerWidget {
 
   @override
   Widget build(context, WidgetRef ref) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          const BottomLayer(),
-          OverrideTextScaleFactor(textScaleFactor: ref.watch(displayStateProvider).displayFontScale, child: const TopLayer()),
-          const OverlayLayer(),
-        ],
+    return KeyboardWidget(
+      bindings: [
+        KeyAction(
+          LogicalKeyboardKey.keyS,
+          'Open Settings Panel',
+          () {
+            ref.read(displayStateProvider).toggleSettingsExpanded();
+          },
+        ),
+        KeyAction(LogicalKeyboardKey.keyR, 'Reset Timer', () {
+          ref.read(timerProvider).stopAndResetTimer();
+            showToast("Timer has been reset",context:context);
+        }),
+        KeyAction(
+          LogicalKeyboardKey.space,
+          "Toggle Timer",
+          () {
+            ref.read(timerProvider).toggleTimer();
+            showToast("Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",context:context);
+          },
+        )
+      ],
+      child: Scaffold(
+        body: Stack(
+          children: [
+            const BottomLayer(),
+            OverrideTextScaleFactor(
+                textScaleFactor:
+                    ref.watch(displayStateProvider).displayFontScale,
+                child: const TopLayer()),
+            const OverlayLayer(),
+          ],
+        ),
       ),
     );
   }
