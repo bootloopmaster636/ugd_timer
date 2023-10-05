@@ -95,11 +95,16 @@ class TopBar extends ConsumerWidget {
           InkWell(
             onTap: () {
               if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
+                if (ref.read(timerProvider).isSet) {
+                  showToast(
+                    "Timer has been ${ref.read(timerProvider).isRunning ? "paused" : "resumed"}",
+                    context: context,
+                  );
+                } else {
+                  showToast("Timer has been started", context: context);
+                }
+
                 ref.read(timerProvider).toggleTimer();
-                showToast(
-                  "Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",
-                  context: context,
-                );
               } else {
                 showToast(
                   "Timer has not been initialized yet...",
@@ -176,9 +181,14 @@ class TimerCard extends ConsumerWidget {
           "${ref.watch(timerProvider).mainTimer.inHours.toString().padLeft(2, '0')}:"
           "${ref.watch(timerProvider).mainTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}:"
           "${ref.watch(timerProvider).mainTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 116,
             fontWeight: FontWeight.w600,
+            color: (ref.watch(timerProvider).isCutOffRunning) &&
+                    (ref.watch(timerProvider).mainTimer.inSeconds % 2 ==
+                        0) //wtf idk how to make this one line?????
+                ? Colors.red
+                : null,
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -207,7 +217,9 @@ class InfoCard extends ConsumerWidget {
                   Text(
                     "${ref.watch(timerProvider).isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
                     style: TextStyle(
-                      fontSize: 28 * scaleFactor,
+                      fontSize: ref.watch(timerProvider).isCutOffRunning
+                          ? 36
+                          : 28 * scaleFactor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

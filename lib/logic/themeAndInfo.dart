@@ -17,6 +17,10 @@ class DisplayEtc {
     _title = title;
   }
 
+  void accentCutOff() {
+    _currentAccent = Colors.amber;
+  }
+
   void dynamicAccentChanger(
       Duration currentTimerState, Duration freezedTimerState) {
     if (currentTimerState.inSeconds <= freezedTimerState.inSeconds * 0.2) {
