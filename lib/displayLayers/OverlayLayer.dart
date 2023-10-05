@@ -13,6 +13,7 @@ class OverlayLayer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final displayStateWatcher = ref.watch(displayStateProvider);
+
     return Animate(
       effects: const [
         SlideEffect(
@@ -359,7 +360,7 @@ class AboutUs extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            "Made with ❤️ by bootloopmaster636, Byonicku, and other contributors",
+            "Made with ❤️ by bootloopmaster636, byonicku, and other contributors",
             textAlign: TextAlign.center,
           ),
         ),
