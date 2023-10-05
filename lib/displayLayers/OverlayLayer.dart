@@ -1,8 +1,10 @@
 import 'dart:ui';
-
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ugd_timer/main.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -71,7 +73,6 @@ class SettingsPanelInside extends ConsumerWidget {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: const [
-                SectionTitle(title: "Import / Export Settings"),
                 SectionTitle(title: "Timer Control"),
                 TitleSection(),
                 MainTimerSection(),
@@ -82,15 +83,75 @@ class SettingsPanelInside extends ConsumerWidget {
                 ThemeModeSection(),
                 DisplayScaleFactorSection(),
                 SectionTitle(title: "Audio Notifications"),
-                AudioNotifTimerFinished(),
                 AudioNotifAssistAvailable(),
                 AudioNotifCutoffStarted(),
+                AudioNotifAllTimeFinished(),
+                SectionTitle(title: "Import / Export Settings"),
+                ImportExportSection(),
                 AboutUs(),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class ImportExportSection extends ConsumerWidget {
+  const ImportExportSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FilledButton(
+          onPressed: () async {
+            FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+            if (result != null) {
+              ref.read(timerProvider).importSettings(result.files.single.path!);
+            } else {
+              // User canceled the picker
+            }
+          },
+          child: const Row(
+            children: [
+              Icon(Icons.file_download_outlined),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Import"),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8,),
+        OutlinedButton(
+          onPressed: () async {
+            String? outputFile = await FilePicker.platform.saveFile(
+              dialogTitle: 'Please select where to save this settings',
+              fileName: "${ref.read(timerProvider).dispEtc.title}.txt",
+            );
+
+            if (outputFile != null) {
+              ref.read(timerProvider).exportSettings(outputFile);
+              showToast("Settings successfully exported");
+            } else {
+              showToast("No file selected");
+            }
+          },
+          child: const Row(
+            children: [
+              Icon(Icons.upload_file_outlined),
+              SizedBox(
+                width: 8,
+              ),
+              Text("Export"),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -260,33 +321,6 @@ class ThemeModeSection extends ConsumerWidget {
   }
 }
 
-class AudioNotifTimerFinished extends ConsumerWidget {
-  const AudioNotifTimerFinished({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-        child: Column(
-      children: [
-        ListTile(
-          title: const Text("Timer finished"),
-          subtitle: const Text("Play sound when timer finished"),
-          trailing: Switch(
-            value: false,
-            onChanged: (value) {
-              print(value);
-            },
-          ),
-        ),
-        ListTile(
-          enabled: false,
-          title: const Text("Audio to play"),
-        ),
-      ],
-    ));
-  }
-}
-
 class AudioNotifAssistAvailable extends ConsumerWidget {
   const AudioNotifAssistAvailable({super.key});
 
@@ -299,15 +333,41 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
           title: const Text("Assist available"),
           subtitle: const Text("Play sound when participant can ask for help"),
           trailing: Switch(
-            value: false,
+            value: ref.watch(timerProvider).soundNotifs.assistAvailableEnabled,
             onChanged: (value) {
-              print(value);
+              ref.read(timerProvider).toggleAssistAvailable();
             },
           ),
         ),
         ListTile(
-          enabled: false,
+          enabled: ref.watch(timerProvider).soundNotifs.assistAvailableEnabled,
           title: const Text("Audio to play"),
+          onTap: () async {
+            FilePickerResult? result =
+                await FilePicker.platform.pickFiles(type: FileType.audio);
+
+            if (result != null) {
+              ref
+                  .read(timerProvider)
+                  .setAssistAvailableSoundPath(File(result.files.single.path!));
+            } else {
+              showToast("No audio file selected");
+            }
+          },
+          trailing: SizedBox(
+            width: 160,
+            child: Text(
+              ref
+                  .watch(timerProvider)
+                  .soundNotifs
+                  .assistAvailableSoundPath
+                  .path
+                  .split("/")
+                  .last,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+            ),
+          ),
         ),
       ],
     ));
@@ -321,23 +381,101 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
         child: Column(
-          children: [
-            ListTile(
-              title: const Text("Timer cut off start"),
-              subtitle: const Text("Play sound when timer finished"),
-              trailing: Switch(
-                value: false,
-                onChanged: (value) {
-                  print(value);
-                },
-              ),
+      children: [
+        ListTile(
+          title: const Text("Timer cut off start"),
+          subtitle: const Text("Play sound when cut off timer starts"),
+          trailing: Switch(
+            value: ref.watch(timerProvider).soundNotifs.cutoffStartedEnabled,
+            onChanged: (value) {
+              ref.read(timerProvider).toggleCutoffStarted();
+            },
+          ),
+        ),
+        ListTile(
+          enabled: ref.watch(timerProvider).soundNotifs.cutoffStartedEnabled,
+          title: const Text("Audio to play"),
+          onTap: () async {
+            FilePickerResult? result =
+                await FilePicker.platform.pickFiles(type: FileType.audio);
+
+            if (result != null) {
+              ref
+                  .read(timerProvider)
+                  .setCutoffStartedSoundPath(File(result.files.single.path!));
+            } else {
+              showToast("No audio file selected");
+            }
+          },
+          trailing: SizedBox(
+            width: 160,
+            child: Text(
+              ref
+                  .watch(timerProvider)
+                  .soundNotifs
+                  .cutoffStartedSoundPath
+                  .path
+                  .split("/")
+                  .last,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
             ),
-            ListTile(
-              enabled: false,
-              title: const Text("Audio to play"),
+          ),
+        ),
+      ],
+    ));
+  }
+}
+
+class AudioNotifAllTimeFinished extends ConsumerWidget {
+  const AudioNotifAllTimeFinished({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+        child: Column(
+      children: [
+        ListTile(
+          title: const Text("All timer finished"),
+          subtitle: const Text("Play sound when all timer already finished"),
+          trailing: Switch(
+            value: ref.watch(timerProvider).soundNotifs.allTimerFinishedEnabled,
+            onChanged: (value) {
+              ref.read(timerProvider).toggleAllTimerFinished();
+            },
+          ),
+        ),
+        ListTile(
+          enabled: ref.watch(timerProvider).soundNotifs.allTimerFinishedEnabled,
+          title: const Text("Audio to play"),
+          onTap: () async {
+            FilePickerResult? result =
+                await FilePicker.platform.pickFiles(type: FileType.audio);
+
+            if (result != null) {
+              ref.read(timerProvider).setAllTimerFinishedSoundPath(
+                  File(result.files.single.path!));
+            } else {
+              showToast("No audio file selected");
+            }
+          },
+          trailing: SizedBox(
+            width: 160,
+            child: Text(
+              ref
+                  .watch(timerProvider)
+                  .soundNotifs
+                  .allTimerFinishedSoundPath
+                  .path
+                  .split("/")
+                  .last,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
             ),
-          ],
-        ));
+          ),
+        ),
+      ],
+    ));
   }
 }
 
@@ -353,7 +491,7 @@ class AboutUs extends StatelessWidget {
           height: 24,
         ),
         const Text(
-          "Version 0.5.3",
+          "Version 0.6.0",
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),

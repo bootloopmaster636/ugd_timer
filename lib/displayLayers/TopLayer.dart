@@ -93,6 +93,7 @@ class TopBar extends ConsumerWidget {
             ),
           ),
           InkWell(
+            splashFactory: InkRipple.splashFactory,
             onTap: () {
               if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
                 if (ref.read(timerProvider).isSet) {
@@ -126,6 +127,7 @@ class TopBar extends ConsumerWidget {
             ),
           ),
           InkWell(
+            splashFactory: InkRipple.splashFactory,
             onTap: () {
               if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
                 ref.read(timerProvider).stopAndResetTimer();
@@ -255,6 +257,7 @@ class InfoCard extends ConsumerWidget {
                   text: "Dapat bertanya asisten setelah\n",
                   style: TextStyle(
                       fontSize: 24 * scaleFactor,
+                      fontFamily: Theme.of(context).textTheme.displayMedium!.fontFamily,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [
                     TextSpan(
@@ -291,6 +294,7 @@ class InfoCard extends ConsumerWidget {
                 text: TextSpan(
                   text: "Sisa waktu bonus\n",
                   style: TextStyle(
+                      fontFamily: Theme.of(context).textTheme.displayMedium!.fontFamily,
                       fontSize: 24 * scaleFactor,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [
