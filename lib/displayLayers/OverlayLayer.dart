@@ -80,7 +80,7 @@ class SettingsPanelInside extends ConsumerWidget {
                 CutOffTimerSection(),
                 SectionTitle(title: "Display"),
                 ThemeModeSection(),
-                DisplayctorSection(),
+                DisplayScaleFactorSection(),
                 SectionTitle(title: "Audio Notifications"),
                 AudioNotifTimerFinished(),
                 AudioNotifAssistAvailable(),
@@ -203,8 +203,8 @@ class CutOffTimerSection extends ConsumerWidget {
   }
 }
 
-class DisplayctorSection extends ConsumerWidget {
-  const DisplayctorSection({super.key});
+class DisplayScaleFactorSection extends ConsumerWidget {
+  const DisplayScaleFactorSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
