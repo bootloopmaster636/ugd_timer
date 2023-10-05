@@ -45,6 +45,8 @@ dependencies:
   pausable_timer: ^2.0.0+1
   keymap: ^0.0.92
   flutter_styled_toast: ^2.2.1
+  audioplayers: ^5.2.0
+  file_picker: ^5.5.0
 
 dev_dependencies:
   flutter_test:

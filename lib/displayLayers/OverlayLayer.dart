@@ -70,16 +70,20 @@ class SettingsPanelInside extends ConsumerWidget {
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children: const [
+                SectionTitle(title: "Import / Export Settings"),
                 SectionTitle(title: "Timer Control"),
                 TitleSection(),
-                SectionTitle(title: "Timer Durations"),
                 MainTimerSection(),
                 AssistTimerSection(),
                 BonusTimerSection(),
                 CutOffTimerSection(),
                 SectionTitle(title: "Display"),
                 ThemeModeSection(),
-                TextScaleFactorSection(),
+                DisplayctorSection(),
+                SectionTitle(title: "Audio Notifications"),
+                AudioNotifTimerFinished(),
+                AudioNotifAssistAvailable(),
+                AudioNotifCutoffStarted(),
                 AboutUs(),
               ],
             ),
@@ -198,14 +202,14 @@ class CutOffTimerSection extends ConsumerWidget {
   }
 }
 
-class TextScaleFactorSection extends ConsumerWidget {
-  const TextScaleFactorSection({super.key});
+class DisplayctorSection extends ConsumerWidget {
+  const DisplayctorSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: ListTile(
-          title: const Text("Text scale factor"),
+          title: const Text("Display scale factor"),
           subtitle: Slider(
             value: ref.watch(displayStateProvider).displayFontScale,
             min: 0.8,
@@ -252,6 +256,87 @@ class ThemeModeSection extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class AudioNotifTimerFinished extends ConsumerWidget {
+  const AudioNotifTimerFinished({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+        child: Column(
+      children: [
+        ListTile(
+          title: const Text("Timer finished"),
+          subtitle: const Text("Play sound when timer finished"),
+          trailing: Switch(
+            value: false,
+            onChanged: (value) {
+              print(value);
+            },
+          ),
+        ),
+        ListTile(
+          enabled: false,
+          title: const Text("Audio to play"),
+        ),
+      ],
+    ));
+  }
+}
+
+class AudioNotifAssistAvailable extends ConsumerWidget {
+  const AudioNotifAssistAvailable({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+        child: Column(
+      children: [
+        ListTile(
+          title: const Text("Assist available"),
+          subtitle: const Text("Play sound when participant can ask for help"),
+          trailing: Switch(
+            value: false,
+            onChanged: (value) {
+              print(value);
+            },
+          ),
+        ),
+        ListTile(
+          enabled: false,
+          title: const Text("Audio to play"),
+        ),
+      ],
+    ));
+  }
+}
+
+class AudioNotifCutoffStarted extends ConsumerWidget {
+  const AudioNotifCutoffStarted({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text("Timer cut off start"),
+              subtitle: const Text("Play sound when timer finished"),
+              trailing: Switch(
+                value: false,
+                onChanged: (value) {
+                  print(value);
+                },
+              ),
+            ),
+            ListTile(
+              enabled: false,
+              title: const Text("Audio to play"),
+            ),
+          ],
+        ));
   }
 }
 
