@@ -18,7 +18,8 @@ class TimerController extends ChangeNotifier {
   Duration _bonusTimer = const Duration(minutes: 0, seconds: 0);
   Duration _cutOffTimer = const Duration(minutes: 0, seconds: 0);
   TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
-  final DisplayEtc _dispEtc = DisplayEtc("", Colors.lightBlue, ThemeMode.system);
+  final DisplayEtc _dispEtc =
+      DisplayEtc("", Colors.lightBlue, ThemeMode.system);
   final SoundNotifs _soundNotifs = SoundNotifs();
   late PausableTimer timer = PausableTimer(const Duration(seconds: 1), () {});
 
@@ -176,8 +177,13 @@ class TimerController extends ChangeNotifier {
     }
   }
 
-  void stopAndResetTimer() {
+  void stopAndResetTimer({bool isPressed = false}) {
     timer.cancel();
+
+    if (isPressed) {
+      _endAt = const TimeOfDay(hour: 0, minute: 0);
+    }
+
     _isRunning = false;
     _isSet = false;
     _isCutOff = false;
@@ -186,6 +192,7 @@ class TimerController extends ChangeNotifier {
     setAssistTimer(reset: true);
     setBonusTimer(reset: true);
     setCutOffTimer(reset: true);
+
     _isAssistAvailableSoundPlayed = false;
     _isCutoffStartedSoundPlayed = false;
     _isAllTimerFinishedSoundPlayed = false;
@@ -223,7 +230,7 @@ class TimerController extends ChangeNotifier {
           _dispEtc.accentCutOff();
 
           //to play sound when cutoff timer starts
-          if(!_isCutoffStartedSoundPlayed) {
+          if (!_isCutoffStartedSoundPlayed) {
             _soundNotifs.playCutoffStarted();
             _isCutoffStartedSoundPlayed = true;
           }
@@ -235,7 +242,7 @@ class TimerController extends ChangeNotifier {
             ..reset()
             ..start();
         } else {
-          if(!_isAllTimerFinishedSoundPlayed) {
+          if (!_isAllTimerFinishedSoundPlayed) {
             _soundNotifs.playAllTimerFinished();
             _isAllTimerFinishedSoundPlayed = true;
           }

@@ -7,12 +7,20 @@ import 'package:keymap/keymap.dart';
 import 'package:override_text_scale_factor/override_text_scale_factor.dart';
 import 'logic/displayState.dart';
 import 'logic/mainLogic.dart';
+import 'package:window_manager/window_manager.dart';
+import 'dart:io';
 
 import 'displayLayers/BottomLayer.dart';
 import 'displayLayers/TopLayer.dart';
 import 'displayLayers/OverlayLayer.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    WindowManager.instance.setMinimumSize(const Size(1280, 720));
+  }
+
   runApp(const ProviderScope(child: App()));
 }
 

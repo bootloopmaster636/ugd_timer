@@ -130,7 +130,7 @@ class TopBar extends ConsumerWidget {
             splashFactory: InkRipple.splashFactory,
             onTap: () {
               if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
-                ref.read(timerProvider).stopAndResetTimer();
+                ref.read(timerProvider).stopAndResetTimer(isPressed: true);
                 showToast("Timer has been reset", context: context);
               } else {
                 showToast(
@@ -257,7 +257,8 @@ class InfoCard extends ConsumerWidget {
                   text: "Dapat bertanya asisten setelah\n",
                   style: TextStyle(
                       fontSize: 24 * scaleFactor,
-                      fontFamily: Theme.of(context).textTheme.displayMedium!.fontFamily,
+                      fontFamily:
+                          Theme.of(context).textTheme.displayMedium!.fontFamily,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [
                     TextSpan(
@@ -294,7 +295,8 @@ class InfoCard extends ConsumerWidget {
                 text: TextSpan(
                   text: "Sisa waktu bonus\n",
                   style: TextStyle(
-                      fontFamily: Theme.of(context).textTheme.displayMedium!.fontFamily,
+                      fontFamily:
+                          Theme.of(context).textTheme.displayMedium!.fontFamily,
                       fontSize: 24 * scaleFactor,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [
