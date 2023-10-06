@@ -126,7 +126,9 @@ class ImportExportSection extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(width: 8,),
+        const SizedBox(
+          width: 8,
+        ),
         OutlinedButton(
           onPressed: () async {
             String? outputFile = await FilePicker.platform.saveFile(
@@ -209,15 +211,25 @@ class AssistTimerSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: ListTile(
-        title: const Text("Assistant timer"),
-        subtitle: const Text("Set the duration where student can ask for help"),
-        trailing: Text(
-          "${ref.watch(timerProvider).assistTimer.inMinutes} minutes",
-          style: const TextStyle(fontSize: 20),
-        ),
-        onTap: () async => ref.read(timerProvider).setAssistTimer(
-            timeFromPicker: await showTimePickerDialog(context)),
-      ),
+          title: const Text("Assistant timer"),
+          subtitle:
+              const Text("Set the duration where student can ask for help"),
+          trailing: Text(
+            "${ref.watch(timerProvider).assistTimer.inMinutes} minutes",
+            style: const TextStyle(fontSize: 20),
+          ),
+          onTap: () async {
+            if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+              showToast(
+                "Main timer must be set first",
+                context: context,
+              );
+              return;
+            }
+
+            ref.read(timerProvider).setAssistTimer(
+                timeFromPicker: await showTimePickerDialog(context));
+          }),
     );
   }
 }
@@ -235,9 +247,18 @@ class BonusTimerSection extends ConsumerWidget {
           "${ref.watch(timerProvider).bonusTimer.inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref
-            .read(timerProvider)
-            .setBonusTimer(timeFromPicker: await showTimePickerDialog(context)),
+        onTap: () async {
+          if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+            showToast(
+              "Main timer must be set first",
+              context: context,
+            );
+            return;
+          }
+
+          ref.read(timerProvider).setBonusTimer(
+              timeFromPicker: await showTimePickerDialog(context));
+        },
       ),
     );
   }
@@ -250,16 +271,25 @@ class CutOffTimerSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: ListTile(
-        title: const Text("Cut off timer"),
-        subtitle:
-            const Text("Maximum time for submission after main timer ran out"),
-        trailing: Text(
-          "${ref.watch(timerProvider).cutOffTimer.inMinutes} minutes",
-          style: const TextStyle(fontSize: 20),
-        ),
-        onTap: () async => ref.read(timerProvider).setCutOffTimer(
-            timeFromPicker: await showTimePickerDialog(context)),
-      ),
+          title: const Text("Cut off timer"),
+          subtitle: const Text(
+              "Maximum time for submission after main timer ran out"),
+          trailing: Text(
+            "${ref.watch(timerProvider).cutOffTimer.inMinutes} minutes",
+            style: const TextStyle(fontSize: 20),
+          ),
+          onTap: () async {
+            if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+              showToast(
+                "Main timer must be set first",
+                context: context,
+              );
+              return;
+            }
+
+            ref.read(timerProvider).setCutOffTimer(
+                timeFromPicker: await showTimePickerDialog(context));
+          }),
     );
   }
 }
@@ -548,6 +578,9 @@ class SectionTitle extends StatelessWidget {
 
 Future<TimeOfDay?> showTimePickerDialog(BuildContext context) async {
   final time = await showTimePicker(
+      helpText: "Set timer duration",
+      errorInvalidText: "Invalid",
+      confirmText: "Set",
       initialEntryMode: TimePickerEntryMode.inputOnly,
       context: context,
       initialTime: const TimeOfDay(hour: 0, minute: 0),
