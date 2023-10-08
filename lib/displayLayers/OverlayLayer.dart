@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ugd_timer/logic/TimerManager.dart';
 import 'package:ugd_timer/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -161,22 +162,26 @@ class ImportExportSection extends ConsumerWidget {
 TextEditingController _controller = TextEditingController();
 
 class TitleSection extends ConsumerWidget {
-  const TitleSection({super.key});
+  const TitleSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _controller =
+        TextEditingController(text: ref.read(timerProvider).getTitle());
+
     return Card(
       child: ListTile(
         title: const Text("Set timer title"),
         subtitle: Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: TextField(
-              decoration: const InputDecoration(),
-              controller: _controller,
-              onChanged: (value) {
-                ref.read(timerProvider).setTitle(value);
-                _controller.text = value;
-              }),
+            decoration: const InputDecoration(),
+            controller: _controller,
+            onChanged: (value) {
+              ref.read(timerProvider).setTitle(value);
+              _controller.text = value;
+            },
+          ),
         ),
       ),
     );
@@ -193,12 +198,13 @@ class MainTimerSection extends ConsumerWidget {
         title: const Text("Main timer"),
         subtitle: const Text("Set the main timer duration"),
         trailing: Text(
-          "${ref.watch(timerProvider).mainTimer.inMinutes} minutes",
+          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref
-            .read(timerProvider)
-            .setMainTimer(timeFromPicker: await showTimePickerDialog(context)),
+        onTap: () async => ref.read(timerProvider).setTimer(
+              TimerType.main,
+              await showTimePickerDialog(context),
+            ),
       ),
     );
   }
@@ -215,11 +221,16 @@ class AssistTimerSection extends ConsumerWidget {
           subtitle:
               const Text("Set the duration where student can ask for help"),
           trailing: Text(
-            "${ref.watch(timerProvider).assistTimer.inMinutes} minutes",
+            "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inMinutes} minutes",
             style: const TextStyle(fontSize: 20),
           ),
           onTap: () async {
-            if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+            if (ref
+                    .watch(timerProvider)
+                    .timerManager
+                    .getTimer(TimerType.main)
+                    .inSeconds ==
+                0) {
               showToast(
                 "Main timer must be set first",
                 context: context,
@@ -227,8 +238,10 @@ class AssistTimerSection extends ConsumerWidget {
               return;
             }
 
-            ref.read(timerProvider).setAssistTimer(
-                timeFromPicker: await showTimePickerDialog(context));
+            ref.read(timerProvider).setTimer(
+                  TimerType.assist,
+                  await showTimePickerDialog(context),
+                );
           }),
     );
   }
@@ -244,11 +257,16 @@ class BonusTimerSection extends ConsumerWidget {
         title: const Text("Bonus timer"),
         subtitle: const Text("Submission must be made before this timer ends"),
         trailing: Text(
-          "${ref.watch(timerProvider).bonusTimer.inMinutes} minutes",
+          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
         onTap: () async {
-          if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+          if (ref
+                  .watch(timerProvider)
+                  .timerManager
+                  .getTimer(TimerType.main)
+                  .inSeconds ==
+              0) {
             showToast(
               "Main timer must be set first",
               context: context,
@@ -256,8 +274,10 @@ class BonusTimerSection extends ConsumerWidget {
             return;
           }
 
-          ref.read(timerProvider).setBonusTimer(
-              timeFromPicker: await showTimePickerDialog(context));
+          ref.read(timerProvider).setTimer(
+                TimerType.bonus,
+                await showTimePickerDialog(context),
+              );
         },
       ),
     );
@@ -275,11 +295,16 @@ class CutOffTimerSection extends ConsumerWidget {
           subtitle: const Text(
               "Maximum time for submission after main timer ran out"),
           trailing: Text(
-            "${ref.watch(timerProvider).cutOffTimer.inMinutes} minutes",
+            "${ref.watch(timerProvider).timerManager.getTimer(TimerType.cutoff).inMinutes} minutes",
             style: const TextStyle(fontSize: 20),
           ),
           onTap: () async {
-            if (ref.watch(timerProvider).mainTimer.inSeconds == 0) {
+            if (ref
+                    .watch(timerProvider)
+                    .timerManager
+                    .getTimer(TimerType.main)
+                    .inSeconds ==
+                0) {
               showToast(
                 "Main timer must be set first",
                 context: context,
@@ -287,8 +312,10 @@ class CutOffTimerSection extends ConsumerWidget {
               return;
             }
 
-            ref.read(timerProvider).setCutOffTimer(
-                timeFromPicker: await showTimePickerDialog(context));
+            ref.read(timerProvider).setTimer(
+                  TimerType.cutoff,
+                  await showTimePickerDialog(context),
+                );
           }),
     );
   }

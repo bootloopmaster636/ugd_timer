@@ -4,7 +4,10 @@ import 'package:pausable_timer/pausable_timer.dart';
 import 'package:ugd_timer/logic/soundNotifs.dart';
 import 'dart:io';
 
+import 'package:ugd_timer/logic/TimerManager.dart';
+
 class TimerController extends ChangeNotifier {
+  // ============= Variables =============
   bool _isRunning = false;
   bool _isSet = false;
   bool _isCutOff = false;
@@ -12,12 +15,8 @@ class TimerController extends ChangeNotifier {
   bool _isAssistAvailableSoundPlayed = false;
   bool _isCutoffStartedSoundPlayed = false;
   bool _isAllTimerFinishedSoundPlayed = false;
-  Duration _mainTimerFreezed = const Duration(hours: 0, minutes: 0, seconds: 0);
-  Duration _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
-  Duration _assistTimer = const Duration(minutes: 0, seconds: 0);
-  Duration _bonusTimer = const Duration(minutes: 0, seconds: 0);
-  Duration _cutOffTimer = const Duration(minutes: 0, seconds: 0);
-  TimeOfDay _endAt = const TimeOfDay(hour: 0, minute: 0);
+  final TimerManager _timerManager = TimerManager();
+
   final DisplayEtc _dispEtc =
       DisplayEtc("", Colors.lightBlue, ThemeMode.system);
   final SoundNotifs _soundNotifs = SoundNotifs();
@@ -25,147 +24,48 @@ class TimerController extends ChangeNotifier {
 
 // ============== Getters =============
   bool get isRunning => _isRunning;
-  Duration get mainTimerFreezed => _mainTimerFreezed;
-  Duration get mainTimer => _mainTimer;
-  Duration get assistTimer => _assistTimer;
-  Duration get bonusTimer => _bonusTimer;
-  Duration get cutOffTimer => _cutOffTimer;
   bool get isCutOffRunning => _isCutOffRunning;
   bool get isSet => _isSet;
+  TimerManager get timerManager => _timerManager;
   DisplayEtc get dispEtc => _dispEtc;
   SoundNotifs get soundNotifs => _soundNotifs;
-  TimeOfDay get endAt => _endAt;
 
-  // ============= Time setter ==============
-  void setMainTimer({TimeOfDay? timeFromPicker, bool? reset}) {
-    if (reset == null || reset == false) {
-      _mainTimer = Duration(
-          hours: timeFromPicker!.hour,
-          minutes: timeFromPicker.minute,
-          seconds: 0);
-      _mainTimerFreezed = Duration(
-          hours: timeFromPicker.hour,
-          minutes: timeFromPicker.minute,
-          seconds: 0);
-    } else {
-      _mainTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
-    }
-
-    if (_isSet) {
-      makeEndAt();
-    }
-
+  // ============= Timer Manager Wrapper =============
+  void setTimer(TimerType timerType, TimeOfDay? timeFromPicker) {
+    _timerManager.setTimerFromPicker(timerType, timeFromPicker);
     notifyListeners();
   }
 
-  void setAssistTimer({TimeOfDay? timeFromPicker, bool? reset}) {
-    if (reset == null || reset == false) {
-      _assistTimer = Duration(
-          hours: timeFromPicker!.hour,
-          minutes: timeFromPicker.minute,
-          seconds: 0);
-    } else {
-      _assistTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
-    }
-    notifyListeners();
-  }
-
-  void setBonusTimer({TimeOfDay? timeFromPicker, bool? reset}) {
-    if (reset == null || reset == false) {
-      _bonusTimer = Duration(
-          hours: timeFromPicker!.hour,
-          minutes: timeFromPicker.minute,
-          seconds: 0);
-    } else {
-      _bonusTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
-    }
-    notifyListeners();
-  }
-
-  void setCutOffTimer({TimeOfDay? timeFromPicker, bool? reset}) {
-    if (reset == null || reset == false) {
-      _cutOffTimer = Duration(
-          hours: timeFromPicker!.hour,
-          minutes: timeFromPicker.minute,
-          seconds: 0);
-    } else {
-      _cutOffTimer = const Duration(hours: 0, minutes: 0, seconds: 0);
-    }
-    notifyListeners();
-  }
-
-  // ============= Timer manager module  =============
-  void decrementTimer(String timertype) async {
-    switch (timertype) {
-      case "main":
-        _mainTimer -= const Duration(seconds: 1);
-
-        break;
-
-      case "assist":
-        if (_assistTimer.inSeconds > 0) {
-          _assistTimer -= const Duration(seconds: 1);
-        }
-
-        break;
-
-      case "bonus":
-        if (_bonusTimer.inSeconds > 0) {
-          _bonusTimer -= const Duration(seconds: 1);
-        }
-
-        break;
-
-      case "cutoff":
-        if (_cutOffTimer.inSeconds > 0) {
-          _cutOffTimer -= const Duration(seconds: 1);
-        }
-
-        break;
-    }
-  }
-
-  void makeEndAt() async {
-    Duration now =
-        Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute);
-    Duration res = mainTimer + now;
-
-    //set new hour
-    int hour = res.inHours % 24;
-    // set new minute
-    int minute = res.inMinutes % 60;
-
-    _endAt = TimeOfDay(hour: hour, minute: minute);
-  }
-
-  // ========== Timer manager ===========
+  // ========== Timer Control ===========
   void startTimer() async {
-    if (_mainTimer.inSeconds == 0) {
+    if (_timerManager.getTimer(TimerType.main).inSeconds == 0) {
       return;
     }
 
+    // if timer is already set, then just resume it.
     if (_isSet) {
-      // if timer is already set, then just resume it.
-      makeEndAt();
+      _timerManager.makeEndAt();
       timer.start();
     } else {
       // if timer is not set, then set it and start the countdown.
       _isSet = true;
 
-      if (_cutOffTimer.inSeconds > 0) {
+      if (_timerManager.getTimer(TimerType.cutoff).inSeconds > 0) {
         _isCutOff = true;
       }
+
+      _isRunning = true;
 
       startCountdown();
     }
 
-    _isRunning = true;
     notifyListeners();
   }
 
   void pauseTimer() async {
     _isRunning = false;
     timer.pause();
+
     notifyListeners();
   }
 
@@ -181,18 +81,16 @@ class TimerController extends ChangeNotifier {
     timer.cancel();
 
     if (isPressed) {
-      _endAt = const TimeOfDay(hour: 0, minute: 0);
+      _timerManager.setEndAt(const TimeOfDay(hour: 0, minute: 0));
+      _dispEtc.dynamicAccentChanger(_timerManager.getTimer(TimerType.main),
+          _timerManager.getTimer(TimerType.mainFreeze));
     }
 
     _isRunning = false;
     _isSet = false;
     _isCutOff = false;
     _isCutOffRunning = false;
-    setMainTimer(reset: true);
-    setAssistTimer(reset: true);
-    setBonusTimer(reset: true);
-    setCutOffTimer(reset: true);
-
+    _timerManager.resetTimers();
     _isAssistAvailableSoundPlayed = false;
     _isCutoffStartedSoundPlayed = false;
     _isAllTimerFinishedSoundPlayed = false;
@@ -200,19 +98,22 @@ class TimerController extends ChangeNotifier {
   }
 
   void startCountdown() async {
-    makeEndAt();
+    _timerManager.makeEndAt();
 
     timer = PausableTimer(
       const Duration(seconds: 1),
       () {
-        if (_isRunning && _mainTimer.inSeconds > 0) {
+        if (_isRunning &&
+            _timerManager.getTimer(TimerType.main).inSeconds > 0) {
           if (!_isCutOffRunning) {
-            _dispEtc.dynamicAccentChanger(_mainTimer, _mainTimerFreezed);
+            _dispEtc.dynamicAccentChanger(
+                _timerManager.getTimer(TimerType.main),
+                _timerManager.getTimer(TimerType.mainFreeze));
           }
 
-          decrementTimer("main");
-          decrementTimer("assist");
-          decrementTimer("bonus");
+          _timerManager.decrementTimer(TimerType.main);
+          _timerManager.decrementTimer(TimerType.assist);
+          _timerManager.decrementTimer(TimerType.bonus);
 
           // To continously repeat this timer till end.
           timer
@@ -220,13 +121,13 @@ class TimerController extends ChangeNotifier {
             ..start();
 
           // to play sound when assistant becomes available
-          if (_assistTimer.inSeconds == 0 && !_isAssistAvailableSoundPlayed) {
+          if (_timerManager.getTimer(TimerType.assist).inSeconds == 0 &&
+              !_isAssistAvailableSoundPlayed) {
             _soundNotifs.playAssistAvailable();
             _isAssistAvailableSoundPlayed = true;
           }
         } else if (_isCutOff) {
-          _mainTimer += _cutOffTimer;
-          _cutOffTimer = const Duration(minutes: 0, seconds: 0);
+          _timerManager.addCutOfftoMain();
           _dispEtc.accentCutOff();
 
           //to play sound when cutoff timer starts
@@ -235,7 +136,7 @@ class TimerController extends ChangeNotifier {
             _isCutoffStartedSoundPlayed = true;
           }
 
-          makeEndAt();
+          _timerManager.makeEndAt();
           _isCutOff = false;
           _isCutOffRunning = true;
           timer
@@ -257,6 +158,10 @@ class TimerController extends ChangeNotifier {
   void setTitle(String s) {
     _dispEtc.setTitle(s);
     notifyListeners();
+  }
+
+  String getTitle() {
+    return _dispEtc.title;
   }
 
   void changeThemeMode(String s) {
@@ -298,10 +203,10 @@ class TimerController extends ChangeNotifier {
   void exportSettings(String? path) {
     String settings = "Title: ${_dispEtc.title}\n"
         "Theme: ${_dispEtc.currentThemeMode}\n"
-        "Main Timer: ${_mainTimer.inSeconds}\n"
-        "Assist Timer: ${_assistTimer.inSeconds}\n"
-        "Bonus Timer: ${_bonusTimer.inSeconds}\n"
-        "Cutoff Timer: ${_cutOffTimer.inSeconds}\n"
+        "Main Timer: ${_timerManager.getTimer(TimerType.main).inSeconds}\n"
+        "Assist Timer: ${_timerManager.getTimer(TimerType.assist).inSeconds}\n"
+        "Bonus Timer: ${_timerManager.getTimer(TimerType.bonus).inSeconds}\n"
+        "Cutoff Timer: ${_timerManager.getTimer(TimerType.cutoff).inSeconds}\n"
         "Assist Available Sound: ${_soundNotifs.assistAvailableSoundPath.path}\n"
         "Cutoff Started Sound: ${_soundNotifs.cutoffStartedSoundPath.path}\n"
         "All Timer Finished Sound: ${_soundNotifs.allTimerFinishedSoundPath.path}\n";
@@ -312,27 +217,44 @@ class TimerController extends ChangeNotifier {
 
   void importSettings(String path) {
     File configFile = File(path);
-    List<String> settings = configFile.readAsStringSync().split("\n");
 
-    String title = settings[0].split(": ")[1];
-    int mainTimer = int.parse(settings[2].split(": ")[1]);
-    int assistTimer = int.parse(settings[3].split(": ")[1]);
-    int bonusTimer = int.parse(settings[4].split(": ")[1]);
-    int cutoffTimer = int.parse(settings[5].split(": ")[1]);
-    File assistAvailableSoundPath = File(settings[6].split(": ")[2]);
-    File cutoffStartedSoundPath = File(settings[7].split(": ")[2]);
-    File allTimerFinishedSoundPath = File(settings[8].split(": ")[2]);
+    try {
+      List<String> settings = configFile.readAsStringSync().split("\n");
 
-    _dispEtc.setTitle(title);
-    _dispEtc.accentCutOff();
-    _mainTimer = Duration(seconds: mainTimer);
-    _mainTimerFreezed = Duration(seconds: mainTimer);
-    _assistTimer = Duration(seconds: assistTimer);
-    _bonusTimer = Duration(seconds: bonusTimer);
-    _cutOffTimer = Duration(seconds: cutoffTimer);
-    _soundNotifs.setAssistAvailableSoundPath(assistAvailableSoundPath);
-    _soundNotifs.setCutoffStartedSoundPath(cutoffStartedSoundPath);
-    _soundNotifs.setAllTimerFinishedSoundPath(allTimerFinishedSoundPath);
-    notifyListeners();
+      if (settings.length >= 9) {
+        String title = settings[0].split(": ")[1].trim();
+        int mainTimer = int.tryParse(settings[2].split(": ")[1]) ?? 0;
+        int assistTimer = int.tryParse(settings[3].split(": ")[1]) ?? 0;
+        int bonusTimer = int.tryParse(settings[4].split(": ")[1]) ?? 0;
+        int cutoffTimer = int.tryParse(settings[5].split(": ")[1]) ?? 0;
+        String assistAvailableSoundPath = settings[6].split(": ")[1].trim();
+        String cutoffStartedSoundPath = settings[7].split(": ")[1].trim();
+        String allTimerFinishedSoundPath = settings[8].split(": ")[1].trim();
+
+        _dispEtc.setTitle(title);
+
+        _timerManager.setTimerDuration(
+            TimerType.main, Duration(seconds: mainTimer));
+        _timerManager.setTimerDuration(
+            TimerType.mainFreeze, Duration(seconds: mainTimer));
+        _timerManager.setTimerDuration(
+            TimerType.assist, Duration(seconds: assistTimer));
+        _timerManager.setTimerDuration(
+            TimerType.bonus, Duration(seconds: bonusTimer));
+        _timerManager.setTimerDuration(
+            TimerType.cutoff, Duration(seconds: cutoffTimer));
+
+        _soundNotifs
+            .setAssistAvailableSoundPath(File(assistAvailableSoundPath));
+        _soundNotifs.setCutoffStartedSoundPath(File(cutoffStartedSoundPath));
+        _soundNotifs
+            .setAllTimerFinishedSoundPath(File(allTimerFinishedSoundPath));
+        notifyListeners();
+      } else {
+        throw ("Invalid settings format. Not enough settings found.");
+      }
+    } catch (e) {
+      throw ("Error reading or parsing settings: $e");
+    }
   }
 }

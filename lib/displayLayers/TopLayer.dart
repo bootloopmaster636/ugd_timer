@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ugd_timer/logic/TimerManager.dart';
 import 'package:ugd_timer/main.dart';
 
 class TopLayer extends ConsumerWidget {
@@ -95,7 +96,12 @@ class TopBar extends ConsumerWidget {
           InkWell(
             splashFactory: InkRipple.splashFactory,
             onTap: () {
-              if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
+              if (ref
+                      .read(timerProvider)
+                      .timerManager
+                      .getTimer(TimerType.main)
+                      .inSeconds !=
+                  0) {
                 if (ref.read(timerProvider).isSet) {
                   showToast(
                     "Timer has been ${ref.read(timerProvider).isRunning ? "paused" : "resumed"}",
@@ -129,7 +135,12 @@ class TopBar extends ConsumerWidget {
           InkWell(
             splashFactory: InkRipple.splashFactory,
             onTap: () {
-              if (ref.watch(timerProvider).mainTimer.inSeconds != 0) {
+              if (ref
+                      .read(timerProvider)
+                      .timerManager
+                      .getTimer(TimerType.main)
+                      .inSeconds !=
+                  0) {
                 ref.read(timerProvider).stopAndResetTimer(isPressed: true);
                 showToast("Timer has been reset", context: context);
               } else {
@@ -180,15 +191,20 @@ class TimerCard extends ConsumerWidget {
       ),
       child: Center(
         child: Text(
-          "${ref.watch(timerProvider).mainTimer.inHours.toString().padLeft(2, '0')}:"
-          "${ref.watch(timerProvider).mainTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}:"
-          "${ref.watch(timerProvider).mainTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}",
+          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inHours.toString().padLeft(2, '0')}:"
+          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inMinutes.remainder(60).toString().padLeft(2, '0')}:"
+          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inSeconds.remainder(60).toString().padLeft(2, '0')}",
           style: TextStyle(
             fontSize: 116,
             fontWeight: FontWeight.w600,
             color: (ref.watch(timerProvider).isCutOffRunning) &&
-                    (ref.watch(timerProvider).mainTimer.inSeconds % 2 ==
-                        0) //wtf idk how to make this one line?????
+                    (ref
+                                .watch(timerProvider)
+                                .timerManager
+                                .getTimer(TimerType.main)
+                                .inSeconds %
+                            2 ==
+                        0) // become more weirder wtf?
                 ? Colors.red
                 : null,
           ),
@@ -226,13 +242,27 @@ class InfoCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    "${ref.watch(timerProvider).endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).endAt.minute.toString().padLeft(2, '0')}",
+                    "${ref.watch(timerProvider).timerManager.endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).timerManager.endAt.minute.toString().padLeft(2, '0')}",
                     style: TextStyle(
                       fontSize: 48 * scaleFactor,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
                   ),
+                  Text(
+                    ref
+                                .watch(timerProvider)
+                                .timerManager
+                                .getTimer(TimerType.cutoff)
+                                .inSeconds >
+                            0
+                        ? "Cutoff di-set selama ${ref.read(timerProvider).timerManager.getTimer(TimerType.cutoff).inMinutes} menit"
+                        : "",
+                    style: TextStyle(
+                      fontSize: 20 * scaleFactor,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+                  )
                 ],
               ),
             ],
@@ -263,8 +293,8 @@ class InfoCard extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text:
-                          "${ref.watch(timerProvider).assistTimer.inMinutes.toString().padLeft(2, '0')} menit "
-                          "${ref.watch(timerProvider).assistTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
+                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
                           fontSize: 32 * scaleFactor,
                           fontWeight: FontWeight.bold,
@@ -302,8 +332,8 @@ class InfoCard extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text:
-                          "${ref.watch(timerProvider).bonusTimer.inMinutes.toString().padLeft(2, '0')} menit "
-                          "${ref.watch(timerProvider).bonusTimer.inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
+                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
                           fontSize: 32 * scaleFactor,
                           fontWeight: FontWeight.bold,
