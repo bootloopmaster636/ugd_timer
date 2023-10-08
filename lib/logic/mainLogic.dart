@@ -42,9 +42,12 @@ class TimerController extends ChangeNotifier {
       return;
     }
 
+    _isRunning = true;
+
     // if timer is already set, then just resume it.
     if (_isSet) {
       _timerManager.makeEndAt();
+
       timer.start();
     } else {
       // if timer is not set, then set it and start the countdown.
@@ -53,8 +56,6 @@ class TimerController extends ChangeNotifier {
       if (_timerManager.isTimerSet(TimerType.cutoff)) {
         _isCutOff = true;
       }
-
-      _isRunning = true;
 
       startCountdown();
     }
