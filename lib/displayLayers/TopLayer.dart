@@ -13,6 +13,7 @@ class TopLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     final displayStateWatcher = ref.watch(displayStateProvider);
+
     return Animate(
       effects: const [
         FadeEffect(
@@ -50,6 +51,11 @@ class TopBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = MediaQuery.of(context).textScaleFactor;
     final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+    final displayStateWatcher = ref.watch(displayStateProvider);
+
+    // not defining ref.read(...) into a variable because documentation said it's bad practice, and causing bugs
+
     return Container(
       height: 60 * scaleFactor,
       decoration: BoxDecoration(
@@ -60,7 +66,7 @@ class TopBar extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
-              ref.read(displayStateProvider).toggleSettingsExpanded();
+              displayStateWatcher.toggleSettingsExpanded();
             },
             child: Container(
               width: 60 * scaleFactor,
@@ -91,12 +97,7 @@ class TopBar extends ConsumerWidget {
           InkWell(
             splashFactory: InkRipple.splashFactory,
             onTap: () {
-              if (ref
-                      .read(timerProvider)
-                      .timerManager
-                      .getTimer(TimerType.main)
-                      .inSeconds !=
-                  0) {
+              if (timerManager.isTimerSet(TimerType.main)) {
                 if (ref.read(timerProvider).isSet) {
                   showToast(
                     "Timer has been ${ref.read(timerProvider).isRunning ? "paused" : "resumed"}",
@@ -105,7 +106,6 @@ class TopBar extends ConsumerWidget {
                 } else {
                   showToast("Timer has been started", context: context);
                 }
-
                 ref.read(timerProvider).toggleTimer();
               } else {
                 showToast(
@@ -119,7 +119,7 @@ class TopBar extends ConsumerWidget {
               height: 60 * scaleFactor,
               color: Theme.of(context).colorScheme.primary,
               child: Icon(
-                ref.watch(timerProvider).isRunning
+                ref.read(timerProvider).isRunning
                     ? Icons.pause
                     : Icons.play_arrow,
                 size: 22 * scaleFactor,
@@ -130,12 +130,7 @@ class TopBar extends ConsumerWidget {
           InkWell(
             splashFactory: InkRipple.splashFactory,
             onTap: () {
-              if (ref
-                      .read(timerProvider)
-                      .timerManager
-                      .getTimer(TimerType.main)
-                      .inSeconds !=
-                  0) {
+              if (timerManager.isTimerSet(TimerType.main)) {
                 ref.read(timerProvider).stopAndResetTimer(isPressed: true);
                 showToast("Timer has been reset", context: context);
               } else {
@@ -168,6 +163,9 @@ class TimerCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Container(
       margin: EdgeInsets.only(top: 20 * scaleFactor),
       width: 800 * scaleFactor,
@@ -186,20 +184,14 @@ class TimerCard extends ConsumerWidget {
       ),
       child: Center(
         child: Text(
-          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inHours.toString().padLeft(2, '0')}:"
-          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inMinutes.remainder(60).toString().padLeft(2, '0')}:"
-          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inSeconds.remainder(60).toString().padLeft(2, '0')}",
+          "${timerManager.getTimer(TimerType.main).inHours.toString().padLeft(2, '0')}:"
+          "${timerManager.getTimer(TimerType.main).inMinutes.remainder(60).toString().padLeft(2, '0')}:"
+          "${timerManager.getTimer(TimerType.main).inSeconds.remainder(60).toString().padLeft(2, '0')}",
           style: TextStyle(
             fontSize: 116,
             fontWeight: FontWeight.w600,
-            color: (ref.watch(timerProvider).isCutOffRunning) &&
-                    (ref
-                                .watch(timerProvider)
-                                .timerManager
-                                .getTimer(TimerType.main)
-                                .inSeconds %
-                            2 ==
-                        0) // become more weirder wtf?
+            color: (timerWatcher.isCutOffRunning) &&
+                    (timerManager.getTimer(TimerType.main).inSeconds % 2 == 0)
                 ? Colors.red
                 : null,
           ),
@@ -216,6 +208,9 @@ class InfoCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -228,16 +223,15 @@ class InfoCard extends ConsumerWidget {
               Column(
                 children: [
                   Text(
-                    "${ref.watch(timerProvider).isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
+                    "${timerWatcher.isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
                     style: TextStyle(
-                      fontSize: ref.watch(timerProvider).isCutOffRunning
-                          ? 36
-                          : 28 * scaleFactor,
+                      fontSize:
+                          timerWatcher.isCutOffRunning ? 36 : 28 * scaleFactor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    "${ref.watch(timerProvider).timerManager.endAt.hour.toString().padLeft(2, '0')}:${ref.watch(timerProvider).timerManager.endAt.minute.toString().padLeft(2, '0')}",
+                    "${timerManager.endAt.hour.toString().padLeft(2, '0')}:${timerManager.endAt.minute.toString().padLeft(2, '0')}",
                     style: TextStyle(
                       fontSize: 48 * scaleFactor,
                       fontWeight: FontWeight.bold,
@@ -245,13 +239,8 @@ class InfoCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    ref
-                                .watch(timerProvider)
-                                .timerManager
-                                .getTimer(TimerType.cutoff)
-                                .inSeconds >
-                            0
-                        ? "Cutoff di-set selama ${ref.read(timerProvider).timerManager.getTimer(TimerType.cutoff).inMinutes} menit"
+                    timerManager.isTimerSet(TimerType.cutoff)
+                        ? "Cutoff di-set selama ${timerManager.getTimer(TimerType.cutoff).inMinutes} menit"
                         : "",
                     style: TextStyle(
                       fontSize: 20 * scaleFactor,
@@ -288,8 +277,8 @@ class InfoCard extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text:
-                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
-                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                          "${timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
+                          "${timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
                           fontSize: 32 * scaleFactor,
                           fontWeight: FontWeight.bold,
@@ -327,8 +316,8 @@ class InfoCard extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text:
-                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
-                          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                          "${timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
+                          "${timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
                           fontSize: 32 * scaleFactor,
                           fontWeight: FontWeight.bold,

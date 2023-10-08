@@ -496,6 +496,8 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
                   File(result.files.single.path!));
             } else {
               showToastLocal("No audio file selected");
+              timerWatcher
+                  .toggleSoundAvailable(NotificationType.assistAvailable);
             }
           },
           trailing: SizedBox(
@@ -554,6 +556,7 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
                   File(result.files.single.path!));
             } else {
               showToastLocal("No audio file selected");
+              timerWatcher.toggleSoundAvailable(NotificationType.cutoffStarted);
             }
           },
           trailing: SizedBox(
@@ -613,6 +616,8 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
                   File(result.files.single.path!));
             } else {
               showToastLocal("No audio file selected");
+              timerWatcher
+                  .toggleSoundAvailable(NotificationType.allTimerFinished);
             }
           },
           trailing: SizedBox(
