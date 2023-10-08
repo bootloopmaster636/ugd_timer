@@ -15,16 +15,11 @@ class TopLayer extends ConsumerWidget {
     final displayStateWatcher = ref.watch(displayStateProvider);
     return Animate(
       effects: const [
-        SlideEffect(
-            duration: Duration(milliseconds: 400),
-            curve: Curves.ease,
-            begin: Offset(0, 0),
-            end: Offset(0.04, 0)),
         FadeEffect(
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
             begin: 1.0,
-            end: 0.5),
+            end: 0.3),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
       child: Column(
