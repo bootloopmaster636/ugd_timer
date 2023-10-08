@@ -7,6 +7,7 @@ import 'package:keymap/keymap.dart';
 import 'package:override_text_scale_factor/override_text_scale_factor.dart';
 import 'logic/displayState.dart';
 import 'logic/mainLogic.dart';
+import 'logic/TimerManager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'dart:io';
 
@@ -69,18 +70,48 @@ class GlobalKbShortcutManager extends ConsumerWidget {
         ),
         KeyAction(
             LogicalKeyboardKey.keyR, isControlPressed: true, 'Reset Timer', () {
-          ref.read(timerProvider).stopAndResetTimer();
-          showToast("Timer has been reset", context: context);
+          if (ref
+                  .read(timerProvider)
+                  .timerManager
+                  .getTimer(TimerType.main)
+                  .inSeconds !=
+              0) {
+            ref.read(timerProvider).stopAndResetTimer(isPressed: true);
+            showToast("Timer has been reset", context: context);
+          } else {
+            showToast(
+              "Timer has not been initialized yet...",
+              context: context,
+            );
+          }
         }),
         KeyAction(
           LogicalKeyboardKey.space,
           isControlPressed: true,
           "Toggle Timer",
           () {
-            ref.read(timerProvider).toggleTimer();
-            showToast(
-                "Timer has been ${ref.read(timerProvider).isRunning ? "resumed" : "paused"}",
-                context: context);
+            if (ref
+                    .read(timerProvider)
+                    .timerManager
+                    .getTimer(TimerType.main)
+                    .inSeconds !=
+                0) {
+              if (ref.read(timerProvider).isSet) {
+                showToast(
+                  "Timer has been ${ref.read(timerProvider).isRunning ? "paused" : "resumed"}",
+                  context: context,
+                );
+              } else {
+                showToast("Timer has been started", context: context);
+              }
+
+              ref.read(timerProvider).toggleTimer();
+            } else {
+              showToast(
+                "Timer has not been initialized yet...",
+                context: context,
+              );
+            }
           },
         )
       ],

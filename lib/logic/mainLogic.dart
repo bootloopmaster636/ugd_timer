@@ -58,15 +58,11 @@ class TimerController extends ChangeNotifier {
 
       startCountdown();
     }
-
-    notifyListeners();
   }
 
   void pauseTimer() async {
     _isRunning = false;
     timer.pause();
-
-    notifyListeners();
   }
 
   void toggleTimer() async {
@@ -75,6 +71,8 @@ class TimerController extends ChangeNotifier {
     } else {
       startTimer();
     }
+
+    notifyListeners();
   }
 
   void stopAndResetTimer({bool isPressed = false}) {

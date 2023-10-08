@@ -20,18 +20,13 @@ class OverlayLayer extends ConsumerWidget {
     return Animate(
       effects: const [
         SlideEffect(
-            duration: Duration(milliseconds: 400),
+            duration: Duration(milliseconds: 300),
             curve: Curves.ease,
             begin: Offset(-1, 0),
             end: Offset(0, 0))
       ],
       target: (displayStateWatcher.settingsExpanded) ? 1 : 0,
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-          child: const SettingsPanelInside(),
-        ),
-      ),
+      child: const SettingsPanelInside(),
     );
   }
 }
@@ -43,58 +38,77 @@ class SettingsPanelInside extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      width: 400,
-      height: MediaQuery.of(context).size.height,
-      constraints: const BoxConstraints(maxWidth: 500),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background.withOpacity(0.8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () =>
-                        ref.read(displayStateProvider).toggleSettingsExpanded(),
-                    child: const Icon(Icons.arrow_back)),
-                const Text(
-                  "Settings",
-                  style: TextStyle(fontSize: 32),
+    return Row(
+      children: [
+        Container(
+          width: 400,
+          height: MediaQuery.of(context).size.height,
+          constraints: const BoxConstraints(maxWidth: 500),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background.withOpacity(0.9),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        onPressed: () => ref
+                            .read(displayStateProvider)
+                            .toggleSettingsExpanded(),
+                        child: const Icon(Icons.arrow_back)),
+                    const Text(
+                      "Settings",
+                      style: TextStyle(fontSize: 32),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+              Expanded(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  children: const [
+                    SectionTitle(title: "Timer Control"),
+                    TitleSection(),
+                    MainTimerSection(),
+                    AssistTimerSection(),
+                    BonusTimerSection(),
+                    CutOffTimerSection(),
+                    SectionTitle(title: "Display"),
+                    ThemeModeSection(),
+                    DisplayScaleFactorSection(),
+                    SectionTitle(title: "Audio Notifications"),
+                    AudioNotifAssistAvailable(),
+                    AudioNotifCutoffStarted(),
+                    AudioNotifAllTimeFinished(),
+                    SectionTitle(title: "Import / Export Settings"),
+                    ImportExportSection(),
+                    AboutUs(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        IgnorePointer(
+          ignoring: !ref.watch(displayStateProvider).settingsExpanded,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width - 400,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.basic,
+              child: GestureDetector(
+                onTap: () =>
+                    ref.read(displayStateProvider).toggleSettingsExpanded(),
+              ),
             ),
           ),
-          Expanded(
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              children: const [
-                SectionTitle(title: "Timer Control"),
-                TitleSection(),
-                MainTimerSection(),
-                AssistTimerSection(),
-                BonusTimerSection(),
-                CutOffTimerSection(),
-                SectionTitle(title: "Display"),
-                ThemeModeSection(),
-                DisplayScaleFactorSection(),
-                SectionTitle(title: "Audio Notifications"),
-                AudioNotifAssistAvailable(),
-                AudioNotifCutoffStarted(),
-                AudioNotifAllTimeFinished(),
-                SectionTitle(title: "Import / Export Settings"),
-                ImportExportSection(),
-                AboutUs(),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
