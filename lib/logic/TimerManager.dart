@@ -59,7 +59,6 @@ class TimerManager {
   void addCutOfftoMain() {
     _timers[TimerType.main] =
         _timers[TimerType.main]! + _timers[TimerType.cutoff]!;
-    _timers[TimerType.cutoff] = Duration.zero;
   }
 
   void makeEndAt() {
@@ -70,6 +69,10 @@ class TimerManager {
     final minute = res.inMinutes % 60;
 
     _endAt = TimeOfDay(hour: hour, minute: minute);
+  }
+
+  bool isTimerSet(TimerType timerType) {
+    return _timers[timerType]!.inSeconds > 0;
   }
 
   TimeOfDay get endAt => _endAt;

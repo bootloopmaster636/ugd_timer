@@ -15,8 +15,8 @@ class TimerController extends ChangeNotifier {
   bool _isAssistAvailableSoundPlayed = false;
   bool _isCutoffStartedSoundPlayed = false;
   bool _isAllTimerFinishedSoundPlayed = false;
-  final TimerManager _timerManager = TimerManager();
 
+  final TimerManager _timerManager = TimerManager();
   final DisplayEtc _dispEtc =
       DisplayEtc("", Colors.lightBlue, ThemeMode.system);
   final SoundNotifs _soundNotifs = SoundNotifs();
@@ -38,7 +38,7 @@ class TimerController extends ChangeNotifier {
 
   // ========== Timer Control ===========
   void startTimer() async {
-    if (_timerManager.getTimer(TimerType.main).inSeconds == 0) {
+    if (!_timerManager.isTimerSet(TimerType.main)) {
       return;
     }
 
@@ -50,7 +50,7 @@ class TimerController extends ChangeNotifier {
       // if timer is not set, then set it and start the countdown.
       _isSet = true;
 
-      if (_timerManager.getTimer(TimerType.cutoff).inSeconds > 0) {
+      if (_timerManager.isTimerSet(TimerType.cutoff)) {
         _isCutOff = true;
       }
 
@@ -90,7 +90,7 @@ class TimerController extends ChangeNotifier {
     _isCutOffRunning = false;
 
     _timerManager.resetTimers();
-    
+
     _isAssistAvailableSoundPlayed = false;
     _isCutoffStartedSoundPlayed = false;
     _isAllTimerFinishedSoundPlayed = false;
@@ -103,8 +103,7 @@ class TimerController extends ChangeNotifier {
     timer = PausableTimer(
       const Duration(seconds: 1),
       () {
-        if (_isRunning &&
-            _timerManager.getTimer(TimerType.main).inSeconds > 0) {
+        if (_isRunning && _timerManager.isTimerSet(TimerType.main)) {
           if (!_isCutOffRunning) {
             _dispEtc.dynamicAccentChanger(
                 _timerManager.getTimer(TimerType.main),
@@ -121,13 +120,15 @@ class TimerController extends ChangeNotifier {
             ..start();
 
           // to play sound when assistant becomes available
-          if (_timerManager.getTimer(TimerType.assist).inSeconds == 0 &&
+          if (!_timerManager.isTimerSet(TimerType.assist) &&
               !_isAssistAvailableSoundPlayed) {
             _soundNotifs.playAssistAvailable();
             _isAssistAvailableSoundPlayed = true;
           }
         } else if (_isCutOff) {
           _timerManager.addCutOfftoMain();
+          _timerManager.setTimerDuration(TimerType.cutoff, Duration.zero);
+
           _dispEtc.accentCutOff();
 
           //to play sound when cutoff timer starts
