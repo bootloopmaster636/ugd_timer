@@ -16,8 +16,22 @@ class ProfileManager {
 
   void exportSettings(String? path, DisplayManager _displayManager,
       TimerManager _timerManager, NotificationManager _notificationManager) {
+    String theme;
+
+    switch (_displayManager.currentThemeMode) {
+      case ThemeMode.light:
+        theme = "Light";
+        break;
+      case ThemeMode.dark:
+        theme = "Dark";
+        break;
+      default:
+        theme = "System";
+        break;
+    }
+
     String settings = "Title: ${_displayManager.title}\n"
-        "Theme: ${_displayManager.currentThemeMode}\n"
+        "Theme: $theme\n"
         "Main Timer: ${_timerManager.getTimer(TimerType.main).inSeconds}\n"
         "Assist Timer: ${_timerManager.getTimer(TimerType.assist).inSeconds}\n"
         "Bonus Timer: ${_timerManager.getTimer(TimerType.bonus).inSeconds}\n"
@@ -68,6 +82,7 @@ class ProfileManager {
         };
 
         _displayManager.setTitle(title);
+        _displayManager.changeThemeMode(settings[1].split(": ")[1].trim());
 
         _timers.forEach((key, value) {
           _timerManager.setTimerDuration(key, Duration(seconds: value));

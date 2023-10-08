@@ -49,15 +49,16 @@ class DisplayManager {
   }
 
   void changeThemeMode(String theme) {
-    if (theme == "Light") {
-      _currentThemeMode = ThemeMode.light;
-      return;
+    switch (theme) {
+      case "Light":
+        _currentThemeMode = ThemeMode.light;
+        break;
+      case "Dark":
+        _currentThemeMode = ThemeMode.dark;
+        break;
+      default:
+        _currentThemeMode = ThemeMode.system;
+        break;
     }
-
-    if (theme == "Dark") {
-      _currentThemeMode = ThemeMode.dark;
-      return;
-    }
-    _currentThemeMode = ThemeMode.system;
   }
 }
