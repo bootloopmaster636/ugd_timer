@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DisplayEtc {
-  DisplayEtc(this._title, this._currentAccent, this._currentThemeMode);
+class DisplayManager {
+  DisplayManager(this._title, this._currentAccent, this._currentThemeMode);
 
   String _title = "";
   Color _currentAccent = Colors.lightBlue;

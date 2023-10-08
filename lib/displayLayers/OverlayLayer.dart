@@ -6,12 +6,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ugd_timer/logic/TimerManager.dart';
+import 'package:ugd_timer/logic/managers/NotificationManager.dart';
+import 'package:ugd_timer/logic/managers/TimerManager.dart';
 import 'package:ugd_timer/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OverlayLayer extends ConsumerWidget {
-  const OverlayLayer({Key? key}) : super(key: key);
+  const OverlayLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,12 +33,12 @@ class OverlayLayer extends ConsumerWidget {
 }
 
 class SettingsPanelInside extends ConsumerWidget {
-  const SettingsPanelInside({
-    super.key,
-  });
+  const SettingsPanelInside({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final displayStateWatcher = ref.watch(displayStateProvider);
+
     return Row(
       children: [
         Container(
@@ -57,9 +58,8 @@ class SettingsPanelInside extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
-                        onPressed: () => ref
-                            .read(displayStateProvider)
-                            .toggleSettingsExpanded(),
+                        onPressed: () =>
+                            displayStateWatcher.toggleSettingsExpanded(),
                         child: const Icon(Icons.arrow_back)),
                     const Text(
                       "Settings",
@@ -70,7 +70,6 @@ class SettingsPanelInside extends ConsumerWidget {
               ),
               Expanded(
                 child: ListView(
-                  physics: const BouncingScrollPhysics(),
                   children: const [
                     SectionTitle(title: "Timer Control"),
                     TitleSection(),
@@ -95,15 +94,14 @@ class SettingsPanelInside extends ConsumerWidget {
           ),
         ),
         IgnorePointer(
-          ignoring: !ref.watch(displayStateProvider).settingsExpanded,
+          ignoring: !displayStateWatcher.settingsExpanded,
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width - 400,
             child: MouseRegion(
               cursor: SystemMouseCursors.basic,
               child: GestureDetector(
-                onTap: () =>
-                    ref.read(displayStateProvider).toggleSettingsExpanded(),
+                onTap: () => displayStateWatcher.toggleSettingsExpanded(),
               ),
             ),
           ),
@@ -118,15 +116,25 @@ class ImportExportSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FilledButton(
           onPressed: () async {
+            if (timerWatcher.isRunning || timerWatcher.isSet) {
+              showToast(
+                "Please stop the timer first before importing settings",
+                context: context,
+              );
+              return;
+            }
+
             FilePickerResult? result = await FilePicker.platform.pickFiles();
 
             if (result != null) {
-              ref.read(timerProvider).importSettings(result.files.single.path!);
+              timerWatcher.importProfile(result.files.single.path!);
             } else {
               // User canceled the picker
             }
@@ -146,13 +154,21 @@ class ImportExportSection extends ConsumerWidget {
         ),
         OutlinedButton(
           onPressed: () async {
+            if (timerWatcher.isRunning || timerWatcher.isSet) {
+              showToast(
+                "Please stop the timer first before exporting settings",
+                context: context,
+              );
+              return;
+            }
+
             String? outputFile = await FilePicker.platform.saveFile(
               dialogTitle: 'Please select where to save this settings',
-              fileName: "${ref.read(timerProvider).dispEtc.title}.txt",
+              fileName: "${timerWatcher.displayManager.title}.txt",
             );
 
             if (outputFile != null) {
-              ref.read(timerProvider).exportSettings(outputFile);
+              timerWatcher.exportProfile(outputFile);
               showToast("Settings successfully exported");
             } else {
               showToast("No file selected");
@@ -180,8 +196,8 @@ class TitleSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _controller =
-        TextEditingController(text: ref.read(timerProvider).getTitle());
+    final timerWatcher = ref.watch(timerProvider);
+    _controller = TextEditingController(text: timerWatcher.getTitle());
 
     return Card(
       child: ListTile(
@@ -192,7 +208,7 @@ class TitleSection extends ConsumerWidget {
             decoration: const InputDecoration(),
             controller: _controller,
             onChanged: (value) {
-              ref.read(timerProvider).setTitle(value);
+              timerWatcher.setTitle(value);
               _controller.text = value;
             },
           ),
@@ -207,18 +223,21 @@ class MainTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Card(
       child: ListTile(
         title: const Text("Main timer"),
         subtitle: const Text("Set the main timer duration"),
         trailing: Text(
-          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.main).inMinutes} minutes",
+          "${timerManager.getTimer(TimerType.main).inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () async => ref.read(timerProvider).setTimer(
-              TimerType.main,
-              await showTimePickerDialog(context),
-            ),
+        onTap: () async => timerWatcher.setTimer(
+          TimerType.main,
+          await showTimePickerDialog(context),
+        ),
       ),
     );
   }
@@ -229,22 +248,20 @@ class AssistTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Card(
       child: ListTile(
           title: const Text("Assistant timer"),
           subtitle:
               const Text("Set the duration where student can ask for help"),
           trailing: Text(
-            "${ref.watch(timerProvider).timerManager.getTimer(TimerType.assist).inMinutes} minutes",
+            "${timerManager.getTimer(TimerType.assist).inMinutes} minutes",
             style: const TextStyle(fontSize: 20),
           ),
           onTap: () async {
-            if (ref
-                    .watch(timerProvider)
-                    .timerManager
-                    .getTimer(TimerType.main)
-                    .inSeconds ==
-                0) {
+            if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
               showToast(
                 "Main timer must be set first",
                 context: context,
@@ -252,10 +269,10 @@ class AssistTimerSection extends ConsumerWidget {
               return;
             }
 
-            ref.read(timerProvider).setTimer(
-                  TimerType.assist,
-                  await showTimePickerDialog(context),
-                );
+            timerWatcher.setTimer(
+              TimerType.assist,
+              await showTimePickerDialog(context),
+            );
           }),
     );
   }
@@ -266,21 +283,19 @@ class BonusTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Card(
       child: ListTile(
         title: const Text("Bonus timer"),
         subtitle: const Text("Submission must be made before this timer ends"),
         trailing: Text(
-          "${ref.watch(timerProvider).timerManager.getTimer(TimerType.bonus).inMinutes} minutes",
+          "${timerManager.getTimer(TimerType.bonus).inMinutes} minutes",
           style: const TextStyle(fontSize: 20),
         ),
         onTap: () async {
-          if (ref
-                  .watch(timerProvider)
-                  .timerManager
-                  .getTimer(TimerType.main)
-                  .inSeconds ==
-              0) {
+          if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
             showToast(
               "Main timer must be set first",
               context: context,
@@ -288,10 +303,10 @@ class BonusTimerSection extends ConsumerWidget {
             return;
           }
 
-          ref.read(timerProvider).setTimer(
-                TimerType.bonus,
-                await showTimePickerDialog(context),
-              );
+          timerWatcher.setTimer(
+            TimerType.bonus,
+            await showTimePickerDialog(context),
+          );
         },
       ),
     );
@@ -303,22 +318,20 @@ class CutOffTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
     return Card(
       child: ListTile(
           title: const Text("Cut off timer"),
           subtitle: const Text(
               "Maximum time for submission after main timer ran out"),
           trailing: Text(
-            "${ref.watch(timerProvider).timerManager.getTimer(TimerType.cutoff).inMinutes} minutes",
+            "${timerManager.getTimer(TimerType.cutoff).inMinutes} minutes",
             style: const TextStyle(fontSize: 20),
           ),
           onTap: () async {
-            if (ref
-                    .watch(timerProvider)
-                    .timerManager
-                    .getTimer(TimerType.main)
-                    .inSeconds ==
-                0) {
+            if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
               showToast(
                 "Main timer must be set first",
                 context: context,
@@ -326,10 +339,10 @@ class CutOffTimerSection extends ConsumerWidget {
               return;
             }
 
-            ref.read(timerProvider).setTimer(
-                  TimerType.cutoff,
-                  await showTimePickerDialog(context),
-                );
+            timerWatcher.setTimer(
+              TimerType.cutoff,
+              await showTimePickerDialog(context),
+            );
           }),
     );
   }
@@ -340,6 +353,8 @@ class DisplayScaleFactorSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final displayStateWatcher = ref.watch(displayStateProvider);
+
     return Card(
       child: ListTile(
           title: const Text("Display scale factor"),
@@ -349,7 +364,7 @@ class DisplayScaleFactorSection extends ConsumerWidget {
             max: 1.8,
             divisions: 11,
             onChanged: (value) =>
-                ref.read(displayStateProvider).setDisplayFontScale(value),
+                displayStateWatcher.setDisplayFontScale(value),
           ),
           trailing: Text(
             ref.watch(displayStateProvider).displayFontScale.toStringAsFixed(1),
@@ -370,10 +385,10 @@ class ThemeModeSection extends ConsumerWidget {
         title: const Text("Application Theme"),
         subtitle: const Text("Select application theme"),
         trailing: DropdownButton<String>(
-          value: ref.watch(timerProvider).dispEtc.currentThemeMode ==
+          value: ref.watch(timerProvider).displayManager.currentThemeMode ==
                   ThemeMode.light
               ? "Light"
-              : ref.watch(timerProvider).dispEtc.currentThemeMode ==
+              : ref.watch(timerProvider).displayManager.currentThemeMode ==
                       ThemeMode.dark
                   ? "Dark"
                   : "System",
@@ -397,6 +412,8 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+
     return Card(
         child: Column(
       children: [
@@ -404,23 +421,25 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
           title: const Text("Assist available"),
           subtitle: const Text("Play sound when participant can ask for help"),
           trailing: Switch(
-            value: ref.watch(timerProvider).soundNotifs.assistAvailableEnabled,
+            value: timerWatcher.notificationManager
+                .getNotificationEnabled(NotificationType.assistAvailable),
             onChanged: (value) {
-              ref.read(timerProvider).toggleAssistAvailable();
+              timerWatcher
+                  .toggleSoundAvailable(NotificationType.assistAvailable);
             },
           ),
         ),
         ListTile(
-          enabled: ref.watch(timerProvider).soundNotifs.assistAvailableEnabled,
+          enabled: timerWatcher.notificationManager
+              .getNotificationEnabled(NotificationType.assistAvailable),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =
                 await FilePicker.platform.pickFiles(type: FileType.audio);
 
             if (result != null) {
-              ref
-                  .read(timerProvider)
-                  .setAssistAvailableSoundPath(File(result.files.single.path!));
+              timerWatcher.setSoundPath(NotificationType.assistAvailable,
+                  File(result.files.single.path!));
             } else {
               showToast("No audio file selected");
             }
@@ -428,10 +447,8 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
           trailing: SizedBox(
             width: 160,
             child: Text(
-              ref
-                  .watch(timerProvider)
-                  .soundNotifs
-                  .assistAvailableSoundPath
+              timerWatcher.notificationManager
+                  .getNotificationSoundPath(NotificationType.assistAvailable)
                   .path
                   .split("/")
                   .last,
@@ -450,6 +467,8 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+
     return Card(
         child: Column(
       children: [
@@ -457,23 +476,24 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
           title: const Text("Timer cut off start"),
           subtitle: const Text("Play sound when cut off timer starts"),
           trailing: Switch(
-            value: ref.watch(timerProvider).soundNotifs.cutoffStartedEnabled,
+            value: timerWatcher.notificationManager
+                .getNotificationEnabled(NotificationType.cutoffStarted),
             onChanged: (value) {
-              ref.read(timerProvider).toggleCutoffStarted();
+              timerWatcher.toggleSoundAvailable(NotificationType.cutoffStarted);
             },
           ),
         ),
         ListTile(
-          enabled: ref.watch(timerProvider).soundNotifs.cutoffStartedEnabled,
+          enabled: timerWatcher.notificationManager
+              .getNotificationEnabled(NotificationType.cutoffStarted),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =
                 await FilePicker.platform.pickFiles(type: FileType.audio);
 
             if (result != null) {
-              ref
-                  .read(timerProvider)
-                  .setCutoffStartedSoundPath(File(result.files.single.path!));
+              timerWatcher.setSoundPath(NotificationType.cutoffStarted,
+                  File(result.files.single.path!));
             } else {
               showToast("No audio file selected");
             }
@@ -481,10 +501,8 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
           trailing: SizedBox(
             width: 160,
             child: Text(
-              ref
-                  .watch(timerProvider)
-                  .soundNotifs
-                  .cutoffStartedSoundPath
+              timerWatcher.notificationManager
+                  .getNotificationSoundPath(NotificationType.cutoffStarted)
                   .path
                   .split("/")
                   .last,
@@ -503,6 +521,8 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+
     return Card(
         child: Column(
       children: [
@@ -510,21 +530,24 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
           title: const Text("All timer finished"),
           subtitle: const Text("Play sound when all timer already finished"),
           trailing: Switch(
-            value: ref.watch(timerProvider).soundNotifs.allTimerFinishedEnabled,
+            value: timerWatcher.notificationManager
+                .getNotificationEnabled(NotificationType.allTimerFinished),
             onChanged: (value) {
-              ref.read(timerProvider).toggleAllTimerFinished();
+              timerWatcher
+                  .toggleSoundAvailable(NotificationType.allTimerFinished);
             },
           ),
         ),
         ListTile(
-          enabled: ref.watch(timerProvider).soundNotifs.allTimerFinishedEnabled,
+          enabled: timerWatcher.notificationManager
+              .getNotificationEnabled(NotificationType.allTimerFinished),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =
                 await FilePicker.platform.pickFiles(type: FileType.audio);
 
             if (result != null) {
-              ref.read(timerProvider).setAllTimerFinishedSoundPath(
+              timerWatcher.setSoundPath(NotificationType.allTimerFinished,
                   File(result.files.single.path!));
             } else {
               showToast("No audio file selected");
@@ -533,10 +556,8 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
           trailing: SizedBox(
             width: 160,
             child: Text(
-              ref
-                  .watch(timerProvider)
-                  .soundNotifs
-                  .allTimerFinishedSoundPath
+              timerWatcher.notificationManager
+                  .getNotificationSoundPath(NotificationType.allTimerFinished)
                   .path
                   .split("/")
                   .last,

@@ -5,9 +5,9 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:keymap/keymap.dart';
 import 'package:override_text_scale_factor/override_text_scale_factor.dart';
-import 'logic/displayState.dart';
-import 'logic/mainLogic.dart';
-import 'logic/TimerManager.dart';
+import 'logic/states/DisplayState.dart';
+import 'logic/states/TimerState.dart';
+import 'logic/managers/TimerManager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'dart:io';
 
@@ -25,7 +25,7 @@ void main() async {
   runApp(const ProviderScope(child: App()));
 }
 
-final timerProvider = ChangeNotifierProvider((ref) => TimerController());
+final timerProvider = ChangeNotifierProvider((ref) => TimerState());
 final displayStateProvider = ChangeNotifierProvider((ref) => DisplayState());
 
 class App extends ConsumerWidget {
@@ -37,18 +37,19 @@ class App extends ConsumerWidget {
       title: 'Timer UGD',
       theme: ThemeData(
         brightness: Brightness.light,
-        colorSchemeSeed: ref.watch(timerProvider).dispEtc.currentAccent,
+        colorSchemeSeed: ref.watch(timerProvider).displayManager.currentAccent,
         useMaterial3: true,
         fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorSchemeSeed: ref.watch(timerProvider).dispEtc.currentAccent,
+        colorSchemeSeed: ref.watch(timerProvider).displayManager.currentAccent,
         useMaterial3: true,
         fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
       ),
-      themeMode: ref.watch(timerProvider).dispEtc.currentThemeMode,
-      home: const Screen(), //please dont "const" this... it'll bug the app
+      themeMode: ref.watch(timerProvider).displayManager.currentThemeMode,
+      // ignore: prefer_const_constructors
+      home: Screen(), //please dont "const" this... it'll bug the app
     );
   }
 }

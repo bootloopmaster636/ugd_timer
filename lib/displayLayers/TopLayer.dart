@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ugd_timer/logic/TimerManager.dart';
+import 'package:ugd_timer/logic/managers/TimerManager.dart';
 import 'package:ugd_timer/main.dart';
 
 class TopLayer extends ConsumerWidget {
@@ -86,7 +86,7 @@ class TopBar extends ConsumerWidget {
           ),
           Expanded(
             child: Text(
-              timerWatcher.dispEtc.title,
+              timerWatcher.displayManager.title,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 26,
