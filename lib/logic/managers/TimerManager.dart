@@ -34,8 +34,7 @@ class TimerManager {
           _timers[key] = Duration.zero;
         }
       });
-    } else if (_timers[TimerType.main] != null &&
-        _timers[TimerType.main]!.inSeconds >= fromPicker.inSeconds) {
+    } else if (_timers[TimerType.main] != null) {
       _timers[timerType] = fromPicker;
     }
   }

@@ -111,74 +111,77 @@ class SettingsPanelInside extends ConsumerWidget {
 }
 
 class ImportExportSection extends ConsumerWidget {
-  const ImportExportSection({super.key});
+  const ImportExportSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timerWatcher = ref.watch(timerProvider);
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
+    void importSettings() async {
+      if (timerWatcher.isRunning || timerWatcher.isSet) {
+        showToastLocal("Please stop the timer first before importing settings");
+        return;
+      }
+
+      try {
+        FilePickerResult? result = await FilePicker.platform
+            .pickFiles(allowedExtensions: ["txt"], allowMultiple: false);
+
+        if (result != null) {
+          timerWatcher.importProfile(result.files.single.path!);
+          showToastLocal("Settings successfully imported");
+        } else {
+          showToastLocal("No file selected");
+        }
+      } catch (e) {
+        showToastLocal("Invalid file format");
+        return;
+      }
+    }
+
+    void exportSettings() async {
+      if (timerWatcher.isRunning || timerWatcher.isSet) {
+        showToastLocal("Please stop the timer first before exporting settings");
+        return;
+      }
+
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Please select where to save this settings',
+        fileName: "${timerWatcher.displayManager.title}.txt",
+      );
+
+      if (outputFile != null) {
+        timerWatcher.exportProfile(outputFile);
+        showToastLocal("Settings successfully exported");
+      } else {
+        showToastLocal("No file selected");
+      }
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FilledButton(
-          onPressed: () async {
-            if (timerWatcher.isRunning || timerWatcher.isSet) {
-              showToast(
-                "Please stop the timer first before importing settings",
-                context: context,
-              );
-              return;
-            }
-
-            FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-            if (result != null) {
-              timerWatcher.importProfile(result.files.single.path!);
-            } else {
-              // User canceled the picker
-            }
-          },
+          onPressed: importSettings,
           child: const Row(
             children: [
               Icon(Icons.file_download_outlined),
-              SizedBox(
-                width: 8,
-              ),
+              SizedBox(width: 8),
               Text("Import"),
             ],
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         OutlinedButton(
-          onPressed: () async {
-            if (timerWatcher.isRunning || timerWatcher.isSet) {
-              showToast(
-                "Please stop the timer first before exporting settings",
-                context: context,
-              );
-              return;
-            }
-
-            String? outputFile = await FilePicker.platform.saveFile(
-              dialogTitle: 'Please select where to save this settings',
-              fileName: "${timerWatcher.displayManager.title}.txt",
-            );
-
-            if (outputFile != null) {
-              timerWatcher.exportProfile(outputFile);
-              showToast("Settings successfully exported");
-            } else {
-              showToast("No file selected");
-            }
-          },
+          onPressed: exportSettings,
           child: const Row(
             children: [
               Icon(Icons.upload_file_outlined),
-              SizedBox(
-                width: 8,
-              ),
+              SizedBox(width: 8),
               Text("Export"),
             ],
           ),
@@ -196,7 +199,7 @@ class TitleSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timerWatcher = ref.watch(timerProvider);
-    _controller = TextEditingController(text: timerWatcher.getTitle());
+    _controller.text = timerWatcher.getTitle();
 
     return Card(
       child: ListTile(
@@ -250,6 +253,10 @@ class AssistTimerSection extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
     return Card(
       child: ListTile(
           title: const Text("Assistant timer"),
@@ -260,17 +267,29 @@ class AssistTimerSection extends ConsumerWidget {
             style: const TextStyle(fontSize: 20),
           ),
           onTap: () async {
-            if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
-              showToast(
+            if (!timerManager.isTimerSet(TimerType.main)) {
+              showToastLocal(
                 "Main timer must be set first",
-                context: context,
+              );
+              return;
+            }
+
+            final timePicker = await showTimePickerDialog(context);
+            final timeDuration = Duration(
+              hours: timePicker!.hour,
+              minutes: timePicker.minute,
+            );
+
+            if (timeDuration > timerManager.getTimer(TimerType.main)) {
+              showToastLocal(
+                "Assistant timer must be less or same with main timer",
               );
               return;
             }
 
             timerWatcher.setTimer(
               TimerType.assist,
-              await showTimePickerDialog(context),
+              timePicker,
             );
           }),
     );
@@ -285,6 +304,10 @@ class BonusTimerSection extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
     return Card(
       child: ListTile(
         title: const Text("Bonus timer"),
@@ -295,16 +318,28 @@ class BonusTimerSection extends ConsumerWidget {
         ),
         onTap: () async {
           if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
-            showToast(
+            showToastLocal(
               "Main timer must be set first",
-              context: context,
+            );
+            return;
+          }
+
+          final timePicker = await showTimePickerDialog(context);
+          final timeDuration = Duration(
+            hours: timePicker!.hour,
+            minutes: timePicker.minute,
+          );
+
+          if (timeDuration > timerManager.getTimer(TimerType.main)) {
+            showToastLocal(
+              "Bonus timer must be less or same with main timer",
             );
             return;
           }
 
           timerWatcher.setTimer(
             TimerType.bonus,
-            await showTimePickerDialog(context),
+            timePicker,
           );
         },
       ),
@@ -320,6 +355,10 @@ class CutOffTimerSection extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
     return Card(
       child: ListTile(
           title: const Text("Cut off timer"),
@@ -331,16 +370,28 @@ class CutOffTimerSection extends ConsumerWidget {
           ),
           onTap: () async {
             if (timerManager.getTimer(TimerType.main).inSeconds == 0) {
-              showToast(
+              showToastLocal(
                 "Main timer must be set first",
-                context: context,
+              );
+              return;
+            }
+
+            final timePicker = await showTimePickerDialog(context);
+            final timeDuration = Duration(
+              hours: timePicker!.hour,
+              minutes: timePicker.minute,
+            );
+
+            if (timeDuration > timerManager.getTimer(TimerType.main)) {
+              showToastLocal(
+                "Cut off timer must be less or same with main timer",
               );
               return;
             }
 
             timerWatcher.setTimer(
               TimerType.cutoff,
-              await showTimePickerDialog(context),
+              timePicker,
             );
           }),
     );
@@ -413,6 +464,10 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timerWatcher = ref.watch(timerProvider);
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
     return Card(
         child: Column(
       children: [
@@ -440,7 +495,7 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
               timerWatcher.setSoundPath(NotificationType.assistAvailable,
                   File(result.files.single.path!));
             } else {
-              showToast("No audio file selected");
+              showToastLocal("No audio file selected");
             }
           },
           trailing: SizedBox(
@@ -468,6 +523,10 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timerWatcher = ref.watch(timerProvider);
 
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
+
     return Card(
         child: Column(
       children: [
@@ -494,7 +553,7 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
               timerWatcher.setSoundPath(NotificationType.cutoffStarted,
                   File(result.files.single.path!));
             } else {
-              showToast("No audio file selected");
+              showToastLocal("No audio file selected");
             }
           },
           trailing: SizedBox(
@@ -521,6 +580,10 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timerWatcher = ref.watch(timerProvider);
+
+    void showToastLocal(String message) {
+      showToast(message, context: context);
+    }
 
     return Card(
         child: Column(
@@ -549,7 +612,7 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
               timerWatcher.setSoundPath(NotificationType.allTimerFinished,
                   File(result.files.single.path!));
             } else {
-              showToast("No audio file selected");
+              showToastLocal("No audio file selected");
             }
           },
           trailing: SizedBox(

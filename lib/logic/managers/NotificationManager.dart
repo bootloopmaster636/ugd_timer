@@ -50,24 +50,10 @@ class NotificationManager {
     });
   }
 
-  Future<void> playAssistAvailable() async {
-    if (getNotificationState(NotificationType.assistAvailable)) {
-      await _player.play(DeviceFileSource(
-          getNotificationSoundPath(NotificationType.assistAvailable).path));
-    }
-  }
-
-  Future<void> playCutoffStarted() async {
-    if (getNotificationState(NotificationType.cutoffStarted)) {
-      await _player.play(DeviceFileSource(
-          getNotificationSoundPath(NotificationType.cutoffStarted).path));
-    }
-  }
-
-  Future<void> playAllTimerFinished() async {
-    if (getNotificationState(NotificationType.allTimerFinished)) {
-      await _player.play(DeviceFileSource(
-          getNotificationSoundPath(NotificationType.allTimerFinished).path));
+  Future<void> playNotification(NotificationType notificationType) async {
+    if (getNotificationState(notificationType)) {
+      await _player.play(
+          DeviceFileSource(getNotificationSoundPath(notificationType).path));
     }
   }
 }

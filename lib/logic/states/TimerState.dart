@@ -123,7 +123,8 @@ class TimerState extends ChangeNotifier {
           // to play sound when assistant becomes available
           if (!_timerManager.isTimerSet(TimerType.assist) &&
               !_isAssistAvailableSoundPlayed) {
-            _notificationManager.playAssistAvailable();
+            _notificationManager
+                .playNotification(NotificationType.assistAvailable);
             _isAssistAvailableSoundPlayed = true;
           }
 
@@ -138,7 +139,7 @@ class TimerState extends ChangeNotifier {
           _displayManager.accentCutOff();
 
           //to play sound when cutoff timer starts
-          _notificationManager.playCutoffStarted();
+          _notificationManager.playNotification(NotificationType.cutoffStarted);
           _timerManager.makeEndAt();
           _isCutOff = false;
           _isCutOffRunning = true;
@@ -148,7 +149,8 @@ class TimerState extends ChangeNotifier {
             ..start();
         } else {
           if (!_isAllTimerFinishedSoundPlayed) {
-            _notificationManager.playAllTimerFinished();
+            _notificationManager
+                .playNotification(NotificationType.allTimerFinished);
             _isAllTimerFinishedSoundPlayed = true;
           }
           stopAndResetTimer();
