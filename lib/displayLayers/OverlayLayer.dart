@@ -422,7 +422,7 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
           subtitle: const Text("Play sound when participant can ask for help"),
           trailing: Switch(
             value: timerWatcher.notificationManager
-                .getNotificationEnabled(NotificationType.assistAvailable),
+                .getNotificationState(NotificationType.assistAvailable),
             onChanged: (value) {
               timerWatcher
                   .toggleSoundAvailable(NotificationType.assistAvailable);
@@ -431,7 +431,7 @@ class AudioNotifAssistAvailable extends ConsumerWidget {
         ),
         ListTile(
           enabled: timerWatcher.notificationManager
-              .getNotificationEnabled(NotificationType.assistAvailable),
+              .getNotificationState(NotificationType.assistAvailable),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =
@@ -477,7 +477,7 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
           subtitle: const Text("Play sound when cut off timer starts"),
           trailing: Switch(
             value: timerWatcher.notificationManager
-                .getNotificationEnabled(NotificationType.cutoffStarted),
+                .getNotificationState(NotificationType.cutoffStarted),
             onChanged: (value) {
               timerWatcher.toggleSoundAvailable(NotificationType.cutoffStarted);
             },
@@ -485,7 +485,7 @@ class AudioNotifCutoffStarted extends ConsumerWidget {
         ),
         ListTile(
           enabled: timerWatcher.notificationManager
-              .getNotificationEnabled(NotificationType.cutoffStarted),
+              .getNotificationState(NotificationType.cutoffStarted),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =
@@ -531,7 +531,7 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
           subtitle: const Text("Play sound when all timer already finished"),
           trailing: Switch(
             value: timerWatcher.notificationManager
-                .getNotificationEnabled(NotificationType.allTimerFinished),
+                .getNotificationState(NotificationType.allTimerFinished),
             onChanged: (value) {
               timerWatcher
                   .toggleSoundAvailable(NotificationType.allTimerFinished);
@@ -540,7 +540,7 @@ class AudioNotifAllTimeFinished extends ConsumerWidget {
         ),
         ListTile(
           enabled: timerWatcher.notificationManager
-              .getNotificationEnabled(NotificationType.allTimerFinished),
+              .getNotificationState(NotificationType.allTimerFinished),
           title: const Text("Audio to play"),
           onTap: () async {
             FilePickerResult? result =

@@ -5,13 +5,13 @@ import 'package:audioplayers/audioplayers.dart';
 enum NotificationType { assistAvailable, cutoffStarted, allTimerFinished }
 
 class NotificationManager {
-  final Map<NotificationType, File> _notificationSettings = {
+  final Map<NotificationType, File> _notificationSoundPath = {
     NotificationType.assistAvailable: File(''),
     NotificationType.cutoffStarted: File(''),
     NotificationType.allTimerFinished: File(''),
   };
 
-  final Map<NotificationType, bool> _notificationEnabled = {
+  final Map<NotificationType, bool> _notificationState = {
     NotificationType.assistAvailable: false,
     NotificationType.cutoffStarted: false,
     NotificationType.allTimerFinished: false,
@@ -20,42 +20,42 @@ class NotificationManager {
   final AudioPlayer _player = AudioPlayer();
 
   void setNotificationSoundPath(NotificationType notificationType, File path) {
-    _notificationSettings[notificationType] = path;
+    _notificationSoundPath[notificationType] = path;
   }
 
   File getNotificationSoundPath(NotificationType notificationType) {
-    return _notificationSettings[notificationType]!;
+    return _notificationSoundPath[notificationType]!;
   }
 
-  void setNotificationEnabled(NotificationType notificationType, bool value) {
-    _notificationEnabled[notificationType] = value;
+  void setNotificationState(NotificationType notificationType, bool value) {
+    _notificationState[notificationType] = value;
   }
 
-  void toggleNotificationEnabled(NotificationType notificationType) {
-    _notificationEnabled[notificationType] =
-        !_notificationEnabled[notificationType]!;
+  void toggleNotificationState(NotificationType notificationType) {
+    _notificationState[notificationType] =
+        !_notificationState[notificationType]!;
   }
 
-  bool getNotificationEnabled(NotificationType notificationType) {
-    return _notificationEnabled[notificationType]!;
+  bool getNotificationState(NotificationType notificationType) {
+    return _notificationState[notificationType]!;
   }
 
   Future<void> playAssistAvailable() async {
-    if (getNotificationEnabled(NotificationType.assistAvailable)) {
+    if (getNotificationState(NotificationType.assistAvailable)) {
       await _player.play(DeviceFileSource(
           getNotificationSoundPath(NotificationType.assistAvailable).path));
     }
   }
 
   Future<void> playCutoffStarted() async {
-    if (getNotificationEnabled(NotificationType.cutoffStarted)) {
+    if (getNotificationState(NotificationType.cutoffStarted)) {
       await _player.play(DeviceFileSource(
           getNotificationSoundPath(NotificationType.cutoffStarted).path));
     }
   }
 
   Future<void> playAllTimerFinished() async {
-    if (getNotificationEnabled(NotificationType.allTimerFinished)) {
+    if (getNotificationState(NotificationType.allTimerFinished)) {
       await _player.play(DeviceFileSource(
           getNotificationSoundPath(NotificationType.allTimerFinished).path));
     }

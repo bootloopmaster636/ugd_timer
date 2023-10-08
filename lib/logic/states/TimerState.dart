@@ -174,7 +174,7 @@ class TimerState extends ChangeNotifier {
 
   // ============= Sound notifs =============
   void toggleSoundAvailable(NotificationType notificationType) {
-    _notificationManager.toggleNotificationEnabled(notificationType);
+    _notificationManager.toggleNotificationState(notificationType);
     notifyListeners();
   }
 

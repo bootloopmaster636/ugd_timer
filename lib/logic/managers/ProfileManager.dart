@@ -22,11 +22,11 @@ class ProfileManager {
         "Assist Timer: ${_timerManager.getTimer(TimerType.assist).inSeconds}\n"
         "Bonus Timer: ${_timerManager.getTimer(TimerType.bonus).inSeconds}\n"
         "Cutoff Timer: ${_timerManager.getTimer(TimerType.cutoff).inSeconds}\n"
-        "Assist Available Sound Enabled: ${_notificationManager.getNotificationEnabled(NotificationType.assistAvailable)}\n"
+        "Assist Available Sound Enabled: ${_notificationManager.getNotificationState(NotificationType.assistAvailable)}\n"
         "Assist Available Sound: ${_notificationManager.getNotificationSoundPath(NotificationType.assistAvailable).path}\n"
-        "Cutoff Started Sound Enabled: ${_notificationManager.getNotificationEnabled(NotificationType.cutoffStarted)}\n"
+        "Cutoff Started Sound Enabled: ${_notificationManager.getNotificationState(NotificationType.cutoffStarted)}\n"
         "Cutoff Started Sound: ${_notificationManager.getNotificationSoundPath(NotificationType.cutoffStarted).path}\n"
-        "All Timer Finished Sound Enabled: ${_notificationManager.getNotificationEnabled(NotificationType.allTimerFinished)}\n"
+        "All Timer Finished Sound Enabled: ${_notificationManager.getNotificationState(NotificationType.allTimerFinished)}\n"
         "All Timer Finished Sound: ${_notificationManager.getNotificationSoundPath(NotificationType.allTimerFinished).path}\n";
 
     File file = File(path!);
@@ -41,51 +41,45 @@ class ProfileManager {
 
       if (settings.length >= 9) {
         String title = settings[0].split(": ")[1].trim();
+
         int mainTimer = int.tryParse(settings[2].split(": ")[1]) ?? 0;
-        int assistTimer = int.tryParse(settings[3].split(": ")[1]) ?? 0;
-        int bonusTimer = int.tryParse(settings[4].split(": ")[1]) ?? 0;
-        int cutoffTimer = int.tryParse(settings[5].split(": ")[1]) ?? 0;
-        String assistAvailableSoundPath = settings[6].split(": ")[1].trim();
-        String cutoffStartedSoundPath = settings[7].split(": ")[1].trim();
-        String allTimerFinishedSoundPath = settings[8].split(": ")[1].trim();
+
+        final Map<TimerType, int> _timers = {
+          TimerType.main: mainTimer,
+          TimerType.mainFreeze: mainTimer,
+          TimerType.assist: int.tryParse(settings[3].split(": ")[1]) ?? 0,
+          TimerType.bonus: int.tryParse(settings[4].split(": ")[1]) ?? 0,
+          TimerType.cutoff: int.tryParse(settings[5].split(": ")[1]) ?? 0,
+        };
+
+        final Map<NotificationType, bool> _notifState = {
+          NotificationType.assistAvailable:
+              bool.tryParse(settings[6].split(": ")[1].trim()) ?? false,
+          NotificationType.cutoffStarted:
+              bool.tryParse(settings[8].split(": ")[1]) ?? false,
+          NotificationType.allTimerFinished:
+              bool.tryParse(settings[10].split(": ")[1]) ?? false,
+        };
+
+        final Map<NotificationType, String> _notifFilePath = {
+          NotificationType.assistAvailable: settings[7].split(": ")[1].trim(),
+          NotificationType.cutoffStarted: settings[9].split(": ")[1].trim(),
+          NotificationType.allTimerFinished: settings[11].split(": ")[1].trim(),
+        };
 
         _displayManager.setTitle(title);
 
-        _timerManager.setTimerDuration(
-            TimerType.main, Duration(seconds: mainTimer));
-        _timerManager.setTimerDuration(
-            TimerType.mainFreeze, Duration(seconds: mainTimer));
-        _timerManager.setTimerDuration(
-            TimerType.assist, Duration(seconds: assistTimer));
-        _timerManager.setTimerDuration(
-            TimerType.bonus, Duration(seconds: bonusTimer));
-        _timerManager.setTimerDuration(
-            TimerType.cutoff, Duration(seconds: cutoffTimer));
+        _timers.forEach((key, value) {
+          _timerManager.setTimerDuration(key, Duration(seconds: value));
+        });
 
-        assistAvailableSoundPath != ''
-            ? _notificationManager.setNotificationEnabled(
-                NotificationType.assistAvailable, true)
-            : _notificationManager.setNotificationEnabled(
-                NotificationType.assistAvailable, false);
+        _notifState.forEach((key, value) {
+          _notificationManager.setNotificationState(key, value);
+        });
 
-        cutoffStartedSoundPath != ''
-            ? _notificationManager.setNotificationEnabled(
-                NotificationType.cutoffStarted, true)
-            : _notificationManager.setNotificationEnabled(
-                NotificationType.cutoffStarted, false);
-
-        allTimerFinishedSoundPath != ''
-            ? _notificationManager.setNotificationEnabled(
-                NotificationType.allTimerFinished, true)
-            : _notificationManager.setNotificationEnabled(
-                NotificationType.allTimerFinished, false);
-
-        _notificationManager.setNotificationSoundPath(
-            NotificationType.assistAvailable, File(assistAvailableSoundPath));
-        _notificationManager.setNotificationSoundPath(
-            NotificationType.cutoffStarted, File(cutoffStartedSoundPath));
-        _notificationManager.setNotificationSoundPath(
-            NotificationType.allTimerFinished, File(allTimerFinishedSoundPath));
+        _notifFilePath.forEach((key, value) {
+          _notificationManager.setNotificationSoundPath(key, File(value));
+        });
       } else {
         throw ("Invalid settings format. Not enough settings found.");
       }
