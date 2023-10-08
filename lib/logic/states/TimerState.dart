@@ -95,6 +95,7 @@ class TimerState extends ChangeNotifier {
 
     _timerManager.resetTimers();
     _displayManager.setTitle("");
+    _notificationManager.resetAllNotification();
 
     _isAssistAvailableSoundPlayed = false;
     _isAllTimerFinishedSoundPlayed = false;

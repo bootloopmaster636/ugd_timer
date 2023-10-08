@@ -40,6 +40,16 @@ class NotificationManager {
     return _notificationState[notificationType]!;
   }
 
+  void resetAllNotification() {
+    _notificationSoundPath.forEach((key, value) {
+      _notificationSoundPath[key] = File('');
+    });
+
+    _notificationState.forEach((key, value) {
+      _notificationState[key] = false;
+    });
+  }
+
   Future<void> playAssistAvailable() async {
     if (getNotificationState(NotificationType.assistAvailable)) {
       await _player.play(DeviceFileSource(
