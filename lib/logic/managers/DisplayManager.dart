@@ -8,9 +8,7 @@ class DisplayManager {
   ThemeMode _currentThemeMode = ThemeMode.system;
 
   String get title => _title;
-
   Color get currentAccent => _currentAccent;
-
   ThemeMode get currentThemeMode => _currentThemeMode;
 
   void setTitle(String title) {
