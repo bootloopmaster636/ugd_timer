@@ -88,7 +88,9 @@ class TimerController extends ChangeNotifier {
     _isSet = false;
     _isCutOff = false;
     _isCutOffRunning = false;
+
     _timerManager.resetTimers();
+    
     _isAssistAvailableSoundPlayed = false;
     _isCutoffStartedSoundPlayed = false;
     _isAllTimerFinishedSoundPlayed = false;
