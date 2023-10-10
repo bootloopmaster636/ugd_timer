@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-class DisplayEtc {
-  DisplayEtc(this._title, this._currentAccent, this._currentThemeMode);
+class DisplayManager {
+  DisplayManager(this._title, this._currentAccent, this._currentThemeMode);
 
   String _title = "";
   Color _currentAccent = Colors.lightBlue;
   ThemeMode _currentThemeMode = ThemeMode.system;
 
   String get title => _title;
-
   Color get currentAccent => _currentAccent;
-
   ThemeMode get currentThemeMode => _currentThemeMode;
 
   void setTitle(String title) {
@@ -49,15 +47,16 @@ class DisplayEtc {
   }
 
   void changeThemeMode(String theme) {
-    if (theme == "Light") {
-      _currentThemeMode = ThemeMode.light;
-      return;
+    switch (theme) {
+      case "Light":
+        _currentThemeMode = ThemeMode.light;
+        break;
+      case "Dark":
+        _currentThemeMode = ThemeMode.dark;
+        break;
+      default:
+        _currentThemeMode = ThemeMode.system;
+        break;
     }
-
-    if (theme == "Dark") {
-      _currentThemeMode = ThemeMode.dark;
-      return;
-    }
-    _currentThemeMode = ThemeMode.system;
   }
 }
