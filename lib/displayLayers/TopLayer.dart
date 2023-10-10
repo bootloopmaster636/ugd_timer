@@ -92,13 +92,10 @@ class TopBar extends ConsumerWidget {
               bool currentFullScreen =
                   await WindowManager.instance.isFullScreen();
 
-              if (currentFullScreen) {
-                WindowManager.instance.setFullScreen(false);
-                showToastLocal("Window has been restored");
-              } else {
-                WindowManager.instance.setFullScreen(true);
-                showToastLocal("Window has been maximized");
-              }
+              WindowManager.instance.setFullScreen(!currentFullScreen);
+              showToastLocal(currentFullScreen
+                  ? "Window has been restored"
+                  : "Window has been maximized");
 
               isFullScreenNotifier.value = !currentFullScreen;
             },
