@@ -286,7 +286,7 @@ class InfoCard extends ConsumerWidget {
             ],
           ),
           SizedBox(
-            height: 56 * scaleFactor,
+            height: 24 * scaleFactor,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
