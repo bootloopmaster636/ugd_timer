@@ -43,6 +43,21 @@ class SettingsPanelInside extends ConsumerWidget {
 
     return Stack(
       children: [
+        //this widget will act as "press anywhere except settings page to close settings page"
+        IgnorePointer(
+          ignoring: !displayStateWatcher.settingsExpanded,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.basic,
+              child: GestureDetector(
+                onTap: () => displayStateWatcher.toggleSettingsExpanded(),
+              ),
+            ),
+          ),
+        ),
+
         Container(
           width: 400,
           height: MediaQuery.of(context).size.height,
@@ -93,21 +108,6 @@ class SettingsPanelInside extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
-        ),
-
-        //this widget will act as "press anywhere except settings page to close settings page"
-        IgnorePointer(
-          ignoring: !displayStateWatcher.settingsExpanded,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: MouseRegion(
-              cursor: SystemMouseCursors.basic,
-              child: GestureDetector(
-                onTap: () => displayStateWatcher.toggleSettingsExpanded(),
-              ),
-            ),
           ),
         ),
       ],
