@@ -37,4 +37,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/lottie_wavy_bg.jpeg
+    - assets/lottie_pattern_bg.json
