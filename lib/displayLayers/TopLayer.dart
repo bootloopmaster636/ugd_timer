@@ -119,12 +119,6 @@ class TopBar extends ConsumerWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: (60 * scaleFactor),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
           Expanded(
             child: Text(
               timerWatcher.displayManager.title,
