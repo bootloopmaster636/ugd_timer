@@ -9,21 +9,35 @@ import 'logic/states/DisplayState.dart';
 import 'logic/states/TimerState.dart';
 import 'logic/managers/TimerManager.dart';
 import 'package:window_manager/window_manager.dart';
-import 'dart:io';
-
 import 'displayLayers/BottomLayer.dart';
 import 'displayLayers/TopLayer.dart';
 import 'displayLayers/OverlayLayer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    WindowManager.instance.setMinimumSize(const Size(1280, 720));
-  }
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(1280, 720),
+    minimumSize: Size(1280, 720),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.normal,
+    title: "Timer UGD",
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 
   runApp(const ProviderScope(child: App()));
 }
+
+final fullscreenProvider = Provider<ValueNotifier<bool>>((ref) {
+  return ValueNotifier<bool>(false); // Initialize with false (not fullscreen)
+});
 
 final timerProvider = ChangeNotifierProvider((ref) => TimerState());
 final displayStateProvider = ChangeNotifierProvider((ref) => DisplayState());

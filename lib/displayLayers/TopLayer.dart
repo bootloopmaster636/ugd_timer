@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ugd_timer/logic/managers/TimerManager.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:ugd_timer/main.dart';
 
 class TopLayer extends ConsumerWidget {
@@ -53,6 +54,11 @@ class TopBar extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
     final displayStateWatcher = ref.watch(displayStateProvider);
+    final isFullScreenNotifier = ref.watch(fullscreenProvider);
+
+    void showToastLocal(String msg) {
+      showToast(msg, context: context);
+    }
 
     // not defining ref.read(...) into a variable because documentation said it's bad practice, and causing bugs
 
@@ -64,7 +70,8 @@ class TopBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
+          InkWell(
+            splashFactory: InkRipple.splashFactory,
             onTap: () {
               displayStateWatcher.toggleSettingsExpanded();
             },
@@ -76,6 +83,35 @@ class TopBar extends ConsumerWidget {
                 Icons.settings_outlined,
                 size: 22 * scaleFactor,
                 color: Theme.of(context).colorScheme.onTertiary,
+              ),
+            ),
+          ),
+          InkWell(
+            splashFactory: InkRipple.splashFactory,
+            onTap: () async {
+              bool currentFullScreen =
+                  await WindowManager.instance.isFullScreen();
+
+              if (currentFullScreen) {
+                WindowManager.instance.setFullScreen(false);
+                showToastLocal("Window has been restored");
+              } else {
+                WindowManager.instance.setFullScreen(true);
+                showToastLocal("Window has been maximized");
+              }
+
+              isFullScreenNotifier.value = !currentFullScreen;
+            },
+            child: Container(
+              width: 60 * scaleFactor,
+              height: 60 * scaleFactor,
+              color: Theme.of(context).colorScheme.secondary,
+              child: Icon(
+                isFullScreenNotifier.value
+                    ? Icons.fullscreen_exit
+                    : Icons.fullscreen,
+                size: 22 * scaleFactor,
+                color: Theme.of(context).colorScheme.onSecondary,
               ),
             ),
           ),
