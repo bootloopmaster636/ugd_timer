@@ -43,7 +43,6 @@ class SettingsPanelInside extends ConsumerWidget {
         Container(
           width: 400,
           height: MediaQuery.of(context).size.height,
-          constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.background,
@@ -93,6 +92,7 @@ class SettingsPanelInside extends ConsumerWidget {
             ],
           ),
         ),
+
         //this widget will act as "press anywhere except settings page to close settings page"
         IgnorePointer(
           ignoring: !displayStateWatcher.settingsExpanded,
