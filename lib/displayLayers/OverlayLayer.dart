@@ -18,12 +18,15 @@ class OverlayLayer extends ConsumerWidget {
     final displayStateWatcher = ref.watch(displayStateProvider);
 
     return Animate(
-      effects: const [
+      effects: [
         SlideEffect(
-            duration: Duration(milliseconds: 450),
+            duration: const Duration(milliseconds: 450),
             curve: Curves.easeInOutCubic,
-            begin: Offset(-0.4, 0),
-            end: Offset(0, 0))
+            begin: Offset(
+                -1 + (MediaQuery.of(context).size.width - 400) / MediaQuery.of(context).size.width,
+                0,
+            ),
+            end: const Offset(0, 0))
       ],
       target: (displayStateWatcher.settingsExpanded) ? 1 : 0,
       child: const SettingsPanelInside(),
@@ -38,7 +41,7 @@ class SettingsPanelInside extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final displayStateWatcher = ref.watch(displayStateProvider);
 
-    return Row(
+    return Stack(
       children: [
         Container(
           width: 400,
@@ -98,7 +101,7 @@ class SettingsPanelInside extends ConsumerWidget {
           ignoring: !displayStateWatcher.settingsExpanded,
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width - 400,
+            width: MediaQuery.of(context).size.width,
             child: MouseRegion(
               cursor: SystemMouseCursors.basic,
               child: GestureDetector(
