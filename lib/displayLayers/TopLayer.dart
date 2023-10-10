@@ -17,11 +17,18 @@ class TopLayer extends ConsumerWidget {
 
     return Animate(
       effects: const [
+        SlideEffect(
+            duration: Duration(milliseconds: 450),
+            curve: Curves.easeInOutCubic,
+            begin: Offset(0.0, 0.0),
+            end: Offset(0.04, 0.0)
+        ),
         FadeEffect(
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
             begin: 1.0,
-            end: 0.3),
+            end: 0.4
+        ),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
       child: Column(

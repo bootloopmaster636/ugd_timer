@@ -20,9 +20,9 @@ class OverlayLayer extends ConsumerWidget {
     return Animate(
       effects: const [
         SlideEffect(
-            duration: Duration(milliseconds: 300),
-            curve: Curves.ease,
-            begin: Offset(-1, 0),
+            duration: Duration(milliseconds: 450),
+            curve: Curves.easeInOutCubic,
+            begin: Offset(-0.4, 0),
             end: Offset(0, 0))
       ],
       target: (displayStateWatcher.settingsExpanded) ? 1 : 0,
@@ -92,6 +92,7 @@ class SettingsPanelInside extends ConsumerWidget {
             ],
           ),
         ),
+        //this widget will act as "press anywhere except settings page to close settings page"
         IgnorePointer(
           ignoring: !displayStateWatcher.settingsExpanded,
           child: SizedBox(
