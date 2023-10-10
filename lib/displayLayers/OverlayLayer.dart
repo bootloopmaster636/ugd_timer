@@ -46,7 +46,7 @@ class SettingsPanelInside extends ConsumerWidget {
           constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background.withOpacity(0.9),
+            color: Theme.of(context).colorScheme.background,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,6 +69,7 @@ class SettingsPanelInside extends ConsumerWidget {
               ),
               Expanded(
                 child: ListView(
+                  physics: const BouncingScrollPhysics(),
                   children: const [
                     SectionTitle(title: "Timer Control"),
                     TitleSection(),
