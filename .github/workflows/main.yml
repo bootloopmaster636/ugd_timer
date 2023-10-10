@@ -2,6 +2,8 @@ name: Flutter CI
 
 on:
   push:
+    tags:
+      "v*.*.*"
 
 jobs:
   build-and-release-windows:
