@@ -89,8 +89,7 @@ class GlobalKbShortcutManager extends ConsumerWidget {
                   .read(timerProvider)
                   .timerManager
                   .getTimer(TimerType.main)
-                  .inSeconds !=
-              0) {
+                  .inSeconds != 0) {
             ref.read(timerProvider).stopAndResetTimer(isPressed: true);
             showToast("Timer has been reset", context: context);
           } else {

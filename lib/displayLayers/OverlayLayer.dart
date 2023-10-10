@@ -18,12 +18,15 @@ class OverlayLayer extends ConsumerWidget {
     final displayStateWatcher = ref.watch(displayStateProvider);
 
     return Animate(
-      effects: const [
+      effects: [
         SlideEffect(
-            duration: Duration(milliseconds: 300),
-            curve: Curves.ease,
-            begin: Offset(-1, 0),
-            end: Offset(0, 0))
+            duration: const Duration(milliseconds: 450),
+            curve: Curves.easeInOutCubic,
+            begin: Offset(
+                -1 + (MediaQuery.of(context).size.width - 400) / MediaQuery.of(context).size.width,
+                0,
+            ),
+            end: const Offset(0, 0))
       ],
       target: (displayStateWatcher.settingsExpanded) ? 1 : 0,
       child: const SettingsPanelInside(),
@@ -38,15 +41,29 @@ class SettingsPanelInside extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final displayStateWatcher = ref.watch(displayStateProvider);
 
-    return Row(
+    return Stack(
       children: [
+        //this widget will act as "press anywhere except settings page to close settings page"
+        IgnorePointer(
+          ignoring: !displayStateWatcher.settingsExpanded,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.basic,
+              child: GestureDetector(
+                onTap: () => displayStateWatcher.toggleSettingsExpanded(),
+              ),
+            ),
+          ),
+        ),
+
         Container(
           width: 400,
           height: MediaQuery.of(context).size.height,
-          constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background.withOpacity(0.9),
+            color: Theme.of(context).colorScheme.background,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,6 +86,7 @@ class SettingsPanelInside extends ConsumerWidget {
               ),
               Expanded(
                 child: ListView(
+                  physics: const BouncingScrollPhysics(),
                   children: const [
                     SectionTitle(title: "Timer Control"),
                     TitleSection(),
@@ -90,19 +108,6 @@ class SettingsPanelInside extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
-        ),
-        IgnorePointer(
-          ignoring: !displayStateWatcher.settingsExpanded,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width - 400,
-            child: MouseRegion(
-              cursor: SystemMouseCursors.basic,
-              child: GestureDetector(
-                onTap: () => displayStateWatcher.toggleSettingsExpanded(),
-              ),
-            ),
           ),
         ),
       ],
@@ -646,7 +651,7 @@ class AboutUs extends StatelessWidget {
           height: 24,
         ),
         const Text(
-          "Version 0.6.0",
+          "Version 0.8.0",
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
