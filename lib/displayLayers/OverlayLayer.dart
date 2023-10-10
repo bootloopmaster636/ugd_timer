@@ -120,14 +120,12 @@ class ImportExportSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timerWatcher = ref.watch(timerProvider);
-
     void showToastLocal(String message) {
       showToast(message, context: context);
     }
 
     void importSettings() async {
-      if (timerWatcher.isRunning || timerWatcher.isSet) {
+      if (ref.read(timerProvider).isRunning || ref.read(timerProvider).isSet) {
         showToastLocal("Please stop the timer first before importing settings");
         return;
       }
@@ -137,7 +135,9 @@ class ImportExportSection extends ConsumerWidget {
             .pickFiles(allowedExtensions: ["txt"], allowMultiple: false);
 
         if (result != null) {
-          timerWatcher.importProfile(result.files.single.path!);
+          ref.read(timerProvider).importProfile(result.files.single.path!);
+          _controller =
+              TextEditingController(text: ref.read(timerProvider).getTitle());
           showToastLocal("Settings successfully imported");
         } else {
           showToastLocal("No file selected");
@@ -149,18 +149,18 @@ class ImportExportSection extends ConsumerWidget {
     }
 
     void exportSettings() async {
-      if (timerWatcher.isRunning || timerWatcher.isSet) {
+      if (ref.read(timerProvider).isRunning || ref.read(timerProvider).isSet) {
         showToastLocal("Please stop the timer first before exporting settings");
         return;
       }
 
       String? outputFile = await FilePicker.platform.saveFile(
         dialogTitle: 'Please select where to save this settings',
-        fileName: "${timerWatcher.displayManager.title}.txt",
+        fileName: "${ref.read(timerProvider).displayManager.title}.txt",
       );
 
       if (outputFile != null) {
-        timerWatcher.exportProfile(outputFile);
+        ref.read(timerProvider).exportProfile(outputFile);
         showToastLocal("Settings successfully exported");
       } else {
         showToastLocal("No file selected");
@@ -203,9 +203,6 @@ class TitleSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timerWatcher = ref.watch(timerProvider);
-    _controller.text = timerWatcher.getTitle();
-
     return Card(
       child: ListTile(
         title: const Text("Set timer title"),
@@ -215,8 +212,7 @@ class TitleSection extends ConsumerWidget {
             decoration: const InputDecoration(),
             controller: _controller,
             onChanged: (value) {
-              timerWatcher.setTitle(value);
-              _controller.text = value;
+              ref.read(timerProvider).setTitle(value);
             },
           ),
         ),
