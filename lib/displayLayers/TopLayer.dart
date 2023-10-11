@@ -27,7 +27,7 @@ class TopLayer extends ConsumerWidget {
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
             begin: 1.0,
-            end: 0.4
+            end: 0.6
         ),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
