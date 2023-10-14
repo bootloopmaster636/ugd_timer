@@ -62,8 +62,6 @@ class TimerState extends ChangeNotifier {
       return;
     }
 
-    //TODO add timer autostart
-
     _isRunning = true;
 
     // if timer is already set, then just resume it.
@@ -79,7 +77,7 @@ class TimerState extends ChangeNotifier {
         _isCutOff = true;
       }
 
-      startCountdown();
+      checkAutoStart();
     }
   }
 
@@ -129,12 +127,15 @@ class TimerState extends ChangeNotifier {
   }
 
   void checkAutoStart() async {
-    timer = PausableTimer(const Duration(seconds: 1), () {
-      if(_isAutoStartEnabled && DateTime.now().hour <= _autoStartTime.hour && DateTime.now().minute <= _autoStartTime.minute){
+    while (_isAutoStartEnabled) {
+      if (_autoStartTime != TimeOfDay.now()) {
+        print("Waiting until $_autoStartTime");
+        await Future.delayed(const Duration(seconds: 1));
+      } else {
         _isAutoStartEnabled = false;
-        timer..reset()..cancel();
+        startCountdown();
       }
-    })..start();
+    }
   }
 
   void startCountdown() async {
