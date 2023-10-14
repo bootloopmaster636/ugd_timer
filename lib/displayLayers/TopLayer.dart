@@ -16,10 +16,6 @@ class TopLayer extends ConsumerWidget {
     final displayStateWatcher = ref.watch(displayStateProvider);
     final isFullScreenNotifier = ref.watch(fullscreenProvider);
 
-    void showToastLocal(String msg) {
-      showToast(msg, context: context);
-    }
-
     return Animate(
       effects: const [
         SlideEffect(
@@ -49,29 +45,51 @@ class TopLayer extends ConsumerWidget {
                   InfoCard(),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: FloatingActionButton(
-                    onPressed: () async {
-                      bool currentFullScreen =
-                      await WindowManager.instance.isFullScreen();
-
-                      WindowManager.instance.setFullScreen(!currentFullScreen);
-                      showToastLocal(currentFullScreen
-                          ? "Window has been restored"
-                          : "Window has been maximized");
-
-                      isFullScreenNotifier.value = !currentFullScreen;
-                    },
-                    child: Icon(isFullScreenNotifier.value ? Icons.fullscreen_exit : Icons.fullscreen),
-                  ),
-                ),
-              )
+              FullscreenFAB(isFullScreenNotifier: isFullScreenNotifier)
             ]),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class FullscreenFAB extends StatelessWidget {
+  const FullscreenFAB({
+    super.key,
+    required this.isFullScreenNotifier,
+  });
+
+  final ValueNotifier<bool> isFullScreenNotifier;
+
+  @override
+  Widget build(BuildContext context) {
+    void showToastLocal(String msg) {
+      showToast(msg, context: context);
+    }
+
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () async {
+            bool currentFullScreen =
+                await WindowManager.instance.isFullScreen();
+
+            WindowManager.instance.setFullScreen(!currentFullScreen);
+            showToastLocal(currentFullScreen
+                ? "Window has been restored"
+                : "Window has entered fullscreen mode");
+
+            isFullScreenNotifier.value = !currentFullScreen;
+          },
+          child: Icon(isFullScreenNotifier.value
+              ? Icons.fullscreen_exit
+              : Icons.fullscreen,
+          ),
+        ),
       ),
     );
   }
@@ -128,12 +146,6 @@ class TopBar extends ConsumerWidget {
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
             ),
-          ),
-          SizedBox(
-            width: (60 * scaleFactor),
-          ),
-          const SizedBox(
-            width: 16,
           ),
           Expanded(
             child: Text(
