@@ -14,7 +14,6 @@ class TopLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     final displayStateWatcher = ref.watch(displayStateProvider);
-    final isFullScreenNotifier = ref.watch(fullscreenProvider);
 
     return Animate(
       effects: const [
@@ -36,8 +35,8 @@ class TopLayer extends ConsumerWidget {
           const TopBar(),
           SizedBox(
             height: MediaQuery.of(context).size.height - 60 * scaleFactor,
-            child: Stack(children: [
-              const Column(
+            child: const Stack(children: [
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -45,7 +44,7 @@ class TopLayer extends ConsumerWidget {
                   InfoCard(),
                 ],
               ),
-              FullscreenFAB(isFullScreenNotifier: isFullScreenNotifier)
+              FullscreenFAB(),
             ]),
           ),
         ],
@@ -54,16 +53,14 @@ class TopLayer extends ConsumerWidget {
   }
 }
 
-class FullscreenFAB extends StatelessWidget {
+class FullscreenFAB extends ConsumerWidget {
   const FullscreenFAB({
     super.key,
-    required this.isFullScreenNotifier,
   });
 
-  final ValueNotifier<bool> isFullScreenNotifier;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFullScreenNotifier = ref.watch(fullscreenProvider);
     void showToastLocal(String msg) {
       showToast(msg, context: context);
     }
