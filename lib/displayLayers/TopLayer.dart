@@ -14,6 +14,11 @@ class TopLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     final displayStateWatcher = ref.watch(displayStateProvider);
+    final isFullScreenNotifier = ref.watch(fullscreenProvider);
+
+    void showToastLocal(String msg) {
+      showToast(msg, context: context);
+    }
 
     return Animate(
       effects: const [
@@ -35,14 +40,36 @@ class TopLayer extends ConsumerWidget {
           const TopBar(),
           SizedBox(
             height: MediaQuery.of(context).size.height - 60 * scaleFactor,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TimerCard(),
-                InfoCard(),
-              ],
-            ),
+            child: Stack(children: [
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TimerCard(),
+                  InfoCard(),
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: FloatingActionButton(
+                    onPressed: () async {
+                      bool currentFullScreen =
+                      await WindowManager.instance.isFullScreen();
+
+                      WindowManager.instance.setFullScreen(!currentFullScreen);
+                      showToastLocal(currentFullScreen
+                          ? "Window has been restored"
+                          : "Window has been maximized");
+
+                      isFullScreenNotifier.value = !currentFullScreen;
+                    },
+                    child: Icon(isFullScreenNotifier.value ? Icons.fullscreen_exit : Icons.fullscreen),
+                  ),
+                ),
+              )
+            ]),
           ),
         ],
       ),
@@ -59,11 +86,6 @@ class TopBar extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
     final displayStateWatcher = ref.watch(displayStateProvider);
-    final isFullScreenNotifier = ref.watch(fullscreenProvider);
-
-    void showToastLocal(String msg) {
-      showToast(msg, context: context);
-    }
 
     // not defining ref.read(...) into a variable because documentation said it's bad practice, and causing bugs
 
@@ -94,24 +116,14 @@ class TopBar extends ConsumerWidget {
           InkWell(
             splashFactory: InkRipple.splashFactory,
             onTap: () async {
-              bool currentFullScreen =
-                  await WindowManager.instance.isFullScreen();
-
-              WindowManager.instance.setFullScreen(!currentFullScreen);
-              showToastLocal(currentFullScreen
-                  ? "Window has been restored"
-                  : "Window has been maximized");
-
-              isFullScreenNotifier.value = !currentFullScreen;
+              print("toggle note");
             },
             child: Container(
               width: 60 * scaleFactor,
               height: 60 * scaleFactor,
               color: Theme.of(context).colorScheme.secondary,
               child: Icon(
-                isFullScreenNotifier.value
-                    ? Icons.fullscreen_exit
-                    : Icons.fullscreen,
+                Icons.event_note_outlined,
                 size: 22 * scaleFactor,
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
@@ -181,7 +193,7 @@ class TopBar extends ConsumerWidget {
             child: Container(
               width: 60 * scaleFactor,
               height: 60 * scaleFactor,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.tertiary,
               child: Icon(
                 Icons.replay,
                 size: 22 * scaleFactor,
