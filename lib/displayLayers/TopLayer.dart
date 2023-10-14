@@ -21,14 +21,12 @@ class TopLayer extends ConsumerWidget {
             duration: Duration(milliseconds: 450),
             curve: Curves.easeInOutCubic,
             begin: Offset(0.0, 0.0),
-            end: Offset(0.04, 0.0)
-        ),
+            end: Offset(0.04, 0.0)),
         FadeEffect(
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
             begin: 1.0,
-            end: 0.6
-        ),
+            end: 0.6),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
       child: Column(
@@ -272,21 +270,23 @@ class InfoCard extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                     ),
                   ),
-                  Text(
-                    timerManager.isTimerSet(TimerType.cutoff)
-                        ? "Cutoff di-set selama ${timerManager.getTimer(TimerType.cutoff).inMinutes} menit"
-                        : "",
-                    style: TextStyle(
-                      fontSize: 20 * scaleFactor,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
-                  )
+                  (timerManager.isTimerSet(TimerType.cutoff))
+                      ? Text(
+                          "Cutoff di-set selama ${timerManager.getTimer(TimerType.cutoff).inMinutes} menit",
+                          style: TextStyle(
+                            fontSize: 20 * scaleFactor,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                          ),
+                        )
+                      : Container(),
                 ],
               ),
             ],
           ),
           SizedBox(
-            height: 24 * scaleFactor,
+            height: 32 * scaleFactor,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

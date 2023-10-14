@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ugd_timer/logic/managers/DisplayManager.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -16,6 +18,9 @@ class TimerState extends ChangeNotifier {
   late PausableTimer timer = PausableTimer(const Duration(seconds: 1), () {});
 
   // ============= Variables =============
+  bool _isAutoStartEnabled = false;
+  TimeOfDay _autoStartTime = const TimeOfDay(hour: 0, minute: 0);
+
   bool _isRunning = false;
   bool _isSet = false;
   bool _isCutOff = false;
@@ -24,17 +29,30 @@ class TimerState extends ChangeNotifier {
   bool _isAllTimerFinishedSoundPlayed = false;
 
 // ============== Getters =============
+  bool get isAutoStartEnabled => _isAutoStartEnabled;
+
   bool get isRunning => _isRunning;
+
   bool get isCutOffRunning => _isCutOffRunning;
+
   bool get isSet => _isSet;
 
   NotificationManager get notificationManager => _notificationManager;
+
   TimerManager get timerManager => _timerManager;
+
   DisplayManager get displayManager => _displayManager;
+
+  TimeOfDay get autoStartTime => _autoStartTime;
 
   // ============= Timer Manager Wrapper =============
   void setTimer(TimerType timerType, TimeOfDay? timeFromPicker) {
     _timerManager.setTimerFromPicker(timerType, timeFromPicker);
+    notifyListeners();
+  }
+
+  void setStartAt(TimeOfDay? timeFromPicker) {
+    _autoStartTime = timeFromPicker!;
     notifyListeners();
   }
 
@@ -43,6 +61,8 @@ class TimerState extends ChangeNotifier {
     if (!_timerManager.isTimerSet(TimerType.main)) {
       return;
     }
+
+    //TODO add timer autostart
 
     _isRunning = true;
 
@@ -78,6 +98,11 @@ class TimerState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleAutoStart() async {
+    _isAutoStartEnabled = !_isAutoStartEnabled;
+    notifyListeners();
+  }
+
   void stopAndResetTimer({bool isPressed = false}) {
     timer.cancel();
 
@@ -101,6 +126,15 @@ class TimerState extends ChangeNotifier {
     _isAllTimerFinishedSoundPlayed = false;
 
     notifyListeners();
+  }
+
+  void checkAutoStart() async {
+    timer = PausableTimer(const Duration(seconds: 1), () {
+      if(_isAutoStartEnabled && DateTime.now().hour <= _autoStartTime.hour && DateTime.now().minute <= _autoStartTime.minute){
+        _isAutoStartEnabled = false;
+        timer..reset()..cancel();
+      }
+    })..start();
   }
 
   void startCountdown() async {
