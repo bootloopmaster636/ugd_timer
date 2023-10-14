@@ -206,7 +206,7 @@ class TimerCard extends ConsumerWidget {
 
     return Container(
       margin: EdgeInsets.only(top: 20 * scaleFactor),
-      width: 800 * scaleFactor,
+      width: 680 * scaleFactor,
       height: 220 * scaleFactor,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.background.withOpacity(0.9),
@@ -310,7 +310,7 @@ class InfoCard extends ConsumerWidget {
                 text: TextSpan(
                   text: "Dapat bertanya asisten setelah\n",
                   style: TextStyle(
-                      fontSize: 24 * scaleFactor,
+                      fontSize: 22 * scaleFactor,
                       fontFamily:
                           Theme.of(context).textTheme.displayMedium!.fontFamily,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
@@ -320,7 +320,7 @@ class InfoCard extends ConsumerWidget {
                           "${timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
                           "${timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
-                          fontSize: 32 * scaleFactor,
+                          fontSize: 28 * scaleFactor,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context)
                               .colorScheme
@@ -351,7 +351,7 @@ class InfoCard extends ConsumerWidget {
                   style: TextStyle(
                       fontFamily:
                           Theme.of(context).textTheme.displayMedium!.fontFamily,
-                      fontSize: 24 * scaleFactor,
+                      fontSize: 22 * scaleFactor,
                       color: Theme.of(context).colorScheme.onTertiaryContainer),
                   children: [
                     TextSpan(
@@ -359,7 +359,7 @@ class InfoCard extends ConsumerWidget {
                           "${timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
                           "${timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
                       style: TextStyle(
-                          fontSize: 32 * scaleFactor,
+                          fontSize: 28 * scaleFactor,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context)
                               .colorScheme
