@@ -196,6 +196,11 @@ class TimerState extends ChangeNotifier {
   }
 
   // ============= App config interface =============
+  void toggleNoteVisibility() {
+    _displayManager.toggleNoteVisibility();
+    notifyListeners();
+  }
+
   void setTitle(String s) {
     _displayManager.setTitle(s);
     notifyListeners();
