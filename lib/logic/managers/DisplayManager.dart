@@ -4,15 +4,32 @@ class DisplayManager {
   DisplayManager(this._title, this._currentAccent, this._currentThemeMode);
 
   String _title = "";
+  String _note = "";
+  bool _isNoteVisible = false;
   Color _currentAccent = Colors.lightBlue;
   ThemeMode _currentThemeMode = ThemeMode.system;
 
+// ============== Getters =============
   String get title => _title;
+
+  String get note => _note;
+
+  bool get isNoteVisible => _isNoteVisible;
+
   Color get currentAccent => _currentAccent;
+
   ThemeMode get currentThemeMode => _currentThemeMode;
 
   void setTitle(String title) {
     _title = title;
+  }
+
+  void setNote(String note) {
+    _note = note;
+  }
+
+  void toggleNoteVisibility() {
+    _isNoteVisible = !_isNoteVisible;
   }
 
   void accentCutOff() {

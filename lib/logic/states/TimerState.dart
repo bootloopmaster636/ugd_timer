@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ugd_timer/logic/managers/DisplayManager.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -16,6 +18,9 @@ class TimerState extends ChangeNotifier {
   late PausableTimer timer = PausableTimer(const Duration(seconds: 1), () {});
 
   // ============= Variables =============
+  bool _isAutoStartEnabled = false;
+  TimeOfDay _autoStartTime = const TimeOfDay(hour: 0, minute: 0);
+
   bool _isRunning = false;
   bool _isSet = false;
   bool _isCutOff = false;
@@ -24,17 +29,30 @@ class TimerState extends ChangeNotifier {
   bool _isAllTimerFinishedSoundPlayed = false;
 
 // ============== Getters =============
+  bool get isAutoStartEnabled => _isAutoStartEnabled;
+
   bool get isRunning => _isRunning;
+
   bool get isCutOffRunning => _isCutOffRunning;
+
   bool get isSet => _isSet;
 
   NotificationManager get notificationManager => _notificationManager;
+
   TimerManager get timerManager => _timerManager;
+
   DisplayManager get displayManager => _displayManager;
+
+  TimeOfDay get autoStartTime => _autoStartTime;
 
   // ============= Timer Manager Wrapper =============
   void setTimer(TimerType timerType, TimeOfDay? timeFromPicker) {
     _timerManager.setTimerFromPicker(timerType, timeFromPicker);
+    notifyListeners();
+  }
+
+  void setStartAt(TimeOfDay? timeFromPicker) {
+    _autoStartTime = timeFromPicker!;
     notifyListeners();
   }
 
@@ -59,7 +77,7 @@ class TimerState extends ChangeNotifier {
         _isCutOff = true;
       }
 
-      startCountdown();
+      checkAutoStart();
     }
   }
 
@@ -75,6 +93,11 @@ class TimerState extends ChangeNotifier {
       startTimer();
     }
 
+    notifyListeners();
+  }
+
+  void toggleAutoStart() async {
+    _isAutoStartEnabled = !_isAutoStartEnabled;
     notifyListeners();
   }
 
@@ -101,6 +124,18 @@ class TimerState extends ChangeNotifier {
     _isAllTimerFinishedSoundPlayed = false;
 
     notifyListeners();
+  }
+
+  void checkAutoStart() async {
+    while (_isAutoStartEnabled) {
+      if (_autoStartTime != TimeOfDay.now()) {
+        print("Waiting until $_autoStartTime");
+        await Future.delayed(const Duration(seconds: 1));
+      } else {
+        _isAutoStartEnabled = false;
+        startCountdown();
+      }
+    }
   }
 
   void startCountdown() async {
@@ -161,6 +196,16 @@ class TimerState extends ChangeNotifier {
   }
 
   // ============= App config interface =============
+  void toggleNoteVisibility() {
+    _displayManager.toggleNoteVisibility();
+    notifyListeners();
+  }
+
+  void setNote(String note) {
+    _displayManager.setNote(note);
+    notifyListeners();
+  }
+
   void setTitle(String s) {
     _displayManager.setTitle(s);
     notifyListeners();

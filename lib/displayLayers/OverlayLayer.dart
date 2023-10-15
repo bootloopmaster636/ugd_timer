@@ -94,6 +94,7 @@ class SettingsPanelInside extends ConsumerWidget {
                     AssistTimerSection(),
                     BonusTimerSection(),
                     CutOffTimerSection(),
+                    StartAtSection(),
                     SectionTitle(title: "Display"),
                     ThemeModeSection(),
                     DisplayScaleFactorSection(),
@@ -216,6 +217,44 @@ class TitleSection extends ConsumerWidget {
             },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StartAtSection extends ConsumerWidget {
+  const StartAtSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final timerWatcher = ref.watch(timerProvider);
+    final timerManager = ref.watch(timerProvider).timerManager;
+
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            title: const Text("Start timer at"),
+            subtitle: const Text("Will start timer automatically at this time"),
+            trailing: Switch(
+              value: ref.watch(timerProvider).isAutoStartEnabled,
+              onChanged: (value) {
+                ref.read(timerProvider).toggleAutoStart();
+              },
+            ),
+          ),
+          ListTile(
+            enabled: ref.watch(timerProvider).isAutoStartEnabled,
+            title: const Text("Set time"),
+            trailing: Text(
+              "${ref.watch(timerProvider).autoStartTime.hour.toString().padLeft(2, '0')} : ${ref.watch(timerProvider).autoStartTime.minute.toString().padLeft(2, '0')}",
+              style: const TextStyle(fontSize: 20),
+            ),
+            onTap: () async {
+              ref.read(timerProvider).setStartAt(await showTimePickerDialog(context));
+            },
+          ),
+        ],
       ),
     );
   }

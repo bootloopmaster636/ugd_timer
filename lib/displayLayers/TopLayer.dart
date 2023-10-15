@@ -14,6 +14,7 @@ class TopLayer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scaleFactor = ref.watch(displayStateProvider).displayFontScale;
     final displayStateWatcher = ref.watch(displayStateProvider);
+    final isNoteVisible = ref.watch(timerProvider).displayManager.isNoteVisible;
 
     return Animate(
       effects: const [
@@ -21,31 +22,152 @@ class TopLayer extends ConsumerWidget {
             duration: Duration(milliseconds: 450),
             curve: Curves.easeInOutCubic,
             begin: Offset(0.0, 0.0),
-            end: Offset(0.04, 0.0)
-        ),
+            end: Offset(0.04, 0.0)),
         FadeEffect(
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
             begin: 1.0,
-            end: 0.4
-        ),
+            end: 0.6),
       ],
       target: (displayStateWatcher.settingsExpanded == true) ? 1 : 0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Row(
         children: [
-          const TopBar(),
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 60 * scaleFactor,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutQuad,
+            width: isNoteVisible
+                ? MediaQuery.of(context).size.width * 0.6
+                : MediaQuery.of(context).size.width,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TimerCard(),
-                InfoCard(),
+                const TopBar(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height - 60 * scaleFactor,
+                  child: const Stack(children: [
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TimerCard(),
+                          InfoCard(),
+                        ],
+                      ),
+                    ),
+                    FullscreenFAB(),
+                  ]),
+                ),
               ],
             ),
           ),
+          const NotePanel()
+        ],
+      ),
+    );
+  }
+}
+
+class FullscreenFAB extends ConsumerWidget {
+  const FullscreenFAB({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFullScreenNotifier = ref.watch(fullscreenProvider);
+    void showToastLocal(String msg) {
+      showToast(msg, context: context);
+    }
+
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () async {
+            bool currentFullScreen =
+                await WindowManager.instance.isFullScreen();
+
+            WindowManager.instance.setFullScreen(!currentFullScreen);
+            showToastLocal(currentFullScreen
+                ? "Window has been restored"
+                : "Window has entered fullscreen mode");
+
+            isFullScreenNotifier.value = !currentFullScreen;
+          },
+          child: Icon(
+            isFullScreenNotifier.value
+                ? Icons.fullscreen_exit
+                : Icons.fullscreen,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NotePanel extends ConsumerStatefulWidget {
+  const NotePanel({super.key});
+
+  @override
+  NotePanelState createState() => NotePanelState();
+}
+
+class NotePanelState extends ConsumerState<NotePanel> {
+  final TextEditingController _noteController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final scaleFactor = MediaQuery.of(context).textScaleFactor;
+
+    return AnimatedContainer(
+      width: ref.watch(timerProvider).displayManager.isNoteVisible ? MediaQuery.of(context).size.width * 0.4 : 0,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+      ),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutQuad,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 60 * scaleFactor,
+            width: MediaQuery.of(context).size.width * 0.4,
+            color: Theme.of(context)
+                .colorScheme
+                .tertiaryContainer
+                .withOpacity(0.6),
+            child: const Center(
+                child: Text(
+              "Note",
+              style: TextStyle(fontSize: 24),
+            )),
+          ),
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height - 60 * scaleFactor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: _noteController,
+                  maxLines: null,
+                  expands: true,
+                  decoration: const InputDecoration.collapsed(
+                      hintText: "Enter your note",
+                  ),
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  onChanged: (note) {
+                    ref.read(timerProvider).setNote(note);
+                  },
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -61,11 +183,6 @@ class TopBar extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
     final displayStateWatcher = ref.watch(displayStateProvider);
-    final isFullScreenNotifier = ref.watch(fullscreenProvider);
-
-    void showToastLocal(String msg) {
-      showToast(msg, context: context);
-    }
 
     // not defining ref.read(...) into a variable because documentation said it's bad practice, and causing bugs
 
@@ -95,25 +212,15 @@ class TopBar extends ConsumerWidget {
           ),
           InkWell(
             splashFactory: InkRipple.splashFactory,
-            onTap: () async {
-              bool currentFullScreen =
-                  await WindowManager.instance.isFullScreen();
-
-              WindowManager.instance.setFullScreen(!currentFullScreen);
-              showToastLocal(currentFullScreen
-                  ? "Window has been restored"
-                  : "Window has been maximized");
-
-              isFullScreenNotifier.value = !currentFullScreen;
+            onTap: () {
+              ref.read(timerProvider).toggleNoteVisibility();
             },
             child: Container(
               width: 60 * scaleFactor,
               height: 60 * scaleFactor,
               color: Theme.of(context).colorScheme.secondary,
               child: Icon(
-                isFullScreenNotifier.value
-                    ? Icons.fullscreen_exit
-                    : Icons.fullscreen,
+                Icons.event_note_outlined,
                 size: 22 * scaleFactor,
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
@@ -177,7 +284,7 @@ class TopBar extends ConsumerWidget {
             child: Container(
               width: 60 * scaleFactor,
               height: 60 * scaleFactor,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.tertiary,
               child: Icon(
                 Icons.replay,
                 size: 22 * scaleFactor,
@@ -200,36 +307,43 @@ class TimerCard extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
 
-    return Container(
-      margin: EdgeInsets.only(top: 20 * scaleFactor),
-      width: 800 * scaleFactor,
-      height: 220 * scaleFactor,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
-            blurRadius: 8,
-            spreadRadius: 2,
-            offset: const Offset(0, 1),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Container(
+          margin: EdgeInsets.only(top: 20 * scaleFactor),
+          width: 680 * scaleFactor,
+          height: 220 * scaleFactor,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                blurRadius: 8,
+                spreadRadius: 2,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          "${timerManager.getTimer(TimerType.main).inHours.toString().padLeft(2, '0')}:"
-          "${timerManager.getTimer(TimerType.main).inMinutes.remainder(60).toString().padLeft(2, '0')}:"
-          "${timerManager.getTimer(TimerType.main).inSeconds.remainder(60).toString().padLeft(2, '0')}",
-          style: TextStyle(
-            fontSize: 116,
-            fontWeight: FontWeight.w600,
-            color: (timerWatcher.isCutOffRunning) &&
-                    (timerManager.getTimer(TimerType.main).inSeconds % 2 == 0)
-                ? Colors.red
-                : null,
+          child: Center(
+            child: Text(
+              "${timerManager.getTimer(TimerType.main).inHours.toString().padLeft(2, '0')}:"
+              "${timerManager.getTimer(TimerType.main).inMinutes.remainder(60).toString().padLeft(2, '0')}:"
+              "${timerManager.getTimer(TimerType.main).inSeconds.remainder(60).toString().padLeft(2, '0')}",
+              style: TextStyle(
+                fontSize: 116,
+                fontWeight: FontWeight.w600,
+                color: (timerWatcher.isCutOffRunning) &&
+                        (timerManager.getTimer(TimerType.main).inSeconds % 2 ==
+                            0)
+                    ? Colors.red
+                    : null,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
@@ -245,126 +359,139 @@ class InfoCard extends ConsumerWidget {
     final timerWatcher = ref.watch(timerProvider);
     final timerManager = ref.watch(timerProvider).timerManager;
 
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "${timerWatcher.isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
-                    style: TextStyle(
-                      fontSize:
-                          timerWatcher.isCutOffRunning ? 36 : 28 * scaleFactor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "${timerManager.endAt.hour.toString().padLeft(2, '0')}:${timerManager.endAt.minute.toString().padLeft(2, '0')}",
-                    style: TextStyle(
-                      fontSize: 48 * scaleFactor,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                  Text(
-                    timerManager.isTimerSet(TimerType.cutoff)
-                        ? "Cutoff di-set selama ${timerManager.getTimer(TimerType.cutoff).inMinutes} menit"
-                        : "",
-                    style: TextStyle(
-                      fontSize: 20 * scaleFactor,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 24 * scaleFactor,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                FontAwesomeIcons.personCircleQuestion,
-                size: 64 * scaleFactor,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              SizedBox(
-                width: 24 * scaleFactor,
-              ),
-              RichText(
-                text: TextSpan(
-                  text: "Dapat bertanya asisten setelah\n",
-                  style: TextStyle(
-                      fontSize: 24 * scaleFactor,
-                      fontFamily:
-                          Theme.of(context).textTheme.displayMedium!.fontFamily,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer),
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 64),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              constraints: BoxConstraints(maxWidth: 400 * scaleFactor),
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Column(
                   children: [
-                    TextSpan(
-                      text:
-                          "${timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
-                          "${timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                    Text(
+                      "${timerWatcher.isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
                       style: TextStyle(
-                          fontSize: 32 * scaleFactor,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer),
+                        fontSize: (timerWatcher.isCutOffRunning ? 36 : 28) *
+                            scaleFactor,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+                    Text(
+                      "${timerManager.endAt.hour.toString().padLeft(2, '0')}:${timerManager.endAt.minute.toString().padLeft(2, '0')}",
+                      style: TextStyle(
+                        fontSize: 48 * scaleFactor,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                    (timerManager.isTimerSet(TimerType.cutoff))
+                        ? Text(
+                            "Cutoff di-set selama ${timerManager.getTimer(TimerType.cutoff).inMinutes} menit",
+                            style: TextStyle(
+                              fontSize: 20 * scaleFactor,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 40 * scaleFactor),
-                height: 72 * scaleFactor,
-                child: VerticalDivider(
-                  color: Theme.of(context).colorScheme.onBackground,
-                  thickness: 6,
+            ),
+            SizedBox(
+              height: 32 * scaleFactor,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  FontAwesomeIcons.personCircleQuestion,
+                  size: 64 * scaleFactor,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-              ),
-              Icon(
-                FontAwesomeIcons.anglesUp,
-                size: 64 * scaleFactor,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              SizedBox(
-                width: 12 * scaleFactor,
-              ),
-              RichText(
-                text: TextSpan(
-                  text: "Sisa waktu bonus\n",
-                  style: TextStyle(
-                      fontFamily:
-                          Theme.of(context).textTheme.displayMedium!.fontFamily,
-                      fontSize: 24 * scaleFactor,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer),
-                  children: [
-                    TextSpan(
-                      text:
-                          "${timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
-                          "${timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
-                      style: TextStyle(
-                          fontSize: 32 * scaleFactor,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer),
-                    ),
-                  ],
+                SizedBox(
+                  width: 24 * scaleFactor,
                 ),
-              )
-            ],
-          ),
-        ],
+                RichText(
+                  text: TextSpan(
+                    text: "Dapat bertanya asisten setelah\n",
+                    style: TextStyle(
+                        fontSize: 22 * scaleFactor,
+                        fontFamily: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .fontFamily,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
+                    children: [
+                      TextSpan(
+                        text:
+                            "${timerManager.getTimer(TimerType.assist).inMinutes.toString().padLeft(2, '0')} menit "
+                            "${timerManager.getTimer(TimerType.assist).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                        style: TextStyle(
+                            fontSize: 28 * scaleFactor,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 40 * scaleFactor),
+                  height: 72 * scaleFactor,
+                  child: VerticalDivider(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    thickness: 6,
+                  ),
+                ),
+                Icon(
+                  FontAwesomeIcons.anglesUp,
+                  size: 64 * scaleFactor,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                SizedBox(
+                  width: 12 * scaleFactor,
+                ),
+                RichText(
+                  text: TextSpan(
+                    text: "Sisa waktu bonus\n",
+                    style: TextStyle(
+                        fontFamily: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .fontFamily,
+                        fontSize: 22 * scaleFactor,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
+                    children: [
+                      TextSpan(
+                        text:
+                            "${timerManager.getTimer(TimerType.bonus).inMinutes.toString().padLeft(2, '0')} menit "
+                            "${timerManager.getTimer(TimerType.bonus).inSeconds.remainder(60).toString().padLeft(2, '0')} detik",
+                        style: TextStyle(
+                            fontSize: 28 * scaleFactor,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
