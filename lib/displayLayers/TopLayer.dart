@@ -35,7 +35,9 @@ class TopLayer extends ConsumerWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeOutQuad,
-            width: isNoteVisible ? MediaQuery.of(context).size.width * 0.6 : MediaQuery.of(context).size.width,
+            width: isNoteVisible
+                ? MediaQuery.of(context).size.width * 0.6
+                : MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -58,7 +60,7 @@ class TopLayer extends ConsumerWidget {
               ],
             ),
           ),
-          isNoteVisible ?  const NotePanel() : Container(),
+          const NotePanel()
         ],
       ),
     );
@@ -94,9 +96,10 @@ class FullscreenFAB extends ConsumerWidget {
 
             isFullScreenNotifier.value = !currentFullScreen;
           },
-          child: Icon(isFullScreenNotifier.value
-              ? Icons.fullscreen_exit
-              : Icons.fullscreen,
+          child: Icon(
+            isFullScreenNotifier.value
+                ? Icons.fullscreen_exit
+                : Icons.fullscreen,
           ),
         ),
       ),
@@ -104,24 +107,28 @@ class FullscreenFAB extends ConsumerWidget {
   }
 }
 
-class NotePanel extends StatefulWidget {
+class NotePanel extends ConsumerStatefulWidget {
   const NotePanel({super.key});
 
   @override
-  State<NotePanel> createState() => _NotePanelState();
+  NotePanelState createState() => NotePanelState();
 }
 
-class _NotePanelState extends State<NotePanel> {
+class NotePanelState extends ConsumerState<NotePanel> {
+  final TextEditingController _noteController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final scaleFactor = MediaQuery.of(context).textScaleFactor;
 
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
+    return AnimatedContainer(
+      width: ref.watch(timerProvider).displayManager.isNoteVisible ? MediaQuery.of(context).size.width * 0.4 : 0,
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
       ),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutQuad,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,8 +136,37 @@ class _NotePanelState extends State<NotePanel> {
           Container(
             height: 60 * scaleFactor,
             width: MediaQuery.of(context).size.width * 0.4,
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            child: const Center(child: Text("Note", style: TextStyle(fontSize: 24),)),
+            color: Theme.of(context)
+                .colorScheme
+                .tertiaryContainer
+                .withOpacity(0.6),
+            child: const Center(
+                child: Text(
+              "Note",
+              style: TextStyle(fontSize: 24),
+            )),
+          ),
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height - 60 * scaleFactor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: _noteController,
+                  maxLines: null,
+                  expands: true,
+                  decoration: const InputDecoration.collapsed(
+                      hintText: "Enter your note",
+                  ),
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  onChanged: (note) {
+                    ref.read(timerProvider).setNote(note);
+                  },
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -300,7 +336,8 @@ class TimerCard extends ConsumerWidget {
                 fontSize: 116,
                 fontWeight: FontWeight.w600,
                 color: (timerWatcher.isCutOffRunning) &&
-                        (timerManager.getTimer(TimerType.main).inSeconds % 2 == 0)
+                        (timerManager.getTimer(TimerType.main).inSeconds % 2 ==
+                            0)
                     ? Colors.red
                     : null,
               ),
@@ -339,8 +376,8 @@ class InfoCard extends ConsumerWidget {
                     Text(
                       "${timerWatcher.isCutOffRunning ? "Cut Off" : "Pengumpulan"} pada pukul",
                       style: TextStyle(
-                        fontSize:
-                        (timerWatcher.isCutOffRunning ? 36 : 28) * scaleFactor,
+                        fontSize: (timerWatcher.isCutOffRunning ? 36 : 28) *
+                            scaleFactor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -349,7 +386,8 @@ class InfoCard extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 48 * scaleFactor,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
                     ),
                     (timerManager.isTimerSet(TimerType.cutoff))
@@ -387,9 +425,12 @@ class InfoCard extends ConsumerWidget {
                     text: "Dapat bertanya asisten setelah\n",
                     style: TextStyle(
                         fontSize: 22 * scaleFactor,
-                        fontFamily:
-                            Theme.of(context).textTheme.displayMedium!.fontFamily,
-                        color: Theme.of(context).colorScheme.onTertiaryContainer),
+                        fontFamily: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .fontFamily,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
                     children: [
                       TextSpan(
                         text:
@@ -425,10 +466,13 @@ class InfoCard extends ConsumerWidget {
                   text: TextSpan(
                     text: "Sisa waktu bonus\n",
                     style: TextStyle(
-                        fontFamily:
-                            Theme.of(context).textTheme.displayMedium!.fontFamily,
+                        fontFamily: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .fontFamily,
                         fontSize: 22 * scaleFactor,
-                        color: Theme.of(context).colorScheme.onTertiaryContainer),
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer),
                     children: [
                       TextSpan(
                         text:

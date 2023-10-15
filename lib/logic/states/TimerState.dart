@@ -201,6 +201,11 @@ class TimerState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setNote(String note) {
+    _displayManager.setNote(note);
+    notifyListeners();
+  }
+
   void setTitle(String s) {
     _displayManager.setTitle(s);
     notifyListeners();
