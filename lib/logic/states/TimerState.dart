@@ -1,12 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:ugd_timer/logic/managers/DisplayManager.dart';
 import 'package:pausable_timer/pausable_timer.dart';
+import 'package:ugd_timer/logic/managers/DisplayManager.dart';
 import 'package:ugd_timer/logic/managers/NotificationManager.dart';
-import 'package:ugd_timer/logic/managers/TimerManager.dart';
 import 'package:ugd_timer/logic/managers/ProfileManager.dart';
-import 'dart:io';
+import 'package:ugd_timer/logic/managers/TimerManager.dart';
 
 class TimerState extends ChangeNotifier {
   // ============= Instances =============
@@ -134,8 +134,11 @@ class TimerState extends ChangeNotifier {
       } else {
         _isAutoStartEnabled = false;
         startCountdown();
+        return;
       }
     }
+    startCountdown();
+    return;
   }
 
   void startCountdown() async {
@@ -151,6 +154,7 @@ class TimerState extends ChangeNotifier {
                 _timerManager.getTimer(TimerType.mainFreeze));
           }
 
+          print("TIMER TICKED");
           _timerManager.decrementTimer(TimerType.main);
           _timerManager.decrementTimer(TimerType.assist);
           _timerManager.decrementTimer(TimerType.bonus);

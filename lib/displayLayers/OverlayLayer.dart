@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -23,8 +24,10 @@ class OverlayLayer extends ConsumerWidget {
             duration: const Duration(milliseconds: 450),
             curve: Curves.easeInOutCubic,
             begin: Offset(
-                -1 + (MediaQuery.of(context).size.width - 400) / MediaQuery.of(context).size.width,
-                0,
+              -1 +
+                  (MediaQuery.of(context).size.width - 400) /
+                      MediaQuery.of(context).size.width,
+              0,
             ),
             end: const Offset(0, 0))
       ],
@@ -251,7 +254,9 @@ class StartAtSection extends ConsumerWidget {
               style: const TextStyle(fontSize: 20),
             ),
             onTap: () async {
-              ref.read(timerProvider).setStartAt(await showTimePickerDialog(context));
+              ref
+                  .read(timerProvider)
+                  .setStartAt(await showTimePickerDialog(context));
             },
           ),
         ],
@@ -690,7 +695,7 @@ class AboutUs extends StatelessWidget {
           height: 24,
         ),
         const Text(
-          "Version 0.9.1",
+          "Version 0.9.2",
           textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
