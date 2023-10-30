@@ -254,9 +254,7 @@ class StartAtSection extends ConsumerWidget {
               style: const TextStyle(fontSize: 20),
             ),
             onTap: () async {
-              ref
-                  .read(timerProvider)
-                  .setStartAt(await showTimePickerDialog(context));
+              ref.read(timerProvider).setStartAt(await showTimePickerDialog(context));
             },
           ),
         ],
