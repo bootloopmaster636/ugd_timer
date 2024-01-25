@@ -1,0 +1,8 @@
+{
+  "helloWorld": "Halo Dunia!",
+  "startTimer": "Mulai timer",
+  "pauseTimer": "Berhentikan timer sebentar timer",
+  "stopAndResetTimer": "Berhentikan dan atur ulang timer",
+  "timerSettings": "Pengaturan timer",
+  "appSettings": "Pengaturan aplikasi"
+}

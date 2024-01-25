@@ -1,0 +1,8 @@
+{
+  "helloWorld": "Hello World!",
+  "startTimer": "Start timer",
+  "pauseTimer": "Pause timer",
+  "stopAndResetTimer": "Stop and reset timer",
+  "timerSettings": "Timer settings",
+  "appSettings": "Application settings"
+}
