@@ -13,7 +13,6 @@ class Clock with _$Clock {
     required Duration currentTimer,
     required Duration assistTimer,
     required Duration bonusTimer,
-    required TimerStatus status,
   }) = _Clock;
 }
 
@@ -31,19 +30,41 @@ class TimerLogic extends _$TimerLogic {
       currentTimer: Duration.zero,
       assistTimer: Duration.zero,
       bonusTimer: Duration.zero,
-      status: TimerStatus.reset,
     );
   }
 
-  Future<void> setTimer(Duration newCurrentTimer, Duration newAssistTimer, Duration newBonusTimer) async {
-    state = AsyncData<Clock>(
-      Clock(
-        currentTimer: newCurrentTimer,
-        assistTimer: newAssistTimer,
-        bonusTimer: newBonusTimer,
-        status: TimerStatus.reset,
-      ),
-    );
+  Future<void> setTimer(
+    TimerType type,
+    Duration duration,
+  ) async {
+    switch (type) {
+      case TimerType.main:
+        state = AsyncData<Clock>(
+          Clock(
+            currentTimer: duration,
+            assistTimer: state.value?.assistTimer ?? Duration.zero,
+            bonusTimer: state.value?.bonusTimer ?? Duration.zero,
+          ),
+        );
+
+      case TimerType.assist:
+        state = AsyncData<Clock>(
+          Clock(
+            currentTimer: state.value?.currentTimer ?? Duration.zero,
+            assistTimer: duration,
+            bonusTimer: state.value?.bonusTimer ?? Duration.zero,
+          ),
+        );
+
+      case TimerType.bonus:
+        state = AsyncData<Clock>(
+          Clock(
+            currentTimer: state.value?.currentTimer ?? Duration.zero,
+            assistTimer: state.value?.assistTimer ?? Duration.zero,
+            bonusTimer: duration,
+          ),
+        );
+    }
   }
 
   Future<void> resetTimer() async {
@@ -52,9 +73,9 @@ class TimerLogic extends _$TimerLogic {
         currentTimer: Duration.zero,
         assistTimer: Duration.zero,
         bonusTimer: Duration.zero,
-        status: TimerStatus.reset,
       ),
     );
+    await ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.reset);
   }
 
   Future<void> decrementTimer() async {
@@ -63,7 +84,6 @@ class TimerLogic extends _$TimerLogic {
           currentTimer: Duration.zero,
           assistTimer: Duration.zero,
           bonusTimer: Duration.zero,
-          status: TimerStatus.reset,
         );
 
     if (clock.currentTimer.inSeconds > 0) {
@@ -97,11 +117,12 @@ class TimerBeat extends _$TimerBeat {
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       final TimerStatus status = state.value ?? TimerStatus.reset;
       switch (status) {
-        case TimerStatus.reset:
-          ref.read(timerLogicProvider.notifier).resetTimer();
         case TimerStatus.running:
           ref.read(timerLogicProvider.notifier).decrementTimer();
         case TimerStatus.paused:
+          //do nothing
+          break;
+        case TimerStatus.reset:
           //do nothing
           break;
       }
