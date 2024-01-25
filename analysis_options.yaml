@@ -6,3 +6,7 @@ linter:
     lines_longer_than_80_chars: false
     omit_local_variable_types: false
     public_member_api_docs: false
+
+analyzer:
+  plugins:
+    - custom_lint
