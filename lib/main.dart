@@ -8,13 +8,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:ugd_timer/hotkeys.dart';
 import 'package:ugd_timer/screen/background.dart';
 import 'package:ugd_timer/screen/top.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await hotKeyManager.unregisterAll();
   await flutter_acrylic.Window.initialize();
 
   if (defaultTargetPlatform == TargetPlatform.windows) {}
@@ -35,13 +38,30 @@ void main() async {
   }
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerStatefulWidget {
   const MainApp({super.key});
+
+  @override
+  ConsumerState<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends ConsumerState<MainApp> {
+  @override
+  void initState() {
+    super.initState();
+    initHotkeys(context, ref);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    hotKeyManager.unregisterAll();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
-      builder: (context, orientation, screenType) {
+      builder: (BuildContext context, Orientation orientation, ScreenType screenType) {
         return FluentApp(
           title: 'UGD Timer',
           darkTheme: FluentThemeData(
@@ -136,7 +156,7 @@ class Menu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menuController = FlyoutController();
+    final FlyoutController menuController = FlyoutController();
     return FlyoutTarget(
       controller: menuController,
       child: IconButton(
@@ -152,7 +172,7 @@ class Menu extends HookConsumerWidget {
             margin: 4,
             builder: (BuildContext context) {
               return MenuFlyout(
-                items: [
+                items: <MenuFlyoutItemBase>[
                   MenuFlyoutItem(
                     leading: const Icon(FluentIcons.play),
                     text: Text(AppLocalizations.of(context)!.startTimer),
