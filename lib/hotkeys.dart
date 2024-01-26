@@ -1,32 +1,39 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:logger/logger.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/timer.dart';
 
-Future<void> initHotkeys(BuildContext context, WidgetRef ref) async {
+// TODO(bootloopmaster636): still buggy. will change this with a different package later
+Future<void> initHotkeys(WidgetRef ref) async {
+  Logger().d('Configuring hotkeys');
   // configure hotkeys
   final HotKey startTimer = HotKey(
     KeyCode.keyS,
     modifiers: <KeyModifier>[KeyModifier.control],
+    scope: HotKeyScope.inapp,
   );
   final HotKey stopAndResetTimer = HotKey(
     KeyCode.keyR,
     modifiers: <KeyModifier>[KeyModifier.control],
+    scope: HotKeyScope.inapp,
   );
   final HotKey timerSettings = HotKey(
     KeyCode.keyT,
     modifiers: <KeyModifier>[KeyModifier.control],
+    scope: HotKeyScope.inapp,
   );
   final HotKey appSettings = HotKey(
     KeyCode.keyO,
     modifiers: <KeyModifier>[KeyModifier.control],
+    scope: HotKeyScope.inapp,
   );
 
   // register hotkeys
   await hotKeyManager.register(
     startTimer,
     keyDownHandler: (HotKey hotKey) {
+      Logger().i('Timer started via shortcut');
       ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
     },
   );

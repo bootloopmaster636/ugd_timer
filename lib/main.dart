@@ -49,14 +49,15 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
-    initHotkeys(context, ref);
+    initHotkeys(ref);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    hotKeyManager.unregisterAll();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   hotKeyManager.unregisterAll();
+  //   Logger().d('Hotkeys unregistered');
+  // }
 
   @override
   Widget build(BuildContext context) {
