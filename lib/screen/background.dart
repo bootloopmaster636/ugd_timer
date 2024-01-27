@@ -11,9 +11,7 @@ class Background extends StatelessWidget {
       width: 100.w,
       height: 100.h - 32,
       color: (defaultTargetPlatform == TargetPlatform.linux)
-          ? FluentTheme.of(context).brightness == Brightness.light
-              ? FluentTheme.of(context).accentColor.lightest.withOpacity(0.8)
-              : FluentTheme.of(context).accentColor.darkest.withOpacity(0.8)
+          ? FluentTheme.of(context).menuColor.withOpacity(0.8)
           : Colors.transparent,
     );
   }

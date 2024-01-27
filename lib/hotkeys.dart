@@ -6,7 +6,6 @@ import 'package:ugd_timer/logic/timer.dart';
 
 // TODO(bootloopmaster636): still buggy. will change this with a different package later
 Future<void> initHotkeys(WidgetRef ref) async {
-  Logger().d('Configuring hotkeys');
   // configure hotkeys
   final HotKey startTimer = HotKey(
     KeyCode.keyS,

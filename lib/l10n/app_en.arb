@@ -4,24 +4,11 @@
   "pauseTimer": "Pause timer",
   "stopAndResetTimer": "Stop and reset timer",
   "timerSettings": "Timer settings",
+  "timerSettingsDescription": "Adjust the timer to your liking",
   "appSettings": "Application settings",
   "assistAvailableIn": "Assist available in",
-  "timeUntilBonusExpired": "Time until bonus expired",
-  "seconds": "second(s)",
-  "minutes": "minute(s)",
-  "hours": "hour(s)",
-  "xMinYSecLeft": "{min} minute(s) {sec} second(s)",
-  "@xMinYSecLeft": {
-    "description": "Usually for displaying how much time available",
-    "placeholders": {
-      "min": {
-        "type": "num",
-        "example": "1"
-      },
-      "sec": {
-        "type": "num",
-        "example": "2"
-      }
-    }
-  }
+  "timeUntilBonusExpired": "Time until bonus expire",
+  "seconds": "{sec, plural, =0{{sec} seconds} =1{1 second} other{{sec} seconds}}",
+  "minutes": "{min, plural, =0{{min} minutes} =1{1 minute} other{{min} minutes}}",
+  "hours": "{hour, plural, =0{{hour} hours} =1{1 hour} other{{hour} hours}}"
 }

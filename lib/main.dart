@@ -10,9 +10,10 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/hotkeys.dart';
-import 'package:ugd_timer/screen/background.dart';
-import 'package:ugd_timer/screen/top.dart';
+import 'package:ugd_timer/logic/overlay.dart';
+import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -81,7 +82,7 @@ class _MainAppState extends ConsumerState<MainApp> {
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
           ),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.light,
           localizationsDelegates: const <LocalizationsDelegate>[
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -93,15 +94,10 @@ class _MainAppState extends ConsumerState<MainApp> {
             Locale('id'), // Indonesia
           ],
           locale: const Locale('en'),
-          home: const Column(
+          home: Column(
             children: <Widget>[
-              TitleBar(),
-              Stack(
-                children: <Widget>[
-                  Background(),
-                  TopLayer(),
-                ],
-              ),
+              const TitleBar(),
+              ScreenStackManager(),
             ],
           ),
         );
@@ -118,7 +114,7 @@ class TitleBar extends HookWidget {
     final ValueNotifier<bool> isFullscreen = useState(false);
 
     return Container(
-      height: 32,
+      height: titleBarHeight,
       color: FluentTheme.of(context).accentColor.normal,
       child: Row(
         children: <Widget>[
@@ -126,7 +122,7 @@ class TitleBar extends HookWidget {
           const Menu(),
           const Gap(4),
           Text(
-            'UGD Timer',
+            'UGD Timer - title hereeeeeeeeeeeeeeeeee',
             style: TextStyle(color: FluentTheme.of(context).activeColor),
           ),
           const Spacer(),
@@ -200,7 +196,10 @@ class Menu extends HookConsumerWidget {
                       'Ctrl+T',
                       style: FluentTheme.of(context).typography.caption,
                     ),
-                    onPressed: Flyout.of(context).close,
+                    onPressed: () {
+                      ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
+                      Flyout.of(context).close();
+                    },
                   ),
                   MenuFlyoutItem(
                     leading: const Icon(FluentIcons.settings),
