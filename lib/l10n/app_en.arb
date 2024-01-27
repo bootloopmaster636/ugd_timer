@@ -10,5 +10,18 @@
   "timeUntilBonusExpired": "Time until bonus expire",
   "seconds": "{sec, plural, =0{{sec} seconds} =1{1 second} other{{sec} seconds}}",
   "minutes": "{min, plural, =0{{min} minutes} =1{1 minute} other{{min} minutes}}",
-  "hours": "{hour, plural, =0{{hour} hours} =1{1 hour} other{{hour} hours}}"
+  "hours": "{hour, plural, =0{{hour} hours} =1{1 hour} other{{hour} hours}}",
+  "mainTimer": "Main timer",
+  "mainTimerDesc": "The main countdown timer",
+  "assistTimer": "Assist timer",
+  "assistTimerDesc": "Select the time when the assistant become available",
+  "bonusTimer": "Bonus timer",
+  "bonusTimerDesc": "Select the time when the bonus will expire",
+  "enable": "Enable",
+  "disable": "Disable",
+  "setTimer": "Set timer",
+  "timerTitle": "Timer title",
+  "timerTitleDesc": "Set the text that will be displayed above the timer",
+  "setTimerTitle": "Set timer title",
+  "enterText": "Enter text"
 }

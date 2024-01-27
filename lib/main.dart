@@ -11,7 +11,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/hotkeys.dart';
 import 'package:ugd_timer/logic/overlay.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
@@ -50,7 +49,7 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
-    initHotkeys(ref);
+    // initHotkeys(ref);
   }
 
   // @override
@@ -82,7 +81,7 @@ class _MainAppState extends ConsumerState<MainApp> {
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
           ),
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.dark,
           localizationsDelegates: const <LocalizationsDelegate>[
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -94,9 +93,9 @@ class _MainAppState extends ConsumerState<MainApp> {
             Locale('id'), // Indonesia
           ],
           locale: const Locale('en'),
-          home: Column(
+          home: const Column(
             children: <Widget>[
-              const TitleBar(),
+              TitleBar(),
               ScreenStackManager(),
             ],
           ),

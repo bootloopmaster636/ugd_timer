@@ -16,17 +16,22 @@ class ScreenStackManager extends ConsumerWidget {
     return Stack(
       children: <Widget>[
         const Background(),
-        AnimatedContainer(
+        AnimatedOpacity(
           duration: const Duration(milliseconds: 600),
           curve: Curves.easeOutQuint,
-          transform: Matrix4.translationValues(
-            isSettingsOverlayOpen ? 80 : 0,
-            0,
-            0,
+          opacity: isSettingsOverlayOpen ? 0.6 : 1,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutQuint,
+            transform: Matrix4.translationValues(
+              isSettingsOverlayOpen ? 80 : 0,
+              0,
+              0,
+            ),
+            height: 100.h - titleBarHeight,
+            alignment: Alignment.center,
+            child: const TopLayer(),
           ),
-          height: 100.h - titleBarHeight,
-          alignment: Alignment.center,
-          child: const TopLayer(),
         ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 600),

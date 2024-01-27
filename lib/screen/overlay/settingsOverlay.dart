@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/overlay.dart';
+import 'package:ugd_timer/screen/overlay/settingsContent.dart';
 
 class SettingsOverlay extends HookConsumerWidget {
   const SettingsOverlay({super.key});
@@ -19,7 +20,7 @@ class SettingsOverlay extends HookConsumerWidget {
             child: Container(
               height: 100.h - titleBarHeight,
               width: 100.w,
-              color: FluentTheme.of(context).menuColor.withOpacity(0.4),
+              color: Colors.transparent,
             ),
           )
         else
@@ -37,8 +38,11 @@ class SettingsOverlay extends HookConsumerWidget {
                 children: <Widget>[
                   const Gap(8),
                   Text(AppLocalizations.of(context)!.timerSettings, style: FluentTheme.of(context).typography.title),
-                  Text(AppLocalizations.of(context)!.timerSettingsDescription,
-                      style: FluentTheme.of(context).typography.body),
+                  Text(
+                    AppLocalizations.of(context)!.timerSettingsDescription,
+                    style: FluentTheme.of(context).typography.body,
+                  ),
+                  const SettingsContent(),
                 ],
               ),
             ),
