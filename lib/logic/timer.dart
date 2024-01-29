@@ -75,7 +75,7 @@ class TimerLogic extends _$TimerLogic {
         bonusTimer: Duration.zero,
       ),
     );
-    await ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.reset);
+    await ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
   }
 
   Future<void> decrementTimer() async {
@@ -106,23 +106,24 @@ class TimerLogic extends _$TimerLogic {
 class TimerBeat extends _$TimerBeat {
   @override
   Future<TimerStatus> build() async {
-    return TimerStatus.reset;
+    await timerBeatLogic();
+    return TimerStatus.stopped;
   }
 
   Future<void> setTimerStatus(TimerStatus newStatus) async {
     state = AsyncData<TimerStatus>(newStatus);
   }
 
-  void timerBeatLogic() {
+  Future<void> timerBeatLogic() async {
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      final TimerStatus status = state.value ?? TimerStatus.reset;
+      final TimerStatus status = state.value ?? TimerStatus.stopped;
       switch (status) {
         case TimerStatus.running:
+          if (ref.read(timerLogicProvider).value?.currentTimer.inSeconds == 0) {
+            ref.read(timerLogicProvider.notifier).resetTimer();
+          }
           ref.read(timerLogicProvider.notifier).decrementTimer();
-        case TimerStatus.paused:
-          //do nothing
-          break;
-        case TimerStatus.reset:
+        case TimerStatus.stopped:
           //do nothing
           break;
       }

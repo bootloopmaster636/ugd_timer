@@ -13,38 +13,41 @@ class ScreenStackManager extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isSettingsOverlayOpen = ref.watch(overlayStateLogicProvider).isTimerSettingsShown;
-    return Stack(
-      children: <Widget>[
-        const Background(),
-        AnimatedOpacity(
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeOutQuint,
-          opacity: isSettingsOverlayOpen ? 0.6 : 1,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeOutQuint,
-            transform: Matrix4.translationValues(
-              isSettingsOverlayOpen ? 80 : 0,
-              0,
-              0,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Stack(
+          children: <Widget>[
+            const Background(),
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutQuint,
+              opacity: isSettingsOverlayOpen ? 0.6 : 1,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutQuint,
+                transform: Matrix4.translationValues(
+                  isSettingsOverlayOpen ? 80 : 0,
+                  0,
+                  0,
+                ),
+                height: 100.h - titleBarHeight,
+                child: const TopLayer(),
+              ),
             ),
-            height: 100.h - titleBarHeight,
-            alignment: Alignment.center,
-            child: const TopLayer(),
-          ),
-        ),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeOutQuint,
-          transform: Matrix4.translationValues(
-            isSettingsOverlayOpen ? 0 : -400,
-            0,
-            0,
-          ),
-          alignment: Alignment.centerLeft,
-          child: const SettingsOverlay(),
-        )
-      ],
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutQuint,
+              transform: Matrix4.translationValues(
+                isSettingsOverlayOpen ? 0 : -400,
+                0,
+                0,
+              ),
+              alignment: Alignment.centerLeft,
+              child: const SettingsOverlay(),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -16,18 +16,21 @@ class Timer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Duration clockProvider = ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero;
+    final Duration mainClock = ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero;
     return Column(
       children: <Widget>[
         AnimatedSpawnableWidget(
           isShown: ref.watch(timerEtcLogicProvider).title.isNotEmpty,
           child: Column(
-            children: [
-              Text(
-                ref.watch(timerEtcLogicProvider).title,
-                style: const TextStyle(
-                  fontSize: 5,
-                  fontWeight: FontWeight.bold,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  ref.watch(timerEtcLogicProvider).title,
+                  style: const TextStyle(
+                    fontSize: 5,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Gap(0.6.h),
@@ -45,7 +48,7 @@ class Timer extends HookConsumerWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: AnimatedClockWidget(
-            time: clockProvider,
+            time: mainClock,
           ),
         ),
         Gap(0.8.h),
@@ -62,6 +65,8 @@ class TimerInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Duration assistClock = ref.watch(timerLogicProvider).value?.assistTimer ?? Duration.zero;
+    final Duration bonusClock = ref.watch(timerLogicProvider).value?.bonusTimer ?? Duration.zero;
     return Row(
       children: <AnimatedSpawnableWidget>[
         AnimatedSpawnableWidget(
@@ -77,8 +82,10 @@ class TimerInfo extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(AppLocalizations.of(context)!.assistAvailableIn, style: const TextStyle(fontSize: 2)),
-                  Text('${AppLocalizations.of(context)!.minutes(1)} ${AppLocalizations.of(context)!.seconds(45)}',
-                      style: const TextStyle(fontSize: 3, fontWeight: FontWeight.bold)),
+                  Text(
+                    '${AppLocalizations.of(context)!.minutes(assistClock.inMinutes)} ${AppLocalizations.of(context)!.seconds(assistClock.inSeconds % 60)}',
+                    style: const TextStyle(fontSize: 3, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ],
@@ -97,7 +104,8 @@ class TimerInfo extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(AppLocalizations.of(context)!.timeUntilBonusExpired, style: const TextStyle(fontSize: 2)),
-                  Text('${AppLocalizations.of(context)!.minutes(3)} ${AppLocalizations.of(context)!.seconds(45)}',
+                  Text(
+                      '${AppLocalizations.of(context)!.minutes(bonusClock.inMinutes)} ${AppLocalizations.of(context)!.seconds(bonusClock.inSeconds % 60)}',
                       style: const TextStyle(fontSize: 3, fontWeight: FontWeight.bold)),
                 ],
               ),

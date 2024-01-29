@@ -1,4 +1,4 @@
-enum TimerStatus { running, paused, reset }
+enum TimerStatus { running, stopped }
 
 enum TimerType { main, assist, bonus }
 

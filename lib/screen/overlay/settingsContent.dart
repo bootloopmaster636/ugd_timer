@@ -123,10 +123,11 @@ class TimerTitleSection extends ConsumerWidget {
     return SettingsSection(
       title: AppLocalizations.of(context)!.timerTitle,
       subtitle: AppLocalizations.of(context)!.timerTitleDesc,
-      children: [
+      children: <Widget>[
         SettingsTileTextfield(
           title: AppLocalizations.of(context)!.setTimerTitle,
           hint: AppLocalizations.of(context)!.enterText,
+          value: ref.watch(timerEtcLogicProvider).title,
           isEnabled: true,
           onChanged: (String text) {
             ref.read(timerEtcLogicProvider.notifier).setTitle(text);

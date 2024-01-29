@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +14,7 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/overlay.dart';
+import 'package:ugd_timer/logic/timer.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -97,11 +100,22 @@ class _MainAppState extends ConsumerState<MainApp> {
             children: <Widget>[
               TitleBar(),
               ScreenStackManager(),
+              Init(),
             ],
           ),
         );
       },
     );
+  }
+}
+
+class Init extends ConsumerWidget {
+  const Init({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(timerBeatProvider);
+    return const SizedBox();
   }
 }
 
@@ -169,32 +183,14 @@ class Menu extends HookConsumerWidget {
             builder: (BuildContext context) {
               return MenuFlyout(
                 items: <MenuFlyoutItemBase>[
-                  MenuFlyoutItem(
-                    leading: const Icon(FluentIcons.play),
-                    text: Text(AppLocalizations.of(context)!.startTimer),
-                    trailing: Text(
-                      'Ctrl+S',
-                      style: FluentTheme.of(context).typography.caption,
-                    ),
-                    onPressed: Flyout.of(context).close,
-                  ),
-                  MenuFlyoutItem(
-                    leading: const Icon(FluentIcons.reset),
-                    text: Text(AppLocalizations.of(context)!.stopAndResetTimer),
-                    trailing: Text(
-                      'Ctrl+R',
-                      style: FluentTheme.of(context).typography.caption,
-                    ),
-                    onPressed: Flyout.of(context).close,
-                  ),
-                  const MenuFlyoutSeparator(),
+                  // TODO(bootloopmaster636): readd keyboard shortcut once shortcut system become stable
                   MenuFlyoutItem(
                     leading: const Icon(FluentIcons.timer),
                     text: Text(AppLocalizations.of(context)!.timerSettings),
-                    trailing: Text(
-                      'Ctrl+T',
-                      style: FluentTheme.of(context).typography.caption,
-                    ),
+                    // trailing: Text(
+                    //   'Ctrl+T',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
                     onPressed: () {
                       ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
                       Flyout.of(context).close();
@@ -203,11 +199,21 @@ class Menu extends HookConsumerWidget {
                   MenuFlyoutItem(
                     leading: const Icon(FluentIcons.settings),
                     text: Text(AppLocalizations.of(context)!.appSettings),
-                    trailing: Text(
-                      'Ctrl+O',
-                      style: FluentTheme.of(context).typography.caption,
-                    ),
+                    // trailing: Text(
+                    //   'Ctrl+O',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
                     onPressed: Flyout.of(context).close,
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.exit),
+                    // trailing: Text(
+                    //   'Ctrl+Q',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: () {
+                      exit(0);
+                    },
                   ),
                 ],
               );

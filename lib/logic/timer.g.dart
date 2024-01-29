@@ -6,7 +6,7 @@ part of 'timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timerLogicHash() => r'85753ae3a8dabb4ef53f590e7beef4504d31cd5f';
+String _$timerLogicHash() => r'c7dda2a458bf502c20b51603d1ac18f29006d6a6';
 
 /// See also [TimerLogic].
 @ProviderFor(TimerLogic)
@@ -21,7 +21,7 @@ final timerLogicProvider =
 );
 
 typedef _$TimerLogic = AutoDisposeAsyncNotifier<Clock>;
-String _$timerBeatHash() => r'b2ad584dc9c95f8347f7f2bff38a74c20239dbcf';
+String _$timerBeatHash() => r'5340f2cf5234c58fd56f4244fe26876b0ccdafc8';
 
 /// See also [TimerBeat].
 @ProviderFor(TimerBeat)

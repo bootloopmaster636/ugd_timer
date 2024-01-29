@@ -123,7 +123,7 @@ void main() {
 
     // wait for 2 second and pause
     Future.delayed(const Duration(seconds: 2), () {
-      container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.paused);
+      container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
     });
 
     // wait for another 2 second and check the result, timer should stay the same...
@@ -184,7 +184,7 @@ void main() {
           bonusTimer: Duration.zero,
         ),
       );
-      expect(container.read(timerBeatProvider).value, TimerStatus.reset);
+      expect(container.read(timerBeatProvider).value, TimerStatus.stopped);
     });
 
     addTearDown(container.dispose);
@@ -215,11 +215,11 @@ void main() {
 
     // spam the timer with multiple start/pause
     container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
-    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.paused);
+    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
     container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
-    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.paused);
+    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
     container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
-    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.paused);
+    container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
     container.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
 
     // wait for 2 second and check the result

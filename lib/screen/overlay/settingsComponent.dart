@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ugd_timer/logic/timerEtc.dart';
 import 'package:ugd_timer/screen/generalComponents.dart';
 
 class SettingsSection extends StatelessWidget {
@@ -121,6 +120,7 @@ class SettingsTileTextfield extends HookConsumerWidget {
     required this.title,
     required this.hint,
     required this.isEnabled,
+    required this.value,
     required this.onChanged,
     super.key,
   });
@@ -128,11 +128,12 @@ class SettingsTileTextfield extends HookConsumerWidget {
   final String title;
   final String hint;
   final bool isEnabled;
+  final String value;
   final void Function(String value) onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController inputCtl = useTextEditingController(text: ref.watch(timerEtcLogicProvider).title);
+    final TextEditingController inputCtl = useTextEditingController(text: value);
     return Acrylic(
       elevation: 8,
       shape: const RoundedRectangleBorder(
