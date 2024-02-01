@@ -3,65 +3,32 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/overlay.dart';
-import 'package:ugd_timer/logic/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timerConf.dart';
+import 'package:ugd_timer/logic/ui/navigation.dart';
+import 'package:ugd_timer/logic/ui/overlay.dart';
+import 'package:ugd_timer/screen/etc/AutoStartWizard.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await hotKeyManager.unregisterAll();
-  await flutter_acrylic.Window.initialize();
+  await Window.initialize();
 
   if (defaultTargetPlatform == TargetPlatform.windows) {}
 
-  if (defaultTargetPlatform == TargetPlatform.linux) {
-    await Window.setEffect(
-      effect: WindowEffect.transparent,
-    );
-  }
-
-  await WindowManager.instance.ensureInitialized();
-  if (kIsWeb == false) {
-    runApp(const ProviderScope(child: MainApp()));
-    doWhenWindowReady(() {
-      appWindow.alignment = Alignment.center;
-      appWindow.show();
-    });
-  }
+  runApp(ProviderScope(child: MainApp()));
 }
 
-class MainApp extends ConsumerStatefulWidget {
-  const MainApp({super.key});
-
-  @override
-  ConsumerState<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends ConsumerState<MainApp> {
-  @override
-  void initState() {
-    super.initState();
-    // initHotkeys(ref);
-  }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   hotKeyManager.unregisterAll();
-  //   Logger().d('Hotkeys unregistered');
-  // }
-
+class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -84,7 +51,7 @@ class _MainAppState extends ConsumerState<MainApp> {
               glowFactor: is10footScreen(context) ? 2.0 : 0.0,
             ),
           ),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
           localizationsDelegates: const <LocalizationsDelegate>[
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -99,8 +66,8 @@ class _MainAppState extends ConsumerState<MainApp> {
           home: const Column(
             children: <Widget>[
               TitleBar(),
-              ScreenStackManager(),
               Init(),
+              ScreenStackManager(),
             ],
           ),
         );
@@ -119,11 +86,11 @@ class Init extends ConsumerWidget {
   }
 }
 
-class TitleBar extends HookWidget {
+class TitleBar extends HookConsumerWidget {
   const TitleBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<bool> isFullscreen = useState(false);
 
     return Container(
@@ -135,7 +102,7 @@ class TitleBar extends HookWidget {
           const Menu(),
           const Gap(4),
           Text(
-            'UGD Timer - title hereeeeeeeeeeeeeeeeee',
+            'UGD Timer | ${ref.watch(timerConfLogicProvider).title}',
             style: TextStyle(color: FluentTheme.of(context).activeColor),
           ),
           const Spacer(),
@@ -204,6 +171,16 @@ class Menu extends HookConsumerWidget {
                     //   style: FluentTheme.of(context).typography.caption,
                     // ),
                     onPressed: Flyout.of(context).close,
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.autoStartWizard),
+                    // trailing: Text(
+                    //   'Ctrl+Q',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: () {
+                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const AutoStartSetupPage());
+                    },
                   ),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.exit),
