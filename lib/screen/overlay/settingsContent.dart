@@ -36,7 +36,7 @@ class MainTimerSection extends ConsumerWidget {
       children: <Widget>[
         SettingsTileTimeSelect(
           title: AppLocalizations.of(context)!.setTimer,
-          selectedTime: ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero,
+          selectedTime: ref.watch(timerLogicProvider).value?.mainTimer ?? Duration.zero,
           isEnabled: true,
           onPressed: (DateTime time) {
             ref
@@ -56,6 +56,17 @@ class AssistTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // functions as a warning when user set this timer duration above main timer
+    ref.listen(
+      timerLogicProvider,
+      (AsyncValue<Clock>? prevClock, AsyncValue<Clock> newClock) async {
+        if (newClock.value!.assistTimer > newClock.value!.mainTimer) {
+          await warnTimeExceedMain(context);
+          await ref.read(timerLogicProvider.notifier).setTimer(TimerType.assist, Duration.zero);
+        }
+      },
+    );
+
     return SettingsSection(
       title: AppLocalizations.of(context)!.assistTimer,
       subtitle: AppLocalizations.of(context)!.assistTimerDesc,
@@ -89,6 +100,17 @@ class BonusTimerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // functions as a warning when user set this timer duration above main timer
+    ref.listen(
+      timerLogicProvider,
+      (AsyncValue<Clock>? prevClock, AsyncValue<Clock> newClock) async {
+        if (newClock.value!.bonusTimer > newClock.value!.mainTimer) {
+          await warnTimeExceedMain(context);
+          await ref.read(timerLogicProvider.notifier).setTimer(TimerType.bonus, Duration.zero);
+        }
+      },
+    );
+
     return SettingsSection(
       title: AppLocalizations.of(context)!.bonusTimer,
       subtitle: AppLocalizations.of(context)!.bonusTimerDesc,
@@ -136,4 +158,22 @@ class TimerTitleSection extends ConsumerWidget {
       ],
     );
   }
+}
+
+Future<void> warnTimeExceedMain(BuildContext context) async {
+  await displayInfoBar(
+    context,
+    duration: const Duration(seconds: 6),
+    builder: (BuildContext context, void Function() close) {
+      return InfoBar(
+        title: Text(AppLocalizations.of(context)!.error),
+        content: Text(AppLocalizations.of(context)!.timerCouldNotExceedMain),
+        action: IconButton(
+          icon: const Icon(FluentIcons.clear),
+          onPressed: close,
+        ),
+        severity: InfoBarSeverity.error,
+      );
+    },
+  );
 }
