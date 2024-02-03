@@ -105,7 +105,7 @@ class TitleBar extends HookConsumerWidget {
             'UGD Timer | ${ref.watch(timerConfLogicProvider).title}',
             style: TextStyle(color: FluentTheme.of(context).activeColor),
           ),
-          const Spacer(),
+          Expanded(child: MoveWindow()),
           IconButton(
             icon: Icon(FluentIcons.full_screen, color: FluentTheme.of(context).activeColor),
             onPressed: () {
