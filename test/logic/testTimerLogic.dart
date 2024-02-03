@@ -12,7 +12,7 @@ void main() {
     expect(
       container.read(timerLogicProvider).value,
       Clock(
-        currentTimer: Duration.zero,
+        mainTimer: Duration.zero,
         assistTimer: Duration.zero,
         bonusTimer: Duration.zero,
       ),
@@ -35,7 +35,7 @@ void main() {
     expect(
       container.read(timerLogicProvider).value,
       Clock(
-        currentTimer: const Duration(seconds: 10),
+        mainTimer: const Duration(seconds: 10),
         assistTimer: const Duration(seconds: 8),
         bonusTimer: const Duration(seconds: 6),
       ),
@@ -66,7 +66,7 @@ void main() {
     expect(
       container.read(timerLogicProvider).value,
       Clock(
-        currentTimer: const Duration(seconds: 10),
+        mainTimer: const Duration(seconds: 10),
         assistTimer: const Duration(seconds: 8),
         bonusTimer: const Duration(seconds: 6),
       ),
@@ -80,7 +80,7 @@ void main() {
       expect(
         container.read(timerLogicProvider).value,
         Clock(
-          currentTimer: const Duration(seconds: 8),
+          mainTimer: const Duration(seconds: 8),
           assistTimer: const Duration(seconds: 6),
           bonusTimer: const Duration(seconds: 4),
         ),
@@ -112,7 +112,7 @@ void main() {
     expect(
       container.read(timerLogicProvider).value,
       Clock(
-        currentTimer: const Duration(seconds: 10),
+        mainTimer: const Duration(seconds: 10),
         assistTimer: const Duration(seconds: 8),
         bonusTimer: const Duration(seconds: 6),
       ),
@@ -131,7 +131,7 @@ void main() {
       expect(
         container.read(timerLogicProvider).value,
         Clock(
-          currentTimer: const Duration(seconds: 8),
+          mainTimer: const Duration(seconds: 8),
           assistTimer: const Duration(seconds: 6),
           bonusTimer: const Duration(seconds: 4),
         ),
@@ -163,7 +163,7 @@ void main() {
     expect(
       container.read(timerLogicProvider).value,
       Clock(
-        currentTimer: const Duration(seconds: 10),
+        mainTimer: const Duration(seconds: 10),
         assistTimer: const Duration(seconds: 8),
         bonusTimer: const Duration(seconds: 6),
       ),
@@ -179,7 +179,7 @@ void main() {
       expect(
         container.read(timerLogicProvider).value,
         Clock(
-          currentTimer: Duration.zero,
+          mainTimer: Duration.zero,
           assistTimer: Duration.zero,
           bonusTimer: Duration.zero,
         ),
@@ -227,7 +227,7 @@ void main() {
       expect(
         container.read(timerLogicProvider).value,
         Clock(
-          currentTimer: const Duration(seconds: 8),
+          mainTimer: const Duration(seconds: 8),
           assistTimer: const Duration(seconds: 6),
           bonusTimer: const Duration(seconds: 4),
         ),

@@ -21,6 +21,7 @@
   "disable": "Disable",
   "cancel": "Cancel",
   "warning": "Warning",
+  "error": "Error",
   "setTimer": "Set timer",
   "timerTitle": "Timer title",
   "timerTitleDesc": "Set the text that will be displayed above the timer",
@@ -33,5 +34,6 @@
   "autoStartMessageHelper": "Type a message that will be displayed below the timer",
   "autoStartMessageExample": "E.g. Please use this time to prepare the project, etc.",
   "mainTimerNotConfiguredWarning": "Main timer haven't been configured, please set the main timer in timer settings.",
-  "timerWillStartAt": "Timer will start at {hr}:{min}"
+  "timerWillStartAt": "Timer will start at {hr}:{min}",
+  "timerCouldNotExceedMain": "This timer could not exceed the main timer, please set this timer duration below the main timer duration."
 }

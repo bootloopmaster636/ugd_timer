@@ -16,7 +16,7 @@ class Timer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Duration mainClock = ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero;
+    final Duration mainClock = ref.watch(timerLogicProvider).value?.mainTimer ?? Duration.zero;
     return Column(
       children: <Widget>[
         HideableWidget(

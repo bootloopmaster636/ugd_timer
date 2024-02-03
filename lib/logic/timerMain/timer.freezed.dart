@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Clock {
-  Duration get currentTimer => throw _privateConstructorUsedError;
+  Duration get mainTimer => throw _privateConstructorUsedError;
   Duration get assistTimer => throw _privateConstructorUsedError;
   Duration get bonusTimer => throw _privateConstructorUsedError;
 
@@ -29,7 +29,7 @@ abstract class $ClockCopyWith<$Res> {
   factory $ClockCopyWith(Clock value, $Res Function(Clock) then) =
       _$ClockCopyWithImpl<$Res, Clock>;
   @useResult
-  $Res call({Duration currentTimer, Duration assistTimer, Duration bonusTimer});
+  $Res call({Duration mainTimer, Duration assistTimer, Duration bonusTimer});
 }
 
 /// @nodoc
@@ -45,14 +45,14 @@ class _$ClockCopyWithImpl<$Res, $Val extends Clock>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentTimer = null,
+    Object? mainTimer = null,
     Object? assistTimer = null,
     Object? bonusTimer = null,
   }) {
     return _then(_value.copyWith(
-      currentTimer: null == currentTimer
-          ? _value.currentTimer
-          : currentTimer // ignore: cast_nullable_to_non_nullable
+      mainTimer: null == mainTimer
+          ? _value.mainTimer
+          : mainTimer // ignore: cast_nullable_to_non_nullable
               as Duration,
       assistTimer: null == assistTimer
           ? _value.assistTimer
@@ -73,7 +73,7 @@ abstract class _$$ClockImplCopyWith<$Res> implements $ClockCopyWith<$Res> {
       __$$ClockImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Duration currentTimer, Duration assistTimer, Duration bonusTimer});
+  $Res call({Duration mainTimer, Duration assistTimer, Duration bonusTimer});
 }
 
 /// @nodoc
@@ -87,14 +87,14 @@ class __$$ClockImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentTimer = null,
+    Object? mainTimer = null,
     Object? assistTimer = null,
     Object? bonusTimer = null,
   }) {
     return _then(_$ClockImpl(
-      currentTimer: null == currentTimer
-          ? _value.currentTimer
-          : currentTimer // ignore: cast_nullable_to_non_nullable
+      mainTimer: null == mainTimer
+          ? _value.mainTimer
+          : mainTimer // ignore: cast_nullable_to_non_nullable
               as Duration,
       assistTimer: null == assistTimer
           ? _value.assistTimer
@@ -112,12 +112,12 @@ class __$$ClockImplCopyWithImpl<$Res>
 
 class _$ClockImpl implements _Clock {
   _$ClockImpl(
-      {required this.currentTimer,
+      {required this.mainTimer,
       required this.assistTimer,
       required this.bonusTimer});
 
   @override
-  final Duration currentTimer;
+  final Duration mainTimer;
   @override
   final Duration assistTimer;
   @override
@@ -125,7 +125,7 @@ class _$ClockImpl implements _Clock {
 
   @override
   String toString() {
-    return 'Clock(currentTimer: $currentTimer, assistTimer: $assistTimer, bonusTimer: $bonusTimer)';
+    return 'Clock(mainTimer: $mainTimer, assistTimer: $assistTimer, bonusTimer: $bonusTimer)';
   }
 
   @override
@@ -133,8 +133,8 @@ class _$ClockImpl implements _Clock {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClockImpl &&
-            (identical(other.currentTimer, currentTimer) ||
-                other.currentTimer == currentTimer) &&
+            (identical(other.mainTimer, mainTimer) ||
+                other.mainTimer == mainTimer) &&
             (identical(other.assistTimer, assistTimer) ||
                 other.assistTimer == assistTimer) &&
             (identical(other.bonusTimer, bonusTimer) ||
@@ -143,7 +143,7 @@ class _$ClockImpl implements _Clock {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, currentTimer, assistTimer, bonusTimer);
+      Object.hash(runtimeType, mainTimer, assistTimer, bonusTimer);
 
   @JsonKey(ignore: true)
   @override
@@ -154,12 +154,12 @@ class _$ClockImpl implements _Clock {
 
 abstract class _Clock implements Clock {
   factory _Clock(
-      {required final Duration currentTimer,
+      {required final Duration mainTimer,
       required final Duration assistTimer,
       required final Duration bonusTimer}) = _$ClockImpl;
 
   @override
-  Duration get currentTimer;
+  Duration get mainTimer;
   @override
   Duration get assistTimer;
   @override

@@ -10,7 +10,7 @@ part 'timer.g.dart';
 @freezed
 class Clock with _$Clock {
   factory Clock({
-    required Duration currentTimer,
+    required Duration mainTimer,
     required Duration assistTimer,
     required Duration bonusTimer,
   }) = _Clock;
@@ -29,7 +29,7 @@ class TimerLogic extends _$TimerLogic {
   @override
   Future<Clock> build() async {
     return Clock(
-      currentTimer: Duration.zero,
+      mainTimer: Duration.zero,
       assistTimer: Duration.zero,
       bonusTimer: Duration.zero,
     );
@@ -43,7 +43,7 @@ class TimerLogic extends _$TimerLogic {
       case TimerType.main:
         state = AsyncData<Clock>(
           Clock(
-            currentTimer: duration,
+            mainTimer: duration,
             assistTimer: state.value?.assistTimer ?? Duration.zero,
             bonusTimer: state.value?.bonusTimer ?? Duration.zero,
           ),
@@ -52,7 +52,7 @@ class TimerLogic extends _$TimerLogic {
       case TimerType.assist:
         state = AsyncData<Clock>(
           Clock(
-            currentTimer: state.value?.currentTimer ?? Duration.zero,
+            mainTimer: state.value?.mainTimer ?? Duration.zero,
             assistTimer: duration,
             bonusTimer: state.value?.bonusTimer ?? Duration.zero,
           ),
@@ -61,7 +61,7 @@ class TimerLogic extends _$TimerLogic {
       case TimerType.bonus:
         state = AsyncData<Clock>(
           Clock(
-            currentTimer: state.value?.currentTimer ?? Duration.zero,
+            mainTimer: state.value?.mainTimer ?? Duration.zero,
             assistTimer: state.value?.assistTimer ?? Duration.zero,
             bonusTimer: duration,
           ),
@@ -72,7 +72,7 @@ class TimerLogic extends _$TimerLogic {
   Future<void> resetTimer() async {
     state = AsyncData<Clock>(
       Clock(
-        currentTimer: Duration.zero,
+        mainTimer: Duration.zero,
         assistTimer: Duration.zero,
         bonusTimer: Duration.zero,
       ),
@@ -83,13 +83,13 @@ class TimerLogic extends _$TimerLogic {
   Future<void> decrementTimer() async {
     Clock clock = state.value ??
         Clock(
-          currentTimer: Duration.zero,
+          mainTimer: Duration.zero,
           assistTimer: Duration.zero,
           bonusTimer: Duration.zero,
         );
 
-    if (clock.currentTimer.inSeconds > 0) {
-      clock = clock.copyWith(currentTimer: clock.currentTimer - const Duration(seconds: 1));
+    if (clock.mainTimer.inSeconds > 0) {
+      clock = clock.copyWith(mainTimer: clock.mainTimer - const Duration(seconds: 1));
     }
 
     if (clock.assistTimer.inSeconds > 0) {
@@ -137,7 +137,7 @@ class TimerBeat extends _$TimerBeat {
 
       switch (timerStatus.status) {
         case TimerStatus.running:
-          if (ref.read(timerLogicProvider).value?.currentTimer.inSeconds == 0) {
+          if (ref.read(timerLogicProvider).value?.mainTimer.inSeconds == 0) {
             ref.read(timerLogicProvider.notifier).resetTimer();
           }
           ref.read(timerLogicProvider.notifier).decrementTimer();

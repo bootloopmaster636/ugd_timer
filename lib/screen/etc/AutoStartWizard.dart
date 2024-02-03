@@ -123,7 +123,7 @@ class AutoStartSetupPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Duration autoStartClockInfo = ref.watch(autoStartLogicProvider).startAt;
     final TextEditingController messageCtl = useTextEditingController();
-    final Duration mainTimer = ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero;
+    final Duration mainTimer = ref.watch(timerLogicProvider).value?.mainTimer ?? Duration.zero;
 
     return Center(
       child: SizedBox(
