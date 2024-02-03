@@ -1,7 +1,7 @@
 import 'package:riverpod/riverpod.dart';
 import 'package:test/test.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
 
 void main() {
   test('Timer set', () {

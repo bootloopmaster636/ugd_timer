@@ -4,8 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:ugd_timer/logic/timer.dart';
-import 'package:ugd_timer/logic/timerEtc.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timerConf.dart';
 import 'package:ugd_timer/screen/generalComponents.dart';
 import 'package:ugd_timer/screen/top/clockComponents.dart';
 
@@ -19,14 +19,14 @@ class Timer extends HookConsumerWidget {
     final Duration mainClock = ref.watch(timerLogicProvider).value?.currentTimer ?? Duration.zero;
     return Column(
       children: <Widget>[
-        AnimatedSpawnableWidget(
-          isShown: ref.watch(timerEtcLogicProvider).title.isNotEmpty,
+        HideableWidget(
+          isShown: ref.watch(timerConfLogicProvider).title.isNotEmpty,
           child: Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  ref.watch(timerEtcLogicProvider).title,
+                  ref.watch(timerConfLogicProvider).title,
                   style: const TextStyle(
                     fontSize: 5,
                     fontWeight: FontWeight.bold,
@@ -68,9 +68,9 @@ class TimerInfo extends ConsumerWidget {
     final Duration assistClock = ref.watch(timerLogicProvider).value?.assistTimer ?? Duration.zero;
     final Duration bonusClock = ref.watch(timerLogicProvider).value?.bonusTimer ?? Duration.zero;
     return Row(
-      children: <AnimatedSpawnableWidget>[
-        AnimatedSpawnableWidget(
-          isShown: ref.watch(timerEtcLogicProvider).assistTimerEnabled,
+      children: <HideableWidget>[
+        HideableWidget(
+          isShown: ref.watch(timerConfLogicProvider).assistTimerEnabled,
           child: Row(
             children: <Widget>[
               const FaIcon(
@@ -91,8 +91,8 @@ class TimerInfo extends ConsumerWidget {
             ],
           ),
         ),
-        AnimatedSpawnableWidget(
-          isShown: ref.watch(timerEtcLogicProvider).bonusTimerEnabled,
+        HideableWidget(
+          isShown: ref.watch(timerConfLogicProvider).bonusTimerEnabled,
           child: Row(
             children: <Widget>[
               const FaIcon(
@@ -112,9 +112,7 @@ class TimerInfo extends ConsumerWidget {
             ],
           ),
         ),
-      ]
-          .map((AnimatedSpawnableWidget e) => Padding(padding: const EdgeInsets.symmetric(horizontal: 2), child: e))
-          .toList(),
+      ].map((HideableWidget e) => Padding(padding: const EdgeInsets.symmetric(horizontal: 2), child: e)).toList(),
     );
   }
 }

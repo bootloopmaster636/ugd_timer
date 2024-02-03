@@ -169,3 +169,135 @@ abstract class _Clock implements Clock {
   _$$ClockImplCopyWith<_$ClockImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$Status {
+  TimerStatus get status => throw _privateConstructorUsedError;
+  DateTime get now => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $StatusCopyWith<Status> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StatusCopyWith<$Res> {
+  factory $StatusCopyWith(Status value, $Res Function(Status) then) =
+      _$StatusCopyWithImpl<$Res, Status>;
+  @useResult
+  $Res call({TimerStatus status, DateTime now});
+}
+
+/// @nodoc
+class _$StatusCopyWithImpl<$Res, $Val extends Status>
+    implements $StatusCopyWith<$Res> {
+  _$StatusCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = null,
+    Object? now = null,
+  }) {
+    return _then(_value.copyWith(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as TimerStatus,
+      now: null == now
+          ? _value.now
+          : now // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$StatusImplCopyWith<$Res> implements $StatusCopyWith<$Res> {
+  factory _$$StatusImplCopyWith(
+          _$StatusImpl value, $Res Function(_$StatusImpl) then) =
+      __$$StatusImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({TimerStatus status, DateTime now});
+}
+
+/// @nodoc
+class __$$StatusImplCopyWithImpl<$Res>
+    extends _$StatusCopyWithImpl<$Res, _$StatusImpl>
+    implements _$$StatusImplCopyWith<$Res> {
+  __$$StatusImplCopyWithImpl(
+      _$StatusImpl _value, $Res Function(_$StatusImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? status = null,
+    Object? now = null,
+  }) {
+    return _then(_$StatusImpl(
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as TimerStatus,
+      now: null == now
+          ? _value.now
+          : now // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$StatusImpl implements _Status {
+  _$StatusImpl({required this.status, required this.now});
+
+  @override
+  final TimerStatus status;
+  @override
+  final DateTime now;
+
+  @override
+  String toString() {
+    return 'Status(status: $status, now: $now)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StatusImpl &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.now, now) || other.now == now));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, status, now);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StatusImplCopyWith<_$StatusImpl> get copyWith =>
+      __$$StatusImplCopyWithImpl<_$StatusImpl>(this, _$identity);
+}
+
+abstract class _Status implements Status {
+  factory _Status(
+      {required final TimerStatus status,
+      required final DateTime now}) = _$StatusImpl;
+
+  @override
+  TimerStatus get status;
+  @override
+  DateTime get now;
+  @override
+  @JsonKey(ignore: true)
+  _$$StatusImplCopyWith<_$StatusImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

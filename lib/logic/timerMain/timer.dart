@@ -16,10 +16,12 @@ class Clock with _$Clock {
   }) = _Clock;
 }
 
-class Status {
-  Status({required this.status});
-
-  TimerStatus status;
+@freezed
+class Status with _$Status {
+  factory Status({
+    required TimerStatus status,
+    required DateTime now,
+  }) = _Status;
 }
 
 @riverpod
@@ -105,19 +107,35 @@ class TimerLogic extends _$TimerLogic {
 @riverpod
 class TimerBeat extends _$TimerBeat {
   @override
-  Future<TimerStatus> build() async {
+  Future<Status> build() async {
     await timerBeatLogic();
-    return TimerStatus.stopped;
+    return Status(
+      status: TimerStatus.stopped,
+      now: DateTime.now(),
+    );
   }
 
   Future<void> setTimerStatus(TimerStatus newStatus) async {
-    state = AsyncData<TimerStatus>(newStatus);
+    final Status status = state.value ??
+        Status(
+          status: TimerStatus.stopped,
+          now: DateTime.now(),
+        );
+    state = AsyncData<Status>(status.copyWith(
+      status: newStatus,
+      now: DateTime.now(),
+    ));
   }
 
   Future<void> timerBeatLogic() async {
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      final TimerStatus status = state.value ?? TimerStatus.stopped;
-      switch (status) {
+      final Status timerStatus = state.value ??
+          Status(
+            status: TimerStatus.stopped,
+            now: DateTime.now(),
+          );
+
+      switch (timerStatus.status) {
         case TimerStatus.running:
           if (ref.read(timerLogicProvider).value?.currentTimer.inSeconds == 0) {
             ref.read(timerLogicProvider.notifier).resetTimer();
@@ -127,6 +145,7 @@ class TimerBeat extends _$TimerBeat {
           //do nothing
           break;
       }
+      state = AsyncData<Status>(timerStatus.copyWith(now: DateTime.now()));
     });
   }
 }

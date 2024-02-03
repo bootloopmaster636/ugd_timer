@@ -19,10 +19,19 @@
   "bonusTimerDesc": "Select the time when the bonus will expire",
   "enable": "Enable",
   "disable": "Disable",
+  "cancel": "Cancel",
+  "warning": "Warning",
   "setTimer": "Set timer",
   "timerTitle": "Timer title",
   "timerTitleDesc": "Set the text that will be displayed above the timer",
   "setTimerTitle": "Set timer title",
   "enterText": "Enter text",
-  "exit": "Exit"
+  "exit": "Exit",
+  "autoStartWizard": "Timer auto-start wizard",
+  "autoStartWizardAsk": "Configure the autostart",
+  "pickATime": "Pick a time...",
+  "autoStartMessageHelper": "Type a message that will be displayed below the timer",
+  "autoStartMessageExample": "E.g. Please use this time to prepare the project, etc.",
+  "mainTimerNotConfiguredWarning": "Main timer haven't been configured, please set the main timer in timer settings.",
+  "timerWillStartAt": "Timer will start at {hr}:{min}"
 }

@@ -96,7 +96,7 @@ class SettingsTileTimeSelect extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeOutQuad,
-        child: AnimatedSpawnableWidget(
+        child: HideableWidget(
           isShown: isEnabled,
           child: ListTile(
             title: Text(title),
@@ -142,7 +142,7 @@ class SettingsTileTextfield extends HookConsumerWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeOutQuad,
-        child: AnimatedSpawnableWidget(
+        child: HideableWidget(
           isShown: isEnabled,
           child: ListTile(
             title: Text(title),

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'timerEtc.dart';
+part of 'timerConf.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$TimerEtc {
+mixin _$TimerConf {
   String get title => throw _privateConstructorUsedError;
   bool get assistTimerEnabled => throw _privateConstructorUsedError;
   bool get bonusTimerEnabled => throw _privateConstructorUsedError;
@@ -24,14 +24,14 @@ mixin _$TimerEtc {
   String get startCutoffAudioPath => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $TimerEtcCopyWith<TimerEtc> get copyWith =>
+  $TimerConfCopyWith<TimerConf> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TimerEtcCopyWith<$Res> {
-  factory $TimerEtcCopyWith(TimerEtc value, $Res Function(TimerEtc) then) =
-      _$TimerEtcCopyWithImpl<$Res, TimerEtc>;
+abstract class $TimerConfCopyWith<$Res> {
+  factory $TimerConfCopyWith(TimerConf value, $Res Function(TimerConf) then) =
+      _$TimerConfCopyWithImpl<$Res, TimerConf>;
   @useResult
   $Res call(
       {String title,
@@ -43,9 +43,9 @@ abstract class $TimerEtcCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TimerEtcCopyWithImpl<$Res, $Val extends TimerEtc>
-    implements $TimerEtcCopyWith<$Res> {
-  _$TimerEtcCopyWithImpl(this._value, this._then);
+class _$TimerConfCopyWithImpl<$Res, $Val extends TimerConf>
+    implements $TimerConfCopyWith<$Res> {
+  _$TimerConfCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -92,11 +92,11 @@ class _$TimerEtcCopyWithImpl<$Res, $Val extends TimerEtc>
 }
 
 /// @nodoc
-abstract class _$$TimerEtcImplCopyWith<$Res>
-    implements $TimerEtcCopyWith<$Res> {
-  factory _$$TimerEtcImplCopyWith(
-          _$TimerEtcImpl value, $Res Function(_$TimerEtcImpl) then) =
-      __$$TimerEtcImplCopyWithImpl<$Res>;
+abstract class _$$TimerConfImplCopyWith<$Res>
+    implements $TimerConfCopyWith<$Res> {
+  factory _$$TimerConfImplCopyWith(
+          _$TimerConfImpl value, $Res Function(_$TimerConfImpl) then) =
+      __$$TimerConfImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -109,11 +109,11 @@ abstract class _$$TimerEtcImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TimerEtcImplCopyWithImpl<$Res>
-    extends _$TimerEtcCopyWithImpl<$Res, _$TimerEtcImpl>
-    implements _$$TimerEtcImplCopyWith<$Res> {
-  __$$TimerEtcImplCopyWithImpl(
-      _$TimerEtcImpl _value, $Res Function(_$TimerEtcImpl) _then)
+class __$$TimerConfImplCopyWithImpl<$Res>
+    extends _$TimerConfCopyWithImpl<$Res, _$TimerConfImpl>
+    implements _$$TimerConfImplCopyWith<$Res> {
+  __$$TimerConfImplCopyWithImpl(
+      _$TimerConfImpl _value, $Res Function(_$TimerConfImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -126,7 +126,7 @@ class __$$TimerEtcImplCopyWithImpl<$Res>
     Object? endAudioPath = null,
     Object? startCutoffAudioPath = null,
   }) {
-    return _then(_$TimerEtcImpl(
+    return _then(_$TimerConfImpl(
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -157,8 +157,8 @@ class __$$TimerEtcImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$TimerEtcImpl implements _TimerEtc {
-  _$TimerEtcImpl(
+class _$TimerConfImpl implements _TimerConf {
+  _$TimerConfImpl(
       {required this.title,
       required this.assistTimerEnabled,
       required this.bonusTimerEnabled,
@@ -181,14 +181,14 @@ class _$TimerEtcImpl implements _TimerEtc {
 
   @override
   String toString() {
-    return 'TimerEtc(title: $title, assistTimerEnabled: $assistTimerEnabled, bonusTimerEnabled: $bonusTimerEnabled, warningAudioPath: $warningAudioPath, endAudioPath: $endAudioPath, startCutoffAudioPath: $startCutoffAudioPath)';
+    return 'TimerConf(title: $title, assistTimerEnabled: $assistTimerEnabled, bonusTimerEnabled: $bonusTimerEnabled, warningAudioPath: $warningAudioPath, endAudioPath: $endAudioPath, startCutoffAudioPath: $startCutoffAudioPath)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TimerEtcImpl &&
+            other is _$TimerConfImpl &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.assistTimerEnabled, assistTimerEnabled) ||
                 other.assistTimerEnabled == assistTimerEnabled) &&
@@ -209,18 +209,18 @@ class _$TimerEtcImpl implements _TimerEtc {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TimerEtcImplCopyWith<_$TimerEtcImpl> get copyWith =>
-      __$$TimerEtcImplCopyWithImpl<_$TimerEtcImpl>(this, _$identity);
+  _$$TimerConfImplCopyWith<_$TimerConfImpl> get copyWith =>
+      __$$TimerConfImplCopyWithImpl<_$TimerConfImpl>(this, _$identity);
 }
 
-abstract class _TimerEtc implements TimerEtc {
-  factory _TimerEtc(
+abstract class _TimerConf implements TimerConf {
+  factory _TimerConf(
       {required final String title,
       required final bool assistTimerEnabled,
       required final bool bonusTimerEnabled,
       required final String warningAudioPath,
       required final String endAudioPath,
-      required final String startCutoffAudioPath}) = _$TimerEtcImpl;
+      required final String startCutoffAudioPath}) = _$TimerConfImpl;
 
   @override
   String get title;
@@ -236,6 +236,6 @@ abstract class _TimerEtc implements TimerEtc {
   String get startCutoffAudioPath;
   @override
   @JsonKey(ignore: true)
-  _$$TimerEtcImplCopyWith<_$TimerEtcImpl> get copyWith =>
+  _$$TimerConfImplCopyWith<_$TimerConfImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/overlay.dart';
-import 'package:ugd_timer/logic/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
+import 'package:ugd_timer/logic/ui/overlay.dart';
 import 'package:ugd_timer/screen/generalComponents.dart';
 import 'package:ugd_timer/screen/top/timer.dart';
 
-class TopLayer extends StatelessWidget {
-  const TopLayer({super.key});
+class MainTimer extends StatelessWidget {
+  const MainTimer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class CompactControlBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TimerStatus status = ref.watch(timerBeatProvider).value ?? TimerStatus.stopped;
+    final TimerStatus status = ref.watch(timerBeatProvider).value?.status ?? TimerStatus.stopped;
     return HoverRevealer(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(

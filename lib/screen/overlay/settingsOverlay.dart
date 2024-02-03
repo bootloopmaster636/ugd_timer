@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/overlay.dart';
+import 'package:ugd_timer/logic/ui/overlay.dart';
 import 'package:ugd_timer/screen/overlay/settingsContent.dart';
 
 class SettingsOverlay extends HookConsumerWidget {

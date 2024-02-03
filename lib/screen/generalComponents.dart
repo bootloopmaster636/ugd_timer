@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class AnimatedSpawnableWidget extends StatelessWidget {
-  const AnimatedSpawnableWidget({required this.isShown, required this.child, super.key});
+class HideableWidget extends StatelessWidget {
+  const HideableWidget({required this.isShown, required this.child, super.key});
 
   final bool isShown;
   final Widget child;
@@ -15,7 +15,7 @@ class AnimatedSpawnableWidget extends StatelessWidget {
         secondChild: const SizedBox(),
         crossFadeState: isShown ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         duration: const Duration(milliseconds: 350),
-        sizeCurve: Curves.easeOutQuart,
+        sizeCurve: Curves.easeOutExpo,
       ),
     );
   }

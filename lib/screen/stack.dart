@@ -2,10 +2,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/overlay.dart';
+import 'package:ugd_timer/logic/ui/navigation.dart';
+import 'package:ugd_timer/logic/ui/overlay.dart';
 import 'package:ugd_timer/screen/background.dart';
 import 'package:ugd_timer/screen/overlay/settingsOverlay.dart';
-import 'package:ugd_timer/screen/top.dart';
 
 class ScreenStackManager extends ConsumerWidget {
   const ScreenStackManager({super.key});
@@ -31,7 +31,7 @@ class ScreenStackManager extends ConsumerWidget {
                   0,
                 ),
                 height: 100.h - titleBarHeight,
-                child: const TopLayer(),
+                child: ref.watch(topWidgetLogicProvider).currentlyShown,
               ),
             ),
             AnimatedContainer(

@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timerEtc.dart';
+part of 'navigation.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timerEtcLogicHash() => r'4f4ae10356e958c8b749cb03d0a5e02c25065f72';
+String _$topWidgetLogicHash() => r'c0e8ec9915d6e19ae57470bee7bbd6c37ecfbba7';
 
-/// See also [TimerEtcLogic].
-@ProviderFor(TimerEtcLogic)
-final timerEtcLogicProvider =
-    AutoDisposeNotifierProvider<TimerEtcLogic, TimerEtc>.internal(
-  TimerEtcLogic.new,
-  name: r'timerEtcLogicProvider',
+/// See also [TopWidgetLogic].
+@ProviderFor(TopWidgetLogic)
+final topWidgetLogicProvider =
+    AutoDisposeNotifierProvider<TopWidgetLogic, TopWidget>.internal(
+  TopWidgetLogic.new,
+  name: r'topWidgetLogicProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$timerEtcLogicHash,
+      : _$topWidgetLogicHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TimerEtcLogic = AutoDisposeNotifier<TimerEtc>;
+typedef _$TopWidgetLogic = AutoDisposeNotifier<TopWidget>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

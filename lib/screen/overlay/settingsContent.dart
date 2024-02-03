@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/timer.dart';
-import 'package:ugd_timer/logic/timerEtc.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timerConf.dart';
 import 'package:ugd_timer/screen/overlay/settingsComponent.dart';
 
 class SettingsContent extends StatelessWidget {
@@ -62,15 +62,15 @@ class AssistTimerSection extends ConsumerWidget {
       children: <Widget>[
         SettingsTileSwitch(
           title: AppLocalizations.of(context)!.enable,
-          value: ref.watch(timerEtcLogicProvider).assistTimerEnabled,
+          value: ref.watch(timerConfLogicProvider).assistTimerEnabled,
           onChanged: (bool value) {
-            ref.read(timerEtcLogicProvider.notifier).setAssistTimerEnabled(assistTimerEnabled: value);
+            ref.read(timerConfLogicProvider.notifier).setAssistTimerEnabled(assistTimerEnabled: value);
           },
         ),
         SettingsTileTimeSelect(
           title: AppLocalizations.of(context)!.setTimer,
           selectedTime: ref.watch(timerLogicProvider).value?.assistTimer ?? Duration.zero,
-          isEnabled: ref.watch(timerEtcLogicProvider).assistTimerEnabled,
+          isEnabled: ref.watch(timerConfLogicProvider).assistTimerEnabled,
           onPressed: (DateTime time) {
             ref
                 .read(timerLogicProvider.notifier)
@@ -95,15 +95,15 @@ class BonusTimerSection extends ConsumerWidget {
       children: <Widget>[
         SettingsTileSwitch(
           title: AppLocalizations.of(context)!.enable,
-          value: ref.watch(timerEtcLogicProvider).bonusTimerEnabled,
+          value: ref.watch(timerConfLogicProvider).bonusTimerEnabled,
           onChanged: (bool value) {
-            ref.read(timerEtcLogicProvider.notifier).setBonusTimerEnabled(bonusTimerEnabled: value);
+            ref.read(timerConfLogicProvider.notifier).setBonusTimerEnabled(bonusTimerEnabled: value);
           },
         ),
         SettingsTileTimeSelect(
           title: AppLocalizations.of(context)!.setTimer,
           selectedTime: ref.watch(timerLogicProvider).value?.bonusTimer ?? Duration.zero,
-          isEnabled: ref.watch(timerEtcLogicProvider).bonusTimerEnabled,
+          isEnabled: ref.watch(timerConfLogicProvider).bonusTimerEnabled,
           onPressed: (DateTime time) {
             ref
                 .read(timerLogicProvider.notifier)
@@ -127,10 +127,10 @@ class TimerTitleSection extends ConsumerWidget {
         SettingsTileTextfield(
           title: AppLocalizations.of(context)!.setTimerTitle,
           hint: AppLocalizations.of(context)!.enterText,
-          value: ref.watch(timerEtcLogicProvider).title,
+          value: ref.watch(timerConfLogicProvider).title,
           isEnabled: true,
           onChanged: (String text) {
-            ref.read(timerEtcLogicProvider.notifier).setTitle(text);
+            ref.read(timerConfLogicProvider.notifier).setTitle(text);
           },
         ),
       ],

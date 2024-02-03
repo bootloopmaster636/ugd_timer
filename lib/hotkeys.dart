@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:logger/logger.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
 
 // TODO(bootloopmaster636): still buggy. will change this with a different package later
 Future<void> initHotkeys(WidgetRef ref) async {

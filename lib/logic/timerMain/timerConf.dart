@@ -1,26 +1,26 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'timerEtc.freezed.dart';
-part 'timerEtc.g.dart';
+part 'timerConf.freezed.dart';
+part 'timerConf.g.dart';
 
 @freezed
-class TimerEtc with _$TimerEtc {
-  factory TimerEtc({
+class TimerConf with _$TimerConf {
+  factory TimerConf({
     required String title,
     required bool assistTimerEnabled,
     required bool bonusTimerEnabled,
     required String warningAudioPath,
     required String endAudioPath,
     required String startCutoffAudioPath,
-  }) = _TimerEtc;
+  }) = _TimerConf;
 }
 
 @riverpod
-class TimerEtcLogic extends _$TimerEtcLogic {
+class TimerConfLogic extends _$TimerConfLogic {
   @override
-  TimerEtc build() {
-    return TimerEtc(
+  TimerConf build() {
+    return TimerConf(
       title: '',
       assistTimerEnabled: false,
       bonusTimerEnabled: false,
