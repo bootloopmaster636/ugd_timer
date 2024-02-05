@@ -4,8 +4,9 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/background.dart';
 import 'package:ugd_timer/screen/overlay/settingsOverlay.dart';
+
+import 'background.dart';
 
 class ScreenStackManager extends ConsumerWidget {
   const ScreenStackManager({super.key});
@@ -17,7 +18,17 @@ class ScreenStackManager extends ConsumerWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         return Stack(
           children: <Widget>[
-            const Background(),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutQuint,
+              transform: Matrix4.translationValues(
+                isSettingsOverlayOpen ? 60 : 0,
+                0,
+                0,
+              ),
+              height: 100.h - titleBarHeight,
+              child: const Background(),
+            ),
             AnimatedOpacity(
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeOutQuint,

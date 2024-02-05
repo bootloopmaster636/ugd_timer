@@ -257,6 +257,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  css_filter:
+    dependency: "direct main"
+    description:
+      name: css_filter
+      sha256: "3d591f01909e6c9e520843b192c0e92f8c6774b751e201fb4c128703551fbc94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   custom_lint:
     dependency: "direct dev"
     description:
@@ -600,6 +608,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  lottie:
+    dependency: "direct main"
+    description:
+      name: lottie
+      sha256: "1f0ce68112072d66ea271a9841994fa8d16442e23d8cf8996c9fa74174e58b4e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   macos_window_utils:
     dependency: transitive
     description:
@@ -1151,4 +1167,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.2.5 <4.0.0"
-  flutter: ">=3.10.0"
+  flutter: ">=3.16.0"

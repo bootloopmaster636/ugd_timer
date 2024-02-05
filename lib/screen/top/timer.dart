@@ -37,18 +37,24 @@ class Timer extends HookConsumerWidget {
             ],
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: FluentTheme.of(context).menuColor.withOpacity(0.8),
-            border: Border.all(
-              color: FluentTheme.of(context).accentColor.dark,
-              width: 0.4,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(2),
+          clipBehavior: Clip.hardEdge,
+          child: Acrylic(
+            child: Container(
+              decoration: BoxDecoration(
+                color: FluentTheme.of(context).menuColor.withOpacity(0.3),
+                border: Border.all(
+                  color: FluentTheme.of(context).accentColor.dark,
+                  width: 0.4,
+                ),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: AnimatedClockWidget(
+                time: mainClock,
+              ),
             ),
-            borderRadius: BorderRadius.circular(2),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          child: AnimatedClockWidget(
-            time: mainClock,
           ),
         ),
         Gap(0.8.h),

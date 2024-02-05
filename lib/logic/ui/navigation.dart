@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:ugd_timer/screen/top/mainTimer.dart';
+import 'package:ugd_timer/screen/top/clockDisplay.dart';
 
 part 'navigation.freezed.dart';
 part 'navigation.g.dart';

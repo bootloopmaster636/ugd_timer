@@ -31,58 +31,55 @@ Future<void> main() async {
 class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ResponsiveSizer(
-      builder: (BuildContext context, Orientation orientation, ScreenType screenType) {
-        return FluentApp(
-          title: 'UGD Timer',
-          darkTheme: FluentThemeData(
-            brightness: Brightness.dark,
-            accentColor: Colors.blue,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen(context) ? 2.0 : 0.0,
+    return Init(
+      child: ResponsiveSizer(
+        builder: (BuildContext context, Orientation orientation, ScreenType screenType) {
+          return FluentApp(
+            title: 'UGD Timer',
+            darkTheme: FluentThemeData(
+              brightness: Brightness.dark,
+              accentColor: Colors.blue,
+              visualDensity: VisualDensity.standard,
             ),
-          ),
-          theme: FluentThemeData(
-            brightness: Brightness.light,
-            accentColor: Colors.blue,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen(context) ? 2.0 : 0.0,
+            theme: FluentThemeData(
+              brightness: Brightness.light,
+              accentColor: Colors.blue,
+              visualDensity: VisualDensity.standard,
             ),
-          ),
-          themeMode: ThemeMode.system,
-          localizationsDelegates: const <LocalizationsDelegate>[
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const <Locale>[
-            Locale('en'), // English
-            Locale('id'), // Indonesia
-          ],
-          locale: const Locale('en'),
-          home: const Column(
-            children: <Widget>[
-              TitleBar(),
-              Init(),
-              ScreenStackManager(),
+            themeMode: ThemeMode.system,
+            localizationsDelegates: const <LocalizationsDelegate>[
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
-          ),
-        );
-      },
+            supportedLocales: const <Locale>[
+              Locale('en'), // English
+              Locale('id'), // Indonesia
+            ],
+            locale: const Locale('en'),
+            home: const Column(
+              children: <Widget>[
+                TitleBar(),
+                ScreenStackManager(),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
 class Init extends ConsumerWidget {
-  const Init({super.key});
+  const Init({required this.child, super.key});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(timerBeatProvider);
-    return const SizedBox();
+    return child;
   }
 }
 
