@@ -1,0 +1,27 @@
+{
+  "helloWorld": "Halo Dunia!",
+  "startTimer": "Mulai timer",
+  "pauseTimer": "Berhentikan timer sebentar",
+  "stopAndResetTimer": "Berhentikan dan atur ulang timer",
+  "timerSettings": "Pengaturan timer",
+  "appSettings": "Pengaturan aplikasi",
+  "assistAvailableIn": "Bantuan tersedia dalam",
+  "timeUntilBonusExpired": "Waktu sampai waktu bonus habis",
+  "seconds": "detik",
+  "minutes": "menit",
+  "hours": "jam",
+  "xMinYSecLeft": "{min} menit {sec} detik",
+  "@xMinYSecLeft": {
+    "description": "Usually for displaying how much time available",
+    "placeholders": {
+      "min": {
+        "type": "num",
+        "example": "1"
+      },
+      "sec": {
+        "type": "num",
+        "example": "2"
+      }
+    }
+  }
+}

@@ -1,153 +1,200 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:keymap/keymap.dart';
-import 'package:override_text_scale_factor/override_text_scale_factor.dart';
-import 'logic/states/DisplayState.dart';
-import 'logic/states/TimerState.dart';
-import 'logic/managers/TimerManager.dart';
+import 'dart:io';
+
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:ugd_timer/constants.dart';
+import 'package:ugd_timer/logic/timerMain/timer.dart';
+import 'package:ugd_timer/logic/timerMain/timerConf.dart';
+import 'package:ugd_timer/logic/ui/navigation.dart';
+import 'package:ugd_timer/logic/ui/overlay.dart';
+import 'package:ugd_timer/screen/etc/AutoStartWizard.dart';
+import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
-import 'displayLayers/BottomLayer.dart';
-import 'displayLayers/TopLayer.dart';
-import 'displayLayers/OverlayLayer.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
+  await Window.initialize();
 
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(1280, 720),
-    minimumSize: Size(1280, 720),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
-    title: "Timer UGD",
-  );
+  if (defaultTargetPlatform == TargetPlatform.windows) {}
 
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-
-  runApp(const ProviderScope(child: App()));
+  runApp(ProviderScope(child: MainApp()));
 }
 
-final fullscreenProvider = Provider<ValueNotifier<bool>>((ref) {
-  return ValueNotifier<bool>(false); // Initialize with false (not fullscreen)
-});
-
-final timerProvider = ChangeNotifierProvider((ref) => TimerState());
-final displayStateProvider = ChangeNotifierProvider((ref) => DisplayState());
-
-class App extends ConsumerWidget {
-  const App({super.key});
-
+class MainApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: 'Timer UGD',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        colorSchemeSeed: ref.watch(timerProvider).displayManager.currentAccent,
-        useMaterial3: true,
-        fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
+  Widget build(BuildContext context) {
+    return Init(
+      child: ResponsiveSizer(
+        builder: (BuildContext context, Orientation orientation, ScreenType screenType) {
+          return FluentApp(
+            title: 'UGD Timer',
+            darkTheme: FluentThemeData(
+              brightness: Brightness.dark,
+              accentColor: Colors.blue,
+              visualDensity: VisualDensity.standard,
+            ),
+            theme: FluentThemeData(
+              brightness: Brightness.light,
+              accentColor: Colors.blue,
+              visualDensity: VisualDensity.standard,
+            ),
+            themeMode: ThemeMode.system,
+            localizationsDelegates: const <LocalizationsDelegate>[
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const <Locale>[
+              Locale('en'), // English
+              Locale('id'), // Indonesia
+            ],
+            locale: const Locale('en'),
+            home: const Column(
+              children: <Widget>[
+                TitleBar(),
+                ScreenStackManager(),
+              ],
+            ),
+          );
+        },
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorSchemeSeed: ref.watch(timerProvider).displayManager.currentAccent,
-        useMaterial3: true,
-        fontFamily: GoogleFonts.spaceGrotesk().fontFamily,
-      ),
-      themeMode: ref.watch(timerProvider).displayManager.currentThemeMode,
-      // ignore: prefer_const_constructors
-      home: Screen(), //please dont "const" this... it'll bug the app
     );
   }
 }
 
-class GlobalKbShortcutManager extends ConsumerWidget {
-  const GlobalKbShortcutManager({super.key});
+class Init extends ConsumerWidget {
+  const Init({required this.child, super.key});
 
+  final Widget child;
+
+  // see https://riverpod.dev/docs/essentials/eager_initialization for more info.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return KeyboardWidget(
-      bindings: [
-        KeyAction(
-          LogicalKeyboardKey.keyS,
-          isControlPressed: true,
-          'Open Settings Panel',
-          () {
-            ref.read(displayStateProvider).toggleSettingsExpanded();
-          },
-        ),
-        KeyAction(
-            LogicalKeyboardKey.keyR, isControlPressed: true, 'Reset Timer', () {
-          if (ref
-                  .read(timerProvider)
-                  .timerManager
-                  .getTimer(TimerType.main)
-                  .inSeconds != 0) {
-            ref.read(timerProvider).stopAndResetTimer(isPressed: true);
-            showToast("Timer has been reset", context: context);
-          } else {
-            showToast(
-              "Timer has not been initialized yet...",
-              context: context,
-            );
-          }
-        }),
-        KeyAction(
-          LogicalKeyboardKey.space,
-          isControlPressed: true,
-          "Toggle Timer",
-          () {
-            if (ref
-                    .read(timerProvider)
-                    .timerManager
-                    .getTimer(TimerType.main)
-                    .inSeconds !=
-                0) {
-              if (ref.read(timerProvider).isSet) {
-                showToast(
-                  "Timer has been ${ref.read(timerProvider).isRunning ? "paused" : "resumed"}",
-                  context: context,
-                );
-              } else {
-                showToast("Timer has been started", context: context);
-              }
-
-              ref.read(timerProvider).toggleTimer();
-            } else {
-              showToast(
-                "Timer has not been initialized yet...",
-                context: context,
-              );
-            }
-          },
-        )
-      ],
-      child: OverrideTextScaleFactor(
-          textScaleFactor: ref.watch(displayStateProvider).displayFontScale,
-          child: const TopLayer()),
-    );
+    ref.watch(timerBeatProvider);
+    return child;
   }
 }
 
-class Screen extends ConsumerWidget {
-  const Screen({super.key});
+class TitleBar extends HookConsumerWidget {
+  const TitleBar({super.key});
 
   @override
-  Widget build(context, WidgetRef ref) {
-    return const Scaffold(
-      body: Stack(
-        children: [
-          BottomLayer(),
-          GlobalKbShortcutManager(),
-          OverlayLayer(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ValueNotifier<bool> isFullscreen = useState(false);
+
+    return Container(
+      height: titleBarHeight,
+      color: FluentTheme.of(context).accentColor.normal,
+      child: Row(
+        children: <Widget>[
+          const Gap(4),
+          const Menu(),
+          const Gap(4),
+          Text(
+            'UGD Timer | ${ref.watch(timerConfLogicProvider).title}',
+            style: TextStyle(color: FluentTheme.of(context).activeColor),
+          ),
+          Expanded(child: MoveWindow()),
+          IconButton(
+            icon: Icon(FluentIcons.full_screen, color: FluentTheme.of(context).activeColor),
+            onPressed: () {
+              isFullscreen.value = !isFullscreen.value;
+              WindowManager.instance.setFullScreen(isFullscreen.value);
+            },
+          ),
+          MinimizeWindowButton(
+            colors: WindowButtonColors(iconNormal: FluentTheme.of(context).activeColor),
+          ),
+          MaximizeWindowButton(
+            colors: WindowButtonColors(iconNormal: FluentTheme.of(context).activeColor),
+          ),
+          CloseWindowButton(
+            colors: WindowButtonColors(iconNormal: FluentTheme.of(context).activeColor),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class Menu extends HookConsumerWidget {
+  const Menu({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final FlyoutController menuController = FlyoutController();
+    return FlyoutTarget(
+      controller: menuController,
+      child: IconButton(
+        icon: Icon(FluentIcons.collapse_menu, color: FluentTheme.of(context).activeColor),
+        onPressed: () {
+          menuController.showFlyout(
+            autoModeConfiguration: FlyoutAutoConfiguration(
+              preferredMode: FlyoutPlacementMode.bottomRight,
+            ),
+            barrierDismissible: true,
+            barrierColor: Colors.transparent,
+            dismissWithEsc: true,
+            margin: 4,
+            builder: (BuildContext context) {
+              return MenuFlyout(
+                items: <MenuFlyoutItemBase>[
+                  // TODO(bootloopmaster636): readd keyboard shortcut once shortcut system become stable
+                  MenuFlyoutItem(
+                    leading: const Icon(FluentIcons.timer),
+                    text: Text(AppLocalizations.of(context)!.timerSettings),
+                    // trailing: Text(
+                    //   'Ctrl+T',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: () {
+                      ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
+                      Flyout.of(context).close();
+                    },
+                  ),
+                  MenuFlyoutItem(
+                    leading: const Icon(FluentIcons.settings),
+                    text: Text(AppLocalizations.of(context)!.appSettings),
+                    // trailing: Text(
+                    //   'Ctrl+O',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: Flyout.of(context).close,
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.autoStartWizard),
+                    // trailing: Text(
+                    //   'Ctrl+Q',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: () {
+                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const AutoStartSetupPage());
+                    },
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.exit),
+                    // trailing: Text(
+                    //   'Ctrl+Q',
+                    //   style: FluentTheme.of(context).typography.caption,
+                    // ),
+                    onPressed: () {
+                      exit(0);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
