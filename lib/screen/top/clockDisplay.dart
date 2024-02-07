@@ -49,49 +49,60 @@ class CompactControlBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TimerStatus status = ref.watch(timerBeatProvider).value?.status ?? TimerStatus.stopped;
     return HoverRevealer(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: FluentTheme.of(context).menuColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(status == TimerStatus.stopped ? FluentIcons.play : FluentIcons.pause),
-            onPressed: () {
-              if (status == TimerStatus.stopped) {
-                ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
-              } else {
-                ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
-              }
-            },
+      child: CompactControlBarContent(),
+    );
+  }
+}
+
+class CompactControlBarContent extends ConsumerWidget {
+  const CompactControlBarContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TimerStatus status = ref.watch(timerBeatProvider).value?.status ?? TimerStatus.stopped;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(status == TimerStatus.stopped ? FluentIcons.play : FluentIcons.pause),
+          onPressed: () {
+            if (status == TimerStatus.stopped) {
+              ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.running);
+            } else {
+              ref.read(timerBeatProvider.notifier).setTimerStatus(TimerStatus.stopped);
+            }
+          },
+        ),
+        IconButton(
+          icon: const Icon(FluentIcons.reset),
+          onPressed: () {
+            ref.read(timerLogicProvider.notifier).resetTimer();
+          },
+        ),
+        const Gap(4),
+        const Divider(
+          size: 16,
+          direction: Axis.vertical,
+          style: DividerThemeData(
+            thickness: 2,
           ),
-          IconButton(
-            icon: const Icon(FluentIcons.reset),
-            onPressed: () {
-              ref.read(timerLogicProvider.notifier).resetTimer();
-            },
-          ),
-          const Gap(4),
-          const Divider(
-            size: 16,
-            direction: Axis.vertical,
-            style: DividerThemeData(
-              thickness: 2,
-            ),
-          ),
-          const Gap(4),
-          IconButton(
-            icon: const Icon(FluentIcons.timer),
-            onPressed: () {
-              ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
-            },
-          ),
-        ],
-      ),
+        ),
+        const Gap(4),
+        IconButton(
+          icon: const Icon(FluentIcons.timer),
+          onPressed: () {
+            ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
+          },
+        ),
+      ],
     );
   }
 }

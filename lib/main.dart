@@ -76,6 +76,7 @@ class Init extends ConsumerWidget {
 
   final Widget child;
 
+  // see https://riverpod.dev/docs/essentials/eager_initialization for more info.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(timerBeatProvider);
