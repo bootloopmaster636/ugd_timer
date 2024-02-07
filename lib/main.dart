@@ -46,7 +46,6 @@ class MainApp extends StatelessWidget {
               accentColor: Colors.blue,
               visualDensity: VisualDensity.standard,
             ),
-            themeMode: ThemeMode.system,
             localizationsDelegates: const <LocalizationsDelegate>[
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -58,6 +57,7 @@ class MainApp extends StatelessWidget {
               Locale('id'), // Indonesia
             ],
             locale: const Locale('en'),
+            themeMode: ThemeMode.system,
             home: const Column(
               children: <Widget>[
                 TitleBar(),
