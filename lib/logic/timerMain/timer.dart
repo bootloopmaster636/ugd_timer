@@ -11,6 +11,7 @@ part 'timer.g.dart';
 class Clock with _$Clock {
   factory Clock({
     required Duration mainTimer,
+    @Default(Duration.zero) Duration mainTimerFreezed,
     required Duration assistTimer,
     required Duration bonusTimer,
   }) = _Clock;
@@ -44,6 +45,7 @@ class TimerLogic extends _$TimerLogic {
         state = AsyncData<Clock>(
           Clock(
             mainTimer: duration,
+            mainTimerFreezed: duration,
             assistTimer: state.value?.assistTimer ?? Duration.zero,
             bonusTimer: state.value?.bonusTimer ?? Duration.zero,
           ),
@@ -53,6 +55,7 @@ class TimerLogic extends _$TimerLogic {
         state = AsyncData<Clock>(
           Clock(
             mainTimer: state.value?.mainTimer ?? Duration.zero,
+            mainTimerFreezed: state.value?.mainTimerFreezed ?? Duration.zero,
             assistTimer: duration,
             bonusTimer: state.value?.bonusTimer ?? Duration.zero,
           ),
@@ -62,6 +65,7 @@ class TimerLogic extends _$TimerLogic {
         state = AsyncData<Clock>(
           Clock(
             mainTimer: state.value?.mainTimer ?? Duration.zero,
+            mainTimerFreezed: state.value?.mainTimerFreezed ?? Duration.zero,
             assistTimer: state.value?.assistTimer ?? Duration.zero,
             bonusTimer: duration,
           ),
@@ -73,6 +77,7 @@ class TimerLogic extends _$TimerLogic {
     state = AsyncData<Clock>(
       Clock(
         mainTimer: Duration.zero,
+        mainTimerFreezed: Duration.zero,
         assistTimer: Duration.zero,
         bonusTimer: Duration.zero,
       ),
@@ -84,6 +89,7 @@ class TimerLogic extends _$TimerLogic {
     Clock clock = state.value ??
         Clock(
           mainTimer: Duration.zero,
+          mainTimerFreezed: Duration.zero,
           assistTimer: Duration.zero,
           bonusTimer: Duration.zero,
         );

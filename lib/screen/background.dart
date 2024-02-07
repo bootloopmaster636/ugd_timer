@@ -17,23 +17,21 @@ class Background extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          const Acrylic(),
           CSSFilter.apply(
             value: CSSFilterMatrix()
                 .grayscale(1)
-                .brightness(FluentTheme.of(context).brightness == Brightness.light ? 5 : 1.5),
+                .brightness(FluentTheme.of(context).brightness == Brightness.light ? 8 : 1),
             child: Lottie.asset(
-              'assets/lottie/bg-wave.json',
+              'assets/lottie/bg-geometry.json',
               repeat: true,
-              reverse: true,
-              frameRate: const FrameRate(24),
               renderCache: RenderCache.drawingCommands,
-              height: 100.h,
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               addRepaintBoundary: true,
             ),
           ),
           Container(
-            color: FluentTheme.of(context).accentColor.withOpacity(0.4),
+            color: FluentTheme.of(context).accentColor.withOpacity(0.1),
           ),
         ],
       ),
