@@ -13,6 +13,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/timerMain/timerConf.dart';
+import 'package:ugd_timer/logic/ui/accentColor.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
 import 'package:ugd_timer/screen/etc/AutoStartWizard.dart';
@@ -28,9 +29,9 @@ Future<void> main() async {
   runApp(ProviderScope(child: MainApp()));
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Init(
       child: ResponsiveSizer(
         builder: (BuildContext context, Orientation orientation, ScreenType screenType) {
@@ -38,12 +39,12 @@ class MainApp extends StatelessWidget {
             title: 'UGD Timer',
             darkTheme: FluentThemeData(
               brightness: Brightness.dark,
-              accentColor: Colors.blue,
+              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             theme: FluentThemeData(
               brightness: Brightness.light,
-              accentColor: Colors.blue,
+              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             localizationsDelegates: const <LocalizationsDelegate>[
