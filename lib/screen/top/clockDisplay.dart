@@ -3,16 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
+import 'package:ugd_timer/logic/timerEtc/timerNotes.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
 import 'package:ugd_timer/screen/generalComponents.dart';
+import 'package:ugd_timer/screen/top/notes.dart';
 import 'package:ugd_timer/screen/top/timer.dart';
 
-class MainTimer extends StatelessWidget {
+class MainTimer extends ConsumerWidget {
   const MainTimer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isNotesShown = ref.watch(notesLogicProvider).isShown;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraint) {
         return Stack(
@@ -23,19 +26,37 @@ class MainTimer extends StatelessWidget {
               left: 16,
               child: CompactControlBar(),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 72.w,
-                  constraints: BoxConstraints(
-                    maxWidth: 120.h,
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    flex: 7,
+                    child: Container(
+                      width: 60.w,
+                      constraints: BoxConstraints(
+                        maxWidth: 120.h,
+                      ),
+                      child: const FittedBox(
+                        child: Timer(),
+                      ),
+                    ),
                   ),
-                  child: const FittedBox(
-                    child: Timer(),
+                  Flexible(
+                    flex: isNotesShown ? 5 : 0,
+                    child: HideableWidget(
+                      isShown: isNotesShown,
+                      child: const Row(
+                        children: [
+                          Gap(16),
+                          Expanded(child: NotesCard()),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         );
@@ -55,7 +76,7 @@ class CompactControlBar extends ConsumerWidget {
         color: FluentTheme.of(context).menuColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: CompactControlBarContent(),
+      child: const CompactControlBarContent(),
     );
   }
 }
@@ -102,6 +123,20 @@ class CompactControlBarContent extends ConsumerWidget {
             ref.read(overlayStateLogicProvider.notifier).toggleTimerSettings();
           },
         ),
+        const Gap(4),
+        const Divider(
+          size: 16,
+          direction: Axis.vertical,
+          style: DividerThemeData(
+            thickness: 2,
+          ),
+        ),
+        const Gap(4),
+        IconButton(
+            icon: const Icon(FluentIcons.quick_note),
+            onPressed: () {
+              ref.read(notesLogicProvider.notifier).toggleNotes();
+            }),
       ],
     );
   }
