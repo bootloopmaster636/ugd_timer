@@ -11,6 +11,7 @@ class Background extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final accent = ref.watch(accentColorStateProvider).toAccentColor();
     return SizedBox(
       width: 100.w,
       height: 100.h - titleBarHeight,
@@ -20,7 +21,9 @@ class Background extends ConsumerWidget {
         fit: StackFit.expand,
         children: <Widget>[
           CSSFilter.apply(
-            value: CSSFilterMatrix().saturate(0).brightness(1.3),
+            value: CSSFilterMatrix()
+                .saturate(0)
+                .brightness(FluentTheme.of(context).brightness == Brightness.light ? 1.4 : 0.8),
             child: Lottie.asset(
               'assets/lottie/bg-geo.json',
               repeat: true,
@@ -31,7 +34,8 @@ class Background extends ConsumerWidget {
             ),
           ),
           Container(
-            color: ref.watch(accentColorStateProvider).withOpacity(0.5),
+            color: (FluentTheme.of(context).brightness == Brightness.light ? accent.lightest : accent.darker)
+                .withOpacity(0.6),
           ),
         ],
       ),
