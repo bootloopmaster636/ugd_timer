@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ugd_timer/constants.dart';
+import 'package:ugd_timer/logic/ui/accentColor.dart';
 
 part 'timer.freezed.dart';
 part 'timer.g.dart';
@@ -96,6 +97,10 @@ class TimerLogic extends _$TimerLogic {
 
     if (clock.mainTimer.inSeconds > 0) {
       clock = clock.copyWith(mainTimer: clock.mainTimer - const Duration(seconds: 1));
+
+      // change accent color based on how much time is left
+      // ignore: avoid_manual_providers_as_generated_provider_dependency
+      ref.read(accentColorStateProvider.notifier).setAccentColorByDuration(clock.mainTimer, clock.mainTimerFreezed);
     }
 
     if (clock.assistTimer.inSeconds > 0) {
