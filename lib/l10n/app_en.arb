@@ -37,5 +37,7 @@
   "timerWillStartAt": "Timer will start at {hr}:{min}",
   "timerCouldNotExceedMain": "This timer could not exceed the main timer, please set this timer duration below the main timer duration.",
   "editMode": "Edit",
-  "renderedMode": "Rendered"
+  "renderedMode": "Rendered",
+  "markdownSupported": "Markdown syntax is supported",
+  "learnMore": "Learn more"
 }
