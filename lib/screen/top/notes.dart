@@ -32,7 +32,7 @@ class NotesCard extends StatelessWidget {
               const Flexible(child: NotesDisplay()),
               HoverRevealer(
                 child: Container(
-                  height: 36,
+                  height: 40,
                   color: FluentTheme.of(context).menuColor.withOpacity(0.8),
                   padding: const EdgeInsets.all(4),
                   child: const NotesControlBar(),

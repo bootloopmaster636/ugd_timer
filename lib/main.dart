@@ -11,12 +11,14 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
+import 'package:ugd_timer/logic/settings/appSettings.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/timerMain/timerConf.dart';
 import 'package:ugd_timer/logic/ui/accentColor.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/etc/AutoStartWizard.dart';
+import 'package:ugd_timer/screen/etc/appsSettings.dart';
+import 'package:ugd_timer/screen/etc/autoStartWizard.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -39,12 +41,12 @@ class MainApp extends ConsumerWidget {
             title: 'UGD Timer',
             darkTheme: FluentThemeData(
               brightness: Brightness.dark,
-              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
+              accentColor: ref.watch(accentColorStateProvider).accentColor.toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             theme: FluentThemeData(
               brightness: Brightness.light,
-              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
+              accentColor: ref.watch(accentColorStateProvider).accentColor.toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             localizationsDelegates: const <LocalizationsDelegate>[
@@ -57,8 +59,8 @@ class MainApp extends ConsumerWidget {
               Locale('en'), // English
               Locale('id'), // Indonesia
             ],
-            locale: const Locale('en'),
-            themeMode: ThemeMode.system,
+            locale: Locale(ref.watch(appSettingsLogicProvider).languageCode),
+            themeMode: ref.watch(appSettingsLogicProvider).themeMode,
             home: const Column(
               children: <Widget>[
                 TitleBar(),
@@ -169,7 +171,10 @@ class Menu extends HookConsumerWidget {
                     //   'Ctrl+O',
                     //   style: FluentTheme.of(context).typography.caption,
                     // ),
-                    onPressed: Flyout.of(context).close,
+                    onPressed: () {
+                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(ApplicationSettingsPage());
+                      Flyout.of(context).close();
+                    },
                   ),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.autoStartWizard),

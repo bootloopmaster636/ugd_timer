@@ -19,7 +19,7 @@ dependencies:
   freezed: ^2.4.6
   gap: ^3.0.1
   hooks_riverpod: ^2.4.9
-  hotkey_manager: ^0.1.8
+  hotkey_manager: ^0.2.1
   intl: any
   responsive_sizer: ^3.3.0+1
   riverpod: ^2.4.9

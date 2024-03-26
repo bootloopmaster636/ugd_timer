@@ -93,20 +93,16 @@ class SettingsTileTimeSelect extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutQuad,
-        child: HideableWidget(
-          isShown: isEnabled,
-          child: ListTile(
-            title: Text(title),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: TimePicker(
-                selected: DateTime(0, 0, 0, selectedTime.inHours, selectedTime.inMinutes.remainder(60)),
-                hourFormat: HourFormat.HH,
-                onChanged: onPressed,
-              ),
+      child: HideableWidget(
+        isShown: isEnabled,
+        child: ListTile(
+          title: Text(title),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: TimePicker(
+              selected: DateTime(0, 0, 0, selectedTime.inHours, selectedTime.inMinutes.remainder(60)),
+              hourFormat: HourFormat.HH,
+              onChanged: onPressed,
             ),
           ),
         ),
@@ -139,23 +135,19 @@ class SettingsTileTextfield extends HookConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutQuad,
-        child: HideableWidget(
-          isShown: isEnabled,
-          child: ListTile(
-            title: Text(title),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: TextBox(
-                controller: inputCtl,
-                placeholder: hint,
-                onChanged: (String value) {
-                  inputCtl.text = value;
-                  onChanged(value);
-                },
-              ),
+      child: HideableWidget(
+        isShown: isEnabled,
+        child: ListTile(
+          title: Text(title),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: TextBox(
+              controller: inputCtl,
+              placeholder: hint,
+              onChanged: (String value) {
+                inputCtl.text = value;
+                onChanged(value);
+              },
             ),
           ),
         ),

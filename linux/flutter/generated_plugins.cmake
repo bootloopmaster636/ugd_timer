@@ -5,7 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   flutter_acrylic
-  hotkey_manager
+  hotkey_manager_linux
   screen_retriever
   url_launcher_linux
   window_manager
