@@ -15,21 +15,21 @@ class AccentColor with _$AccentColor {
 @riverpod
 class AccentColorState extends _$AccentColorState {
   @override
-  Color build() {
-    return Colors.blue;
+  AccentColor build() {
+    return AccentColor(accentColor: Colors.blue);
   }
 
   void setAccentColorByDuration(Duration now, Duration set) {
     if (now.inSeconds > set.inSeconds * .8) {
-      state = Colors.blue;
+      state = AccentColor(accentColor: Colors.blue);
     } else if (now.inSeconds > set.inSeconds * .6) {
-      state = Colors.teal;
+      state = AccentColor(accentColor: Colors.teal);
     } else if (now.inSeconds > set.inSeconds * .4) {
-      state = Colors.green;
+      state = AccentColor(accentColor: Colors.green);
     } else if (now.inSeconds > set.inSeconds * .2) {
-      state = Colors.orange;
+      state = AccentColor(accentColor: Colors.orange);
     } else if (now.inSeconds > set.inSeconds * .1) {
-      state = Colors.red;
+      state = AccentColor(accentColor: Colors.red);
     }
   }
 }

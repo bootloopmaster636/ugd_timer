@@ -12,7 +12,7 @@ part of 'accentColor.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AccentColor {
@@ -45,10 +45,10 @@ class _$AccentColorCopyWithImpl<$Res, $Val extends AccentColor>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accentColor = null,
+    Object? accentColor = freezed,
   }) {
     return _then(_value.copyWith(
-      accentColor: null == accentColor
+      accentColor: freezed == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -78,10 +78,10 @@ class __$$AccentColorImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accentColor = null,
+    Object? accentColor = freezed,
   }) {
     return _then(_$AccentColorImpl(
-      accentColor: null == accentColor
+      accentColor: freezed == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -107,12 +107,13 @@ class _$AccentColorImpl implements _AccentColor {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccentColorImpl &&
-            (identical(other.accentColor, accentColor) ||
-                other.accentColor == accentColor));
+            const DeepCollectionEquality()
+                .equals(other.accentColor, accentColor));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, accentColor);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(accentColor));
 
   @JsonKey(ignore: true)
   @override
