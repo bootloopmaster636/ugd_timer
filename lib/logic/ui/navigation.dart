@@ -36,13 +36,12 @@ class TopWidgetLogic extends _$TopWidgetLogic {
   void backToTimer() {
     state = state.copyWith(
         currentlyShown: PlayAnimationBuilder<double>(
-      tween: Tween<double>(begin: 1.2, end: 1),
+      tween: Tween<double>(begin: 1.05, end: 1),
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeOutQuart,
       builder: (BuildContext context, double value, _) {
-        return Transform(
-          transform: Matrix4.identity()..scale(value),
-          alignment: Alignment.center,
+        return Transform.scale(
+          scale: value,
           child: const MainTimer(),
         );
       },
@@ -52,13 +51,12 @@ class TopWidgetLogic extends _$TopWidgetLogic {
   void setCurrentlyShown(Widget widget) {
     state = state.copyWith(
         currentlyShown: PlayAnimationBuilder<double>(
-      tween: Tween<double>(begin: 0.9, end: 1),
+      tween: Tween<double>(begin: 0.95, end: 1),
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeOutQuart,
       builder: (BuildContext context, double value, _) {
-        return Transform(
-          transform: Matrix4.identity()..scale(value),
-          alignment: Alignment.center,
+        return Transform.scale(
+          scale: value,
           child: widget,
         );
       },
