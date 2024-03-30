@@ -2,14 +2,14 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/ui/accentColor.dart';
+import 'package:ugd_timer/logic/ui/accent_color.dart';
 
 class Background extends ConsumerWidget {
   const Background({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accent = ref.watch(accentColorStateProvider).accentColor.toAccentColor();
+    final AccentColor accent = ref.watch(accentColorStateProvider).accentColor.toAccentColor();
     return SizedBox(
       width: 100.w,
       height: 100.h - titleBarHeight,

@@ -6,6 +6,6 @@ enum NotesShowMode { edit, rendered }
 
 const double titleBarHeight = 32;
 
-List<String> languageCode = ['en', 'id'];
+List<String> languageCode = <String>['en', 'id'];
 
-List<String> languageName = ['English', 'Bahasa Indonesia'];
+List<String> languageName = <String>['English', 'Bahasa Indonesia'];

@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'accentColor.dart';
+part of 'autostart_logic.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accentColorStateHash() => r'49010fd510e3ef86e4c7a531a47c6e2612c14d45';
+String _$autoStartLogicHash() => r'bd6f9b973aad860c01009849fa862dbe48e2bd00';
 
-/// See also [AccentColorState].
-@ProviderFor(AccentColorState)
-final accentColorStateProvider =
-    AutoDisposeNotifierProvider<AccentColorState, AccentColor>.internal(
-  AccentColorState.new,
-  name: r'accentColorStateProvider',
+/// See also [AutoStartLogic].
+@ProviderFor(AutoStartLogic)
+final autoStartLogicProvider =
+    AutoDisposeNotifierProvider<AutoStartLogic, AutoStartClock>.internal(
+  AutoStartLogic.new,
+  name: r'autoStartLogicProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$accentColorStateHash,
+      : _$autoStartLogicHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AccentColorState = AutoDisposeNotifier<AccentColor>;
+typedef _$AutoStartLogic = AutoDisposeNotifier<AutoStartClock>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

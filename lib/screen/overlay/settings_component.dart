@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
+import 'package:ugd_timer/screen/general_components.dart';
 
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
@@ -32,7 +32,7 @@ class SettingsSection extends StatelessWidget {
         ),
         const Gap(8),
         ...children.map(
-          (e) => Padding(
+          (Widget e) => Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: e,
           ),

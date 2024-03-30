@@ -14,13 +14,18 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+Clock _$ClockFromJson(Map<String, dynamic> json) {
+  return _Clock.fromJson(json);
+}
+
 /// @nodoc
 mixin _$Clock {
   Duration get mainTimer => throw _privateConstructorUsedError;
-  Duration get mainTimerFreezed => throw _privateConstructorUsedError;
   Duration get assistTimer => throw _privateConstructorUsedError;
   Duration get bonusTimer => throw _privateConstructorUsedError;
+  Duration get mainTimerFreezed => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ClockCopyWith<Clock> get copyWith => throw _privateConstructorUsedError;
 }
@@ -32,9 +37,9 @@ abstract class $ClockCopyWith<$Res> {
   @useResult
   $Res call(
       {Duration mainTimer,
-      Duration mainTimerFreezed,
       Duration assistTimer,
-      Duration bonusTimer});
+      Duration bonusTimer,
+      Duration mainTimerFreezed});
 }
 
 /// @nodoc
@@ -51,18 +56,14 @@ class _$ClockCopyWithImpl<$Res, $Val extends Clock>
   @override
   $Res call({
     Object? mainTimer = null,
-    Object? mainTimerFreezed = null,
     Object? assistTimer = null,
     Object? bonusTimer = null,
+    Object? mainTimerFreezed = null,
   }) {
     return _then(_value.copyWith(
       mainTimer: null == mainTimer
           ? _value.mainTimer
           : mainTimer // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      mainTimerFreezed: null == mainTimerFreezed
-          ? _value.mainTimerFreezed
-          : mainTimerFreezed // ignore: cast_nullable_to_non_nullable
               as Duration,
       assistTimer: null == assistTimer
           ? _value.assistTimer
@@ -71,6 +72,10 @@ class _$ClockCopyWithImpl<$Res, $Val extends Clock>
       bonusTimer: null == bonusTimer
           ? _value.bonusTimer
           : bonusTimer // ignore: cast_nullable_to_non_nullable
+              as Duration,
+      mainTimerFreezed: null == mainTimerFreezed
+          ? _value.mainTimerFreezed
+          : mainTimerFreezed // ignore: cast_nullable_to_non_nullable
               as Duration,
     ) as $Val);
   }
@@ -85,9 +90,9 @@ abstract class _$$ClockImplCopyWith<$Res> implements $ClockCopyWith<$Res> {
   @useResult
   $Res call(
       {Duration mainTimer,
-      Duration mainTimerFreezed,
       Duration assistTimer,
-      Duration bonusTimer});
+      Duration bonusTimer,
+      Duration mainTimerFreezed});
 }
 
 /// @nodoc
@@ -102,18 +107,14 @@ class __$$ClockImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? mainTimer = null,
-    Object? mainTimerFreezed = null,
     Object? assistTimer = null,
     Object? bonusTimer = null,
+    Object? mainTimerFreezed = null,
   }) {
     return _then(_$ClockImpl(
       mainTimer: null == mainTimer
           ? _value.mainTimer
           : mainTimer // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      mainTimerFreezed: null == mainTimerFreezed
-          ? _value.mainTimerFreezed
-          : mainTimerFreezed // ignore: cast_nullable_to_non_nullable
               as Duration,
       assistTimer: null == assistTimer
           ? _value.assistTimer
@@ -123,32 +124,39 @@ class __$$ClockImplCopyWithImpl<$Res>
           ? _value.bonusTimer
           : bonusTimer // ignore: cast_nullable_to_non_nullable
               as Duration,
+      mainTimerFreezed: null == mainTimerFreezed
+          ? _value.mainTimerFreezed
+          : mainTimerFreezed // ignore: cast_nullable_to_non_nullable
+              as Duration,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$ClockImpl implements _Clock {
   _$ClockImpl(
       {required this.mainTimer,
-      this.mainTimerFreezed = Duration.zero,
       required this.assistTimer,
-      required this.bonusTimer});
+      required this.bonusTimer,
+      this.mainTimerFreezed = Duration.zero});
+
+  factory _$ClockImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ClockImplFromJson(json);
 
   @override
   final Duration mainTimer;
   @override
-  @JsonKey()
-  final Duration mainTimerFreezed;
-  @override
   final Duration assistTimer;
   @override
   final Duration bonusTimer;
+  @override
+  @JsonKey()
+  final Duration mainTimerFreezed;
 
   @override
   String toString() {
-    return 'Clock(mainTimer: $mainTimer, mainTimerFreezed: $mainTimerFreezed, assistTimer: $assistTimer, bonusTimer: $bonusTimer)';
+    return 'Clock(mainTimer: $mainTimer, assistTimer: $assistTimer, bonusTimer: $bonusTimer, mainTimerFreezed: $mainTimerFreezed)';
   }
 
   @override
@@ -158,40 +166,50 @@ class _$ClockImpl implements _Clock {
             other is _$ClockImpl &&
             (identical(other.mainTimer, mainTimer) ||
                 other.mainTimer == mainTimer) &&
-            (identical(other.mainTimerFreezed, mainTimerFreezed) ||
-                other.mainTimerFreezed == mainTimerFreezed) &&
             (identical(other.assistTimer, assistTimer) ||
                 other.assistTimer == assistTimer) &&
             (identical(other.bonusTimer, bonusTimer) ||
-                other.bonusTimer == bonusTimer));
+                other.bonusTimer == bonusTimer) &&
+            (identical(other.mainTimerFreezed, mainTimerFreezed) ||
+                other.mainTimerFreezed == mainTimerFreezed));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, mainTimer, mainTimerFreezed, assistTimer, bonusTimer);
+      runtimeType, mainTimer, assistTimer, bonusTimer, mainTimerFreezed);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ClockImplCopyWith<_$ClockImpl> get copyWith =>
       __$$ClockImplCopyWithImpl<_$ClockImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ClockImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _Clock implements Clock {
   factory _Clock(
       {required final Duration mainTimer,
-      final Duration mainTimerFreezed,
       required final Duration assistTimer,
-      required final Duration bonusTimer}) = _$ClockImpl;
+      required final Duration bonusTimer,
+      final Duration mainTimerFreezed}) = _$ClockImpl;
+
+  factory _Clock.fromJson(Map<String, dynamic> json) = _$ClockImpl.fromJson;
 
   @override
   Duration get mainTimer;
   @override
-  Duration get mainTimerFreezed;
-  @override
   Duration get assistTimer;
   @override
   Duration get bonusTimer;
+  @override
+  Duration get mainTimerFreezed;
   @override
   @JsonKey(ignore: true)
   _$$ClockImplCopyWith<_$ClockImpl> get copyWith =>

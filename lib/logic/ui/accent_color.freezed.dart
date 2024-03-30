@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'accentColor.dart';
+part of 'accent_color.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,27 +15,27 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$AccentColor {
+mixin _$DynamicAccentColor {
   Color get accentColor => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $AccentColorCopyWith<AccentColor> get copyWith =>
+  $DynamicAccentColorCopyWith<DynamicAccentColor> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AccentColorCopyWith<$Res> {
-  factory $AccentColorCopyWith(
-          AccentColor value, $Res Function(AccentColor) then) =
-      _$AccentColorCopyWithImpl<$Res, AccentColor>;
+abstract class $DynamicAccentColorCopyWith<$Res> {
+  factory $DynamicAccentColorCopyWith(
+          DynamicAccentColor value, $Res Function(DynamicAccentColor) then) =
+      _$DynamicAccentColorCopyWithImpl<$Res, DynamicAccentColor>;
   @useResult
   $Res call({Color accentColor});
 }
 
 /// @nodoc
-class _$AccentColorCopyWithImpl<$Res, $Val extends AccentColor>
-    implements $AccentColorCopyWith<$Res> {
-  _$AccentColorCopyWithImpl(this._value, this._then);
+class _$DynamicAccentColorCopyWithImpl<$Res, $Val extends DynamicAccentColor>
+    implements $DynamicAccentColorCopyWith<$Res> {
+  _$DynamicAccentColorCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -45,10 +45,10 @@ class _$AccentColorCopyWithImpl<$Res, $Val extends AccentColor>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accentColor = freezed,
+    Object? accentColor = null,
   }) {
     return _then(_value.copyWith(
-      accentColor: freezed == accentColor
+      accentColor: null == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -58,7 +58,7 @@ class _$AccentColorCopyWithImpl<$Res, $Val extends AccentColor>
 
 /// @nodoc
 abstract class _$$AccentColorImplCopyWith<$Res>
-    implements $AccentColorCopyWith<$Res> {
+    implements $DynamicAccentColorCopyWith<$Res> {
   factory _$$AccentColorImplCopyWith(
           _$AccentColorImpl value, $Res Function(_$AccentColorImpl) then) =
       __$$AccentColorImplCopyWithImpl<$Res>;
@@ -69,7 +69,7 @@ abstract class _$$AccentColorImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AccentColorImplCopyWithImpl<$Res>
-    extends _$AccentColorCopyWithImpl<$Res, _$AccentColorImpl>
+    extends _$DynamicAccentColorCopyWithImpl<$Res, _$AccentColorImpl>
     implements _$$AccentColorImplCopyWith<$Res> {
   __$$AccentColorImplCopyWithImpl(
       _$AccentColorImpl _value, $Res Function(_$AccentColorImpl) _then)
@@ -78,10 +78,10 @@ class __$$AccentColorImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accentColor = freezed,
+    Object? accentColor = null,
   }) {
     return _then(_$AccentColorImpl(
-      accentColor: freezed == accentColor
+      accentColor: null == accentColor
           ? _value.accentColor
           : accentColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -99,7 +99,7 @@ class _$AccentColorImpl implements _AccentColor {
 
   @override
   String toString() {
-    return 'AccentColor(accentColor: $accentColor)';
+    return 'DynamicAccentColor(accentColor: $accentColor)';
   }
 
   @override
@@ -107,13 +107,12 @@ class _$AccentColorImpl implements _AccentColor {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccentColorImpl &&
-            const DeepCollectionEquality()
-                .equals(other.accentColor, accentColor));
+            (identical(other.accentColor, accentColor) ||
+                other.accentColor == accentColor));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(accentColor));
+  int get hashCode => Object.hash(runtimeType, accentColor);
 
   @JsonKey(ignore: true)
   @override
@@ -122,7 +121,7 @@ class _$AccentColorImpl implements _AccentColor {
       __$$AccentColorImplCopyWithImpl<_$AccentColorImpl>(this, _$identity);
 }
 
-abstract class _AccentColor implements AccentColor {
+abstract class _AccentColor implements DynamicAccentColor {
   factory _AccentColor({required final Color accentColor}) = _$AccentColorImpl;
 
   @override

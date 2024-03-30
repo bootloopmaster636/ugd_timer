@@ -2,12 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'accentColor.freezed.dart';
-part 'accentColor.g.dart';
+part 'accent_color.freezed.dart';
+part 'accent_color.g.dart';
 
 @freezed
-class AccentColor with _$AccentColor {
-  factory AccentColor({
+class DynamicAccentColor with _$DynamicAccentColor {
+  factory DynamicAccentColor({
     required Color accentColor,
   }) = _AccentColor;
 }
@@ -15,21 +15,21 @@ class AccentColor with _$AccentColor {
 @riverpod
 class AccentColorState extends _$AccentColorState {
   @override
-  AccentColor build() {
-    return AccentColor(accentColor: Colors.blue);
+  DynamicAccentColor build() {
+    return DynamicAccentColor(accentColor: Colors.blue);
   }
 
   void setAccentColorByDuration(Duration now, Duration set) {
     if (now.inSeconds > set.inSeconds * .8) {
-      state = AccentColor(accentColor: Colors.blue);
+      state = DynamicAccentColor(accentColor: Colors.blue);
     } else if (now.inSeconds > set.inSeconds * .6) {
-      state = AccentColor(accentColor: Colors.teal);
+      state = DynamicAccentColor(accentColor: Colors.teal);
     } else if (now.inSeconds > set.inSeconds * .4) {
-      state = AccentColor(accentColor: Colors.green);
+      state = DynamicAccentColor(accentColor: Colors.green);
     } else if (now.inSeconds > set.inSeconds * .2) {
-      state = AccentColor(accentColor: Colors.orange);
+      state = DynamicAccentColor(accentColor: Colors.orange);
     } else if (now.inSeconds > set.inSeconds * .1) {
-      state = AccentColor(accentColor: Colors.red);
+      state = DynamicAccentColor(accentColor: Colors.red);
     }
   }
 }

@@ -11,14 +11,15 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/settings/appSettings.dart';
+import 'package:ugd_timer/data/appSettings/app_settings_persistence.dart';
+import 'package:ugd_timer/logic/settings/app_settings.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
-import 'package:ugd_timer/logic/timerMain/timerConf.dart';
-import 'package:ugd_timer/logic/ui/accentColor.dart';
+import 'package:ugd_timer/logic/timerMain/timer_conf.dart';
+import 'package:ugd_timer/logic/ui/accent_color.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/etc/appsSettings.dart';
-import 'package:ugd_timer/screen/etc/autoStartWizard.dart';
+import 'package:ugd_timer/screen/etc/apps_settings.dart';
+import 'package:ugd_timer/screen/etc/autostart_wizard.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -28,10 +29,12 @@ Future<void> main() async {
 
   if (defaultTargetPlatform == TargetPlatform.windows) {}
 
-  runApp(ProviderScope(child: MainApp()));
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends ConsumerWidget {
+  const MainApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Init(
@@ -82,8 +85,22 @@ class Init extends ConsumerWidget {
   // see https://riverpod.dev/docs/essentials/eager_initialization for more info.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(timerBeatProvider);
-    return child;
+    ref
+      ..watch(timerBeatProvider)
+      ..watch(appSettingsLogicProvider);
+    final AsyncValue<void> appSettings = ref.watch(appSettingsPersistenceProvider);
+
+    if (appSettings.isLoading) {
+      return FluentTheme(
+        data: FluentThemeData(
+          brightness: Brightness.light,
+          accentColor: Colors.blue,
+        ),
+        child: const Center(child: ProgressBar()),
+      );
+    } else {
+      return child;
+    }
   }
 }
 
@@ -172,10 +189,11 @@ class Menu extends HookConsumerWidget {
                     //   style: FluentTheme.of(context).typography.caption,
                     // ),
                     onPressed: () {
-                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(ApplicationSettingsPage());
+                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const ApplicationSettingsPage());
                       Flyout.of(context).close();
                     },
                   ),
+                  const MenuFlyoutSeparator(),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.autoStartWizard),
                     // trailing: Text(
@@ -186,6 +204,19 @@ class Menu extends HookConsumerWidget {
                       ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const AutoStartSetupPage());
                     },
                   ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.importProfile),
+                    onPressed: () {
+                      exit(0);
+                    },
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.exportProfile),
+                    onPressed: () {
+                      exit(0);
+                    },
+                  ),
+                  const MenuFlyoutSeparator(),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.exit),
                     // trailing: Text(

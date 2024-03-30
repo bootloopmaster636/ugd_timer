@@ -7,8 +7,8 @@ import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 
-part 'autoStartLogic.freezed.dart';
-part 'autoStartLogic.g.dart';
+part 'autostart_logic.freezed.dart';
+part 'autostart_logic.g.dart';
 
 @freezed
 class AutoStartClock with _$AutoStartClock {
@@ -25,7 +25,7 @@ class AutoStartLogic extends _$AutoStartLogic {
   AutoStartClock build() {
     final DateTime now = DateTime.now();
     return AutoStartClock(
-      startAt: Duration(hours: now.hour, minutes: now.minute, seconds: 0),
+      startAt: Duration(hours: now.hour, minutes: now.minute),
       message: '',
       enabled: false,
     );

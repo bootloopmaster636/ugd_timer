@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/ui/accentColor.dart';
+import 'package:ugd_timer/logic/ui/accent_color.dart';
 
 part 'timer.freezed.dart';
 part 'timer.g.dart';
@@ -12,10 +12,12 @@ part 'timer.g.dart';
 class Clock with _$Clock {
   factory Clock({
     required Duration mainTimer,
-    @Default(Duration.zero) Duration mainTimerFreezed,
     required Duration assistTimer,
     required Duration bonusTimer,
+    @Default(Duration.zero) Duration mainTimerFreezed,
   }) = _Clock;
+
+  factory Clock.fromJson(Map<String, dynamic> json) => _$ClockFromJson(json);
 }
 
 @freezed
@@ -78,7 +80,6 @@ class TimerLogic extends _$TimerLogic {
     state = AsyncData<Clock>(
       Clock(
         mainTimer: Duration.zero,
-        mainTimerFreezed: Duration.zero,
         assistTimer: Duration.zero,
         bonusTimer: Duration.zero,
       ),
@@ -90,7 +91,6 @@ class TimerLogic extends _$TimerLogic {
     Clock clock = state.value ??
         Clock(
           mainTimer: Duration.zero,
-          mainTimerFreezed: Duration.zero,
           assistTimer: Duration.zero,
           bonusTimer: Duration.zero,
         );
@@ -132,10 +132,12 @@ class TimerBeat extends _$TimerBeat {
           status: TimerStatus.stopped,
           now: DateTime.now(),
         );
-    state = AsyncData<Status>(status.copyWith(
-      status: newStatus,
-      now: DateTime.now(),
-    ));
+    state = AsyncData<Status>(
+      status.copyWith(
+        status: newStatus,
+        now: DateTime.now(),
+      ),
+    );
   }
 
   Future<void> timerBeatLogic() async {

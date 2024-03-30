@@ -7,8 +7,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/timerEtc/timerNotes.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
+import 'package:ugd_timer/logic/timerEtc/timer_notes.dart';
+import 'package:ugd_timer/screen/general_components.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotesCard extends StatelessWidget {
@@ -65,7 +65,7 @@ class NotesEdit extends HookConsumerWidget {
     final TextEditingController inputCtl = useTextEditingController(text: ref.read(notesLogicProvider).data);
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      children: <Widget>[
         Flexible(
           child: MediaQuery(
             data: MediaQueryData(textScaler: TextScaler.linear(ref.watch(notesLogicProvider).textScale)),
@@ -97,15 +97,15 @@ class NotesEdit extends HookConsumerWidget {
                 style: FluentTheme.of(context).typography.caption,
               ),
               onPressed: () async {
-                final Uri _url =
+                final Uri url =
                     Uri.parse('https://guides.github.com/features/mastering-markdown/#GitHub-flavored-markdown');
-                if (!await launchUrl(_url)) {
-                  throw Exception('Could not launch $_url');
+                if (!await launchUrl(url)) {
+                  throw Exception('Could not launch $url');
                 }
               },
             ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -119,15 +119,16 @@ class NotesRender extends ConsumerWidget {
     return MediaQuery(
       data: MediaQueryData(textScaler: TextScaler.linear(ref.watch(notesLogicProvider).textScale)),
       child: Markdown(
-          data: ref.watch(notesLogicProvider).data,
-          onTapLink: (String text, String? href, String title) async {
-            if (href != null) {
-              final Uri url = Uri.parse(href);
-              if (!await launchUrl(url)) {
-                throw Exception('Could not launch $url');
-              }
+        data: ref.watch(notesLogicProvider).data,
+        onTapLink: (String text, String? href, String title) async {
+          if (href != null) {
+            final Uri url = Uri.parse(href);
+            if (!await launchUrl(url)) {
+              throw Exception('Could not launch $url');
             }
-          }),
+          }
+        },
+      ),
     );
   }
 }

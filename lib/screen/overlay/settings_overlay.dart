@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/overlay/settingsContent.dart';
+import 'package:ugd_timer/screen/overlay/settings_content.dart';
 
 class SettingsOverlay extends HookConsumerWidget {
   const SettingsOverlay({super.key});

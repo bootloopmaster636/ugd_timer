@@ -2,12 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'appSettings.freezed.dart';
-part 'appSettings.g.dart';
+part 'app_settings.freezed.dart';
+part 'app_settings.g.dart';
 
 @freezed
-class AppSettingsModel with _$AppSettingsModel {
-  factory AppSettingsModel({
+class AppSettings with _$AppSettings {
+  factory AppSettings({
     required String languageCode,
     required ThemeMode themeMode,
   }) = _AppSettingsModel;
@@ -16,8 +16,8 @@ class AppSettingsModel with _$AppSettingsModel {
 @riverpod
 class AppSettingsLogic extends _$AppSettingsLogic {
   @override
-  AppSettingsModel build() {
-    return AppSettingsModel(
+  AppSettings build() {
+    return AppSettings(
       languageCode: 'en',
       themeMode: ThemeMode.system,
     );

@@ -43,5 +43,7 @@
   "backToTimer": "Back to timer",
   "language": "Language",
   "languageSettingsDesc": "Select the language for the application",
-  "themeMode": "Theme Mode"
+  "themeMode": "Theme Mode",
+  "importProfile": "Import profile",
+  "exportProfile": "Export profile"
 }

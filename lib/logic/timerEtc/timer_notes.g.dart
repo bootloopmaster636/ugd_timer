@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timerNotes.dart';
+part of 'timer_notes.dart';
 
 // **************************************************************************
 // RiverpodGenerator

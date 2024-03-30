@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/timerEtc/timerNotes.dart';
+import 'package:ugd_timer/logic/timerEtc/timer_notes.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
+import 'package:ugd_timer/screen/general_components.dart';
 import 'package:ugd_timer/screen/top/notes.dart';
 import 'package:ugd_timer/screen/top/timer.dart';
 
@@ -48,7 +48,7 @@ class MainTimer extends ConsumerWidget {
                     child: HideableWidget(
                       isShown: isNotesShown,
                       child: const Row(
-                        children: [
+                        children: <Widget>[
                           Gap(16),
                           Expanded(child: NotesCard()),
                         ],
@@ -133,10 +133,11 @@ class CompactControlBarContent extends ConsumerWidget {
         ),
         const Gap(4),
         IconButton(
-            icon: const Icon(FluentIcons.quick_note),
-            onPressed: () {
-              ref.read(notesLogicProvider.notifier).toggleNotes();
-            }),
+          icon: const Icon(FluentIcons.quick_note),
+          onPressed: () {
+            ref.read(notesLogicProvider.notifier).toggleNotes();
+          },
+        ),
       ],
     );
   }

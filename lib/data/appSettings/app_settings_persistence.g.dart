@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timerConf.dart';
+part of 'app_settings_persistence.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timerConfLogicHash() => r'e9b6cb2d629d198766e10acfe4595067b8336994';
+String _$appSettingsPersistenceHash() =>
+    r'decaa0119fb4cc4c3902351e7c2557741b3a26c4';
 
-/// See also [TimerConfLogic].
-@ProviderFor(TimerConfLogic)
-final timerConfLogicProvider =
-    AutoDisposeNotifierProvider<TimerConfLogic, TimerConf>.internal(
-  TimerConfLogic.new,
-  name: r'timerConfLogicProvider',
+/// See also [AppSettingsPersistence].
+@ProviderFor(AppSettingsPersistence)
+final appSettingsPersistenceProvider =
+    AutoDisposeAsyncNotifierProvider<AppSettingsPersistence, void>.internal(
+  AppSettingsPersistence.new,
+  name: r'appSettingsPersistenceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$timerConfLogicHash,
+      : _$appSettingsPersistenceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TimerConfLogic = AutoDisposeNotifier<TimerConf>;
+typedef _$AppSettingsPersistence = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

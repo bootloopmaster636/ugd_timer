@@ -3,10 +3,31 @@
 part of 'timer.dart';
 
 // **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$ClockImpl _$$ClockImplFromJson(Map<String, dynamic> json) => _$ClockImpl(
+      mainTimer: Duration(microseconds: json['mainTimer'] as int),
+      assistTimer: Duration(microseconds: json['assistTimer'] as int),
+      bonusTimer: Duration(microseconds: json['bonusTimer'] as int),
+      mainTimerFreezed: json['mainTimerFreezed'] == null
+          ? Duration.zero
+          : Duration(microseconds: json['mainTimerFreezed'] as int),
+    );
+
+Map<String, dynamic> _$$ClockImplToJson(_$ClockImpl instance) =>
+    <String, dynamic>{
+      'mainTimer': instance.mainTimer.inMicroseconds,
+      'assistTimer': instance.assistTimer.inMicroseconds,
+      'bonusTimer': instance.bonusTimer.inMicroseconds,
+      'mainTimerFreezed': instance.mainTimerFreezed.inMicroseconds,
+    };
+
+// **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timerLogicHash() => r'e06dd86fddb7dfe42026433bb2b3b70645b6b484';
+String _$timerLogicHash() => r'e67e25112544f97127e8496602b02a186ad54e48';
 
 /// See also [TimerLogic].
 @ProviderFor(TimerLogic)

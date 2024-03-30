@@ -6,7 +6,7 @@ part of 'navigation.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$topWidgetLogicHash() => r'c0e8ec9915d6e19ae57470bee7bbd6c37ecfbba7';
+String _$topWidgetLogicHash() => r'0b54d58618177e3adcd86168d16419bb41576656';
 
 /// See also [TopWidgetLogic].
 @ProviderFor(TopWidgetLogic)

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'appSettings.dart';
+part of 'app_settings.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,28 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$AppSettingsModel {
+mixin _$AppSettings {
   String get languageCode => throw _privateConstructorUsedError;
   ThemeMode get themeMode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $AppSettingsModelCopyWith<AppSettingsModel> get copyWith =>
+  $AppSettingsCopyWith<AppSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AppSettingsModelCopyWith<$Res> {
-  factory $AppSettingsModelCopyWith(
-          AppSettingsModel value, $Res Function(AppSettingsModel) then) =
-      _$AppSettingsModelCopyWithImpl<$Res, AppSettingsModel>;
+abstract class $AppSettingsCopyWith<$Res> {
+  factory $AppSettingsCopyWith(
+          AppSettings value, $Res Function(AppSettings) then) =
+      _$AppSettingsCopyWithImpl<$Res, AppSettings>;
   @useResult
   $Res call({String languageCode, ThemeMode themeMode});
 }
 
 /// @nodoc
-class _$AppSettingsModelCopyWithImpl<$Res, $Val extends AppSettingsModel>
-    implements $AppSettingsModelCopyWith<$Res> {
-  _$AppSettingsModelCopyWithImpl(this._value, this._then);
+class _$AppSettingsCopyWithImpl<$Res, $Val extends AppSettings>
+    implements $AppSettingsCopyWith<$Res> {
+  _$AppSettingsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -64,7 +64,7 @@ class _$AppSettingsModelCopyWithImpl<$Res, $Val extends AppSettingsModel>
 
 /// @nodoc
 abstract class _$$AppSettingsModelImplCopyWith<$Res>
-    implements $AppSettingsModelCopyWith<$Res> {
+    implements $AppSettingsCopyWith<$Res> {
   factory _$$AppSettingsModelImplCopyWith(_$AppSettingsModelImpl value,
           $Res Function(_$AppSettingsModelImpl) then) =
       __$$AppSettingsModelImplCopyWithImpl<$Res>;
@@ -75,7 +75,7 @@ abstract class _$$AppSettingsModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AppSettingsModelImplCopyWithImpl<$Res>
-    extends _$AppSettingsModelCopyWithImpl<$Res, _$AppSettingsModelImpl>
+    extends _$AppSettingsCopyWithImpl<$Res, _$AppSettingsModelImpl>
     implements _$$AppSettingsModelImplCopyWith<$Res> {
   __$$AppSettingsModelImplCopyWithImpl(_$AppSettingsModelImpl _value,
       $Res Function(_$AppSettingsModelImpl) _then)
@@ -112,7 +112,7 @@ class _$AppSettingsModelImpl implements _AppSettingsModel {
 
   @override
   String toString() {
-    return 'AppSettingsModel(languageCode: $languageCode, themeMode: $themeMode)';
+    return 'AppSettings(languageCode: $languageCode, themeMode: $themeMode)';
   }
 
   @override
@@ -137,7 +137,7 @@ class _$AppSettingsModelImpl implements _AppSettingsModel {
           this, _$identity);
 }
 
-abstract class _AppSettingsModel implements AppSettingsModel {
+abstract class _AppSettingsModel implements AppSettings {
   factory _AppSettingsModel(
       {required final String languageCode,
       required final ThemeMode themeMode}) = _$AppSettingsModelImpl;

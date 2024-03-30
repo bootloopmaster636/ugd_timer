@@ -4,7 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ugd_timer/constants.dart';
-import 'package:ugd_timer/logic/settings/appSettings.dart';
+import 'package:ugd_timer/data/appSettings/app_settings_persistence.dart';
+import 'package:ugd_timer/logic/settings/app_settings.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 
 class ApplicationSettingsPage extends ConsumerWidget {
@@ -13,15 +14,14 @@ class ApplicationSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(24),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: Column(
-            children: [
+            children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   IconButton(
                     icon: const Icon(
                       FluentIcons.back,
@@ -55,14 +55,14 @@ class AppSettingsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: [
+        children: <HookConsumerWidget>[
           const LanguageSettings(),
           const ThemeModeSettings(),
         ]
-            .map((e) => Padding(
+            .map((HookConsumerWidget e) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: e,
-                ))
+                ),)
             .toList(),
       ),
     );
@@ -82,7 +82,7 @@ class LanguageSettings extends HookConsumerWidget {
         constraints: const BoxConstraints(maxHeight: 300),
         child: SingleChildScrollView(
           child: Column(
-            children: languageCode.map((e) {
+            children: languageCode.map((String e) {
               return ListTile(
                 title: Text(
                   languageName[languageCode.indexOf(e)],
@@ -90,14 +90,13 @@ class LanguageSettings extends HookConsumerWidget {
                 ),
                 leading: RadioButton(
                   checked: ref.watch(appSettingsLogicProvider).languageCode == e,
+                  semanticLabel: languageName[languageCode.indexOf(e)],
                   onChanged: (bool value) {
                     ref.read(appSettingsLogicProvider.notifier).setLanguageCode(e);
+                    ref.read(appSettingsPersistenceProvider.notifier).saveSettings();
+                    isExpanded.value = false;
                   },
                 ),
-                onPressed: () {
-                  ref.read(appSettingsLogicProvider.notifier).setLanguageCode(e);
-                  isExpanded.value = false;
-                },
               );
             }).toList(),
           ),
@@ -122,7 +121,7 @@ class ThemeModeSettings extends HookConsumerWidget {
         ),
         trailing: ComboBox<String>(
           value: themeModeName[ref.watch(appSettingsLogicProvider).themeMode.index],
-          items: themeModeName.map((e) {
+          items: themeModeName.map((String e) {
             return ComboBoxItem<String>(
               value: e,
               child: Text(e),
@@ -130,6 +129,7 @@ class ThemeModeSettings extends HookConsumerWidget {
           }).toList(),
           onChanged: (String? val) {
             ref.read(appSettingsLogicProvider.notifier).setThemeMode(val ?? 'System');
+            ref.read(appSettingsPersistenceProvider.notifier).saveSettings();
           },
         ),
       ),

@@ -2,8 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ugd_timer/constants.dart';
 
-part 'timerNotes.freezed.dart';
-part 'timerNotes.g.dart';
+part 'timer_notes.freezed.dart';
+part 'timer_notes.g.dart';
 
 @freezed
 class Notes with _$Notes {
