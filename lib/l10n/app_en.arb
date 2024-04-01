@@ -45,5 +45,8 @@
   "languageSettingsDesc": "Select the language for the application",
   "themeMode": "Theme Mode",
   "importProfile": "Import profile",
-  "exportProfile": "Export profile"
+  "importProfileSuccess": "Profile successfully imported!",
+  "exportProfile": "Export profile",
+  "exportProfileSuccess": "Profile successfully exported!",
+  "somethingWrong": "Something went wrong"
 }

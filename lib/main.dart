@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/data/appSettings/app_settings_persistence.dart';
+import 'package:ugd_timer/data/timerProfile/profile_io.dart';
 import 'package:ugd_timer/logic/settings/app_settings.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/timerMain/timer_conf.dart';
@@ -31,6 +32,8 @@ Future<void> main() async {
 
   runApp(const ProviderScope(child: MainApp()));
 }
+
+final GlobalKey widgetKey = GlobalKey();
 
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
@@ -64,8 +67,9 @@ class MainApp extends ConsumerWidget {
             ],
             locale: Locale(ref.watch(appSettingsLogicProvider).languageCode),
             themeMode: ref.watch(appSettingsLogicProvider).themeMode,
-            home: const Column(
-              children: <Widget>[
+            home: Column(
+              key: widgetKey,
+              children: const <Widget>[
                 TitleBar(),
                 ScreenStackManager(),
               ],
@@ -156,8 +160,8 @@ class Menu extends HookConsumerWidget {
       controller: menuController,
       child: IconButton(
         icon: Icon(FluentIcons.collapse_menu, color: FluentTheme.of(context).activeColor),
-        onPressed: () {
-          menuController.showFlyout(
+        onPressed: () async {
+          await menuController.showFlyout(
             autoModeConfiguration: FlyoutAutoConfiguration(
               preferredMode: FlyoutPlacementMode.bottomRight,
             ),
@@ -206,14 +210,14 @@ class Menu extends HookConsumerWidget {
                   ),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.importProfile),
-                    onPressed: () {
-                      exit(0);
+                    onPressed: () async {
+                      await importTimerConfig(ref);
                     },
                   ),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.exportProfile),
-                    onPressed: () {
-                      exit(0);
+                    onPressed: () async {
+                      await exportTimerConfig(ref);
                     },
                   ),
                   const MenuFlyoutSeparator(),

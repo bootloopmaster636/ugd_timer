@@ -132,3 +132,120 @@ abstract class _OverlayState implements OverlayState {
   _$$OverlayStateImplCopyWith<_$OverlayStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$OverlayWidget {
+  Widget get widget => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $OverlayWidgetCopyWith<OverlayWidget> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OverlayWidgetCopyWith<$Res> {
+  factory $OverlayWidgetCopyWith(
+          OverlayWidget value, $Res Function(OverlayWidget) then) =
+      _$OverlayWidgetCopyWithImpl<$Res, OverlayWidget>;
+  @useResult
+  $Res call({Widget widget});
+}
+
+/// @nodoc
+class _$OverlayWidgetCopyWithImpl<$Res, $Val extends OverlayWidget>
+    implements $OverlayWidgetCopyWith<$Res> {
+  _$OverlayWidgetCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? widget = null,
+  }) {
+    return _then(_value.copyWith(
+      widget: null == widget
+          ? _value.widget
+          : widget // ignore: cast_nullable_to_non_nullable
+              as Widget,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OverlayWidgetImplCopyWith<$Res>
+    implements $OverlayWidgetCopyWith<$Res> {
+  factory _$$OverlayWidgetImplCopyWith(
+          _$OverlayWidgetImpl value, $Res Function(_$OverlayWidgetImpl) then) =
+      __$$OverlayWidgetImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({Widget widget});
+}
+
+/// @nodoc
+class __$$OverlayWidgetImplCopyWithImpl<$Res>
+    extends _$OverlayWidgetCopyWithImpl<$Res, _$OverlayWidgetImpl>
+    implements _$$OverlayWidgetImplCopyWith<$Res> {
+  __$$OverlayWidgetImplCopyWithImpl(
+      _$OverlayWidgetImpl _value, $Res Function(_$OverlayWidgetImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? widget = null,
+  }) {
+    return _then(_$OverlayWidgetImpl(
+      widget: null == widget
+          ? _value.widget
+          : widget // ignore: cast_nullable_to_non_nullable
+              as Widget,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$OverlayWidgetImpl implements _OverlayWidget {
+  _$OverlayWidgetImpl({required this.widget});
+
+  @override
+  final Widget widget;
+
+  @override
+  String toString() {
+    return 'OverlayWidget(widget: $widget)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OverlayWidgetImpl &&
+            (identical(other.widget, widget) || other.widget == widget));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, widget);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OverlayWidgetImplCopyWith<_$OverlayWidgetImpl> get copyWith =>
+      __$$OverlayWidgetImplCopyWithImpl<_$OverlayWidgetImpl>(this, _$identity);
+}
+
+abstract class _OverlayWidget implements OverlayWidget {
+  factory _OverlayWidget({required final Widget widget}) = _$OverlayWidgetImpl;
+
+  @override
+  Widget get widget;
+  @override
+  @JsonKey(ignore: true)
+  _$$OverlayWidgetImplCopyWith<_$OverlayWidgetImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
