@@ -4,9 +4,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/overlay/settingsOverlay.dart';
-
-import 'background.dart';
+import 'package:ugd_timer/screen/background.dart';
+import 'package:ugd_timer/screen/overlay/settings_overlay.dart';
 
 class ScreenStackManager extends ConsumerWidget {
   const ScreenStackManager({super.key});

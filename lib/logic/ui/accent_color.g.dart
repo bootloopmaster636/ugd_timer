@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'navigation.dart';
+part of 'accent_color.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$topWidgetLogicHash() => r'0b54d58618177e3adcd86168d16419bb41576656';
+String _$accentColorStateHash() => r'd11c7b05de525ea1e52192c340554983d98689d3';
 
-/// See also [TopWidgetLogic].
-@ProviderFor(TopWidgetLogic)
-final topWidgetLogicProvider =
-    AutoDisposeNotifierProvider<TopWidgetLogic, TopWidget>.internal(
-  TopWidgetLogic.new,
-  name: r'topWidgetLogicProvider',
+/// See also [AccentColorState].
+@ProviderFor(AccentColorState)
+final accentColorStateProvider =
+    AutoDisposeNotifierProvider<AccentColorState, DynamicAccentColor>.internal(
+  AccentColorState.new,
+  name: r'accentColorStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$topWidgetLogicHash,
+      : _$accentColorStateHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TopWidgetLogic = AutoDisposeNotifier<TopWidget>;
+typedef _$AccentColorState = AutoDisposeNotifier<DynamicAccentColor>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

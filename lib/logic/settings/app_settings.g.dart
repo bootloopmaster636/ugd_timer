@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'accentColor.dart';
+part of 'app_settings.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accentColorStateHash() => r'0141c41be162bb6125bd4449d9f10780c5071de6';
+String _$appSettingsLogicHash() => r'3c62435145572885055ae2acbe60a113326ee4fa';
 
-/// See also [AccentColorState].
-@ProviderFor(AccentColorState)
-final accentColorStateProvider =
-    AutoDisposeNotifierProvider<AccentColorState, Color>.internal(
-  AccentColorState.new,
-  name: r'accentColorStateProvider',
+/// See also [AppSettingsLogic].
+@ProviderFor(AppSettingsLogic)
+final appSettingsLogicProvider =
+    AutoDisposeNotifierProvider<AppSettingsLogic, AppSettings>.internal(
+  AppSettingsLogic.new,
+  name: r'appSettingsLogicProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$accentColorStateHash,
+      : _$appSettingsLogicHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AccentColorState = AutoDisposeNotifier<Color>;
+typedef _$AppSettingsLogic = AutoDisposeNotifier<AppSettings>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

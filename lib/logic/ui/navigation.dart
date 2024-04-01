@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:ugd_timer/screen/top/clockDisplay.dart';
+import 'package:simple_animations/animation_builder/play_animation_builder.dart';
+import 'package:ugd_timer/screen/top/clock_display.dart';
 
 part 'navigation.freezed.dart';
 part 'navigation.g.dart';
@@ -16,20 +16,53 @@ class TopWidget with _$TopWidget {
 
 @riverpod
 class TopWidgetLogic extends _$TopWidgetLogic {
-  // TODO(bootloopmaster636): will have to fix animation sometime, because the screen switching is 🤮
-
   @override
   TopWidget build() {
     return TopWidget(
-      currentlyShown: const MainTimer().animate().fadeIn(),
+      currentlyShown: PlayAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 2000),
+        curve: Curves.easeOutQuart,
+        builder: (BuildContext context, double value, _) {
+          return Opacity(
+            opacity: value,
+            child: const MainTimer(),
+          );
+        },
+      ),
     );
   }
 
   void backToTimer() {
-    state = state.copyWith(currentlyShown: MainTimer().animate().fadeIn());
+    state = state.copyWith(
+      currentlyShown: PlayAnimationBuilder<double>(
+        tween: Tween<double>(begin: 1.05, end: 1),
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutQuart,
+        builder: (BuildContext context, double value, _) {
+          return Transform.scale(
+            scale: value,
+            child: const MainTimer(),
+          );
+        },
+      ),
+    );
   }
 
   void setCurrentlyShown(Widget widget) {
-    state = state.copyWith(currentlyShown: widget.animate().fadeIn());
+    state = state.copyWith(
+      currentlyShown: PlayAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0.95, end: 1),
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutQuart,
+        builder: (BuildContext context, double value, _) {
+          return Transform.scale(
+            scale: value,
+            child: widget,
+          );
+        },
+        key: ValueKey<Widget>(widget),
+      ),
+    );
   }
 }

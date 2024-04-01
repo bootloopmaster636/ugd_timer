@@ -11,12 +11,16 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/constants.dart';
+import 'package:ugd_timer/data/appSettings/app_settings_persistence.dart';
+import 'package:ugd_timer/data/timerProfile/profile_io.dart';
+import 'package:ugd_timer/logic/settings/app_settings.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
-import 'package:ugd_timer/logic/timerMain/timerConf.dart';
-import 'package:ugd_timer/logic/ui/accentColor.dart';
+import 'package:ugd_timer/logic/timerMain/timer_conf.dart';
+import 'package:ugd_timer/logic/ui/accent_color.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/etc/AutoStartWizard.dart';
+import 'package:ugd_timer/screen/etc/apps_settings.dart';
+import 'package:ugd_timer/screen/etc/autostart_wizard.dart';
 import 'package:ugd_timer/screen/stack.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -26,10 +30,14 @@ Future<void> main() async {
 
   if (defaultTargetPlatform == TargetPlatform.windows) {}
 
-  runApp(ProviderScope(child: MainApp()));
+  runApp(const ProviderScope(child: MainApp()));
 }
 
+final GlobalKey widgetKey = GlobalKey();
+
 class MainApp extends ConsumerWidget {
+  const MainApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Init(
@@ -39,12 +47,12 @@ class MainApp extends ConsumerWidget {
             title: 'UGD Timer',
             darkTheme: FluentThemeData(
               brightness: Brightness.dark,
-              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
+              accentColor: ref.watch(accentColorStateProvider).accentColor.toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             theme: FluentThemeData(
               brightness: Brightness.light,
-              accentColor: ref.watch(accentColorStateProvider).toAccentColor(),
+              accentColor: ref.watch(accentColorStateProvider).accentColor.toAccentColor(),
               visualDensity: VisualDensity.standard,
             ),
             localizationsDelegates: const <LocalizationsDelegate>[
@@ -57,10 +65,11 @@ class MainApp extends ConsumerWidget {
               Locale('en'), // English
               Locale('id'), // Indonesia
             ],
-            locale: const Locale('en'),
-            themeMode: ThemeMode.system,
-            home: const Column(
-              children: <Widget>[
+            locale: Locale(ref.watch(appSettingsLogicProvider).languageCode),
+            themeMode: ref.watch(appSettingsLogicProvider).themeMode,
+            home: Column(
+              key: widgetKey,
+              children: const <Widget>[
                 TitleBar(),
                 ScreenStackManager(),
               ],
@@ -80,8 +89,22 @@ class Init extends ConsumerWidget {
   // see https://riverpod.dev/docs/essentials/eager_initialization for more info.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(timerBeatProvider);
-    return child;
+    ref
+      ..watch(timerBeatProvider)
+      ..watch(appSettingsLogicProvider);
+    final AsyncValue<void> appSettings = ref.watch(appSettingsPersistenceProvider);
+
+    if (appSettings.isLoading) {
+      return FluentTheme(
+        data: FluentThemeData(
+          brightness: Brightness.light,
+          accentColor: Colors.blue,
+        ),
+        child: const Center(child: ProgressBar()),
+      );
+    } else {
+      return child;
+    }
   }
 }
 
@@ -137,8 +160,8 @@ class Menu extends HookConsumerWidget {
       controller: menuController,
       child: IconButton(
         icon: Icon(FluentIcons.collapse_menu, color: FluentTheme.of(context).activeColor),
-        onPressed: () {
-          menuController.showFlyout(
+        onPressed: () async {
+          await menuController.showFlyout(
             autoModeConfiguration: FlyoutAutoConfiguration(
               preferredMode: FlyoutPlacementMode.bottomRight,
             ),
@@ -169,8 +192,12 @@ class Menu extends HookConsumerWidget {
                     //   'Ctrl+O',
                     //   style: FluentTheme.of(context).typography.caption,
                     // ),
-                    onPressed: Flyout.of(context).close,
+                    onPressed: () {
+                      ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const ApplicationSettingsPage());
+                      Flyout.of(context).close();
+                    },
                   ),
+                  const MenuFlyoutSeparator(),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.autoStartWizard),
                     // trailing: Text(
@@ -181,6 +208,19 @@ class Menu extends HookConsumerWidget {
                       ref.read(topWidgetLogicProvider.notifier).setCurrentlyShown(const AutoStartSetupPage());
                     },
                   ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.importProfile),
+                    onPressed: () async {
+                      await importTimerConfig(ref);
+                    },
+                  ),
+                  MenuFlyoutItem(
+                    text: Text(AppLocalizations.of(context)!.exportProfile),
+                    onPressed: () async {
+                      await exportTimerConfig(ref);
+                    },
+                  ),
+                  const MenuFlyoutSeparator(),
                   MenuFlyoutItem(
                     text: Text(AppLocalizations.of(context)!.exit),
                     // trailing: Text(

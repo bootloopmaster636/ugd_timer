@@ -19,7 +19,7 @@ dependencies:
   freezed: ^2.4.6
   gap: ^3.0.1
   hooks_riverpod: ^2.4.9
-  hotkey_manager: ^0.1.8
+  hotkey_manager: ^0.2.1
   intl: any
   responsive_sizer: ^3.3.0+1
   riverpod: ^2.4.9
@@ -32,11 +32,16 @@ dependencies:
   animated_flip_counter: ^0.2.6
   shadow: ^1.5.0
   font_awesome_flutter: ^10.6.0
-  flutter_animate: ^4.4.1
   lottie: ^3.0.0
   css_filter: ^1.0.3
   flutter_markdown: ^0.6.18+3
   url_launcher: ^6.2.4
+  simple_animations: ^5.0.2
+  shared_preferences: ^2.2.2
+  json_annotation: ^4.8.1
+  archive: ^3.4.10
+  path_provider: ^2.1.2
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   build_runner: ^2.4.8

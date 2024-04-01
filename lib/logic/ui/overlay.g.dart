@@ -22,5 +22,22 @@ final overlayStateLogicProvider =
 );
 
 typedef _$OverlayStateLogic = AutoDisposeNotifier<OverlayState>;
+String _$overlayWidgetLogicHash() =>
+    r'141a8e3566292428fd74a95563486aff0e3e965e';
+
+/// See also [OverlayWidgetLogic].
+@ProviderFor(OverlayWidgetLogic)
+final overlayWidgetLogicProvider =
+    AutoDisposeNotifierProvider<OverlayWidgetLogic, OverlayWidget>.internal(
+  OverlayWidgetLogic.new,
+  name: r'overlayWidgetLogicProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$overlayWidgetLogicHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$OverlayWidgetLogic = AutoDisposeNotifier<OverlayWidget>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

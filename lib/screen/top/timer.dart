@@ -5,9 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
-import 'package:ugd_timer/logic/timerMain/timerConf.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
-import 'package:ugd_timer/screen/top/clockComponents.dart';
+import 'package:ugd_timer/logic/timerMain/timer_conf.dart';
+import 'package:ugd_timer/screen/general_components.dart';
+import 'package:ugd_timer/screen/top/clock_components.dart';
 
 // const Duration clockProvider = Duration.zero;
 
@@ -109,8 +109,9 @@ class TimerInfo extends ConsumerWidget {
                 children: <Widget>[
                   Text(AppLocalizations.of(context)!.timeUntilBonusExpired, style: const TextStyle(fontSize: 2)),
                   Text(
-                      '${AppLocalizations.of(context)!.minutes(bonusClock.inMinutes)} ${AppLocalizations.of(context)!.seconds(bonusClock.inSeconds % 60)}',
-                      style: const TextStyle(fontSize: 3, fontWeight: FontWeight.bold)),
+                    '${AppLocalizations.of(context)!.minutes(bonusClock.inMinutes)} ${AppLocalizations.of(context)!.seconds(bonusClock.inSeconds % 60)}',
+                    style: const TextStyle(fontSize: 3, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ],

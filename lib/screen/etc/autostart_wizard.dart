@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:ugd_timer/logic/timerEtc/autoStartLogic.dart';
+import 'package:ugd_timer/logic/timerEtc/autostart_logic.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
 import 'package:ugd_timer/logic/ui/navigation.dart';
 import 'package:ugd_timer/logic/ui/overlay.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
-import 'package:ugd_timer/screen/top/clockComponents.dart';
+import 'package:ugd_timer/screen/general_components.dart';
+import 'package:ugd_timer/screen/top/clock_components.dart';
 
 class AutoStartTimerPage extends HookConsumerWidget {
   const AutoStartTimerPage({super.key});
@@ -21,7 +21,7 @@ class AutoStartTimerPage extends HookConsumerWidget {
     final String message = ref.watch(autoStartLogicProvider).message;
 
     return LayoutBuilder(
-      builder: (context, constraints) {
+      builder: (BuildContext context, BoxConstraints constraints) {
         return Stack(
           children: <Widget>[
             Center(
@@ -39,7 +39,7 @@ class AutoStartTimerPage extends HookConsumerWidget {
                 child: Button(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       const Icon(
                         FluentIcons.cancel,
                         size: 16,
@@ -60,14 +60,14 @@ class AutoStartTimerPage extends HookConsumerWidget {
             Positioned(
               right: 0,
               child: Column(
-                children: [
+                children: <Widget>[
                   Text('state.startat.inhours: ${startAt.inHours}'),
                   Text('state.startat.inminutes % 60: ${startAt.inMinutes % 60}'),
                   Text('DateTime.now().hour: ${DateTime.now().hour}'),
                   Text('DateTime.now().minute: ${DateTime.now().minute}'),
                 ],
               ),
-            )
+            ),
           ],
         );
       },
@@ -94,7 +94,7 @@ class AutoStartTimer extends StatelessWidget {
       child: FittedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             AnimatedClockWidget(time: Duration(hours: now.hour, minutes: now.minute, seconds: now.second)),
             const Gap(2),
             if (message.isNotEmpty) ...<Widget>[
@@ -106,7 +106,9 @@ class AutoStartTimer extends StatelessWidget {
             ],
             Text(
               AppLocalizations.of(context)!.timerWillStartAt(
-                  startAt.inHours.toString().padLeft(2, '0'), (startAt.inMinutes % 60).toString().padLeft(2, '0')),
+                startAt.inHours.toString().padLeft(2, '0'),
+                (startAt.inMinutes % 60).toString().padLeft(2, '0'),
+              ),
               style: const TextStyle(fontSize: 2, fontWeight: FontWeight.bold),
             ),
           ],
@@ -131,7 +133,7 @@ class AutoStartSetupPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Text(
               AppLocalizations.of(context)!.autoStartWizardAsk,
               style: FluentTheme.of(context).typography.title,
@@ -160,7 +162,7 @@ class AutoStartSetupPage extends HookConsumerWidget {
             TimePicker(
               hourFormat: HourFormat.HH,
               header: AppLocalizations.of(context)!.pickATime,
-              selected: DateTime(0, 0, 0, autoStartClockInfo.inHours, autoStartClockInfo.inMinutes % 60, 0),
+              selected: DateTime(0, 0, 0, autoStartClockInfo.inHours, autoStartClockInfo.inMinutes % 60),
               onChanged: (DateTime value) {
                 ref
                     .read(autoStartLogicProvider.notifier)
@@ -180,7 +182,7 @@ class AutoStartSetupPage extends HookConsumerWidget {
             ),
             const Gap(16),
             Row(
-              children: [
+              children: <Widget>[
                 FilledButton(
                   child: Text(
                     AppLocalizations.of(context)!.startTimer,
@@ -200,7 +202,7 @@ class AutoStartSetupPage extends HookConsumerWidget {
                   },
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

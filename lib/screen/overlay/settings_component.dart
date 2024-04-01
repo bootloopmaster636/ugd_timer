@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ugd_timer/screen/generalComponents.dart';
+import 'package:ugd_timer/screen/general_components.dart';
 
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
@@ -32,7 +32,7 @@ class SettingsSection extends StatelessWidget {
         ),
         const Gap(8),
         ...children.map(
-          (e) => Padding(
+          (Widget e) => Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: e,
           ),
@@ -93,20 +93,16 @@ class SettingsTileTimeSelect extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutQuad,
-        child: HideableWidget(
-          isShown: isEnabled,
-          child: ListTile(
-            title: Text(title),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: TimePicker(
-                selected: DateTime(0, 0, 0, selectedTime.inHours, selectedTime.inMinutes.remainder(60)),
-                hourFormat: HourFormat.HH,
-                onChanged: onPressed,
-              ),
+      child: HideableWidget(
+        isShown: isEnabled,
+        child: ListTile(
+          title: Text(title),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: TimePicker(
+              selected: DateTime(0, 0, 0, selectedTime.inHours, selectedTime.inMinutes.remainder(60)),
+              hourFormat: HourFormat.HH,
+              onChanged: onPressed,
             ),
           ),
         ),
@@ -139,23 +135,19 @@ class SettingsTileTextfield extends HookConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOutQuad,
-        child: HideableWidget(
-          isShown: isEnabled,
-          child: ListTile(
-            title: Text(title),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: TextBox(
-                controller: inputCtl,
-                placeholder: hint,
-                onChanged: (String value) {
-                  inputCtl.text = value;
-                  onChanged(value);
-                },
-              ),
+      child: HideableWidget(
+        isShown: isEnabled,
+        child: ListTile(
+          title: Text(title),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: TextBox(
+              controller: inputCtl,
+              placeholder: hint,
+              onChanged: (String value) {
+                inputCtl.text = value;
+                onChanged(value);
+              },
             ),
           ),
         ),

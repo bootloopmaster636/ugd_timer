@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ugd_timer/constants.dart';
 import 'package:ugd_timer/logic/timerMain/timer.dart';
-import 'package:ugd_timer/logic/timerMain/timerConf.dart';
-import 'package:ugd_timer/screen/overlay/settingsComponent.dart';
+import 'package:ugd_timer/logic/timerMain/timer_conf.dart';
+import 'package:ugd_timer/screen/overlay/settings_component.dart';
 
 class SettingsContent extends StatelessWidget {
   const SettingsContent({super.key});

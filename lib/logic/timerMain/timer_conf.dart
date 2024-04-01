@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'timerConf.freezed.dart';
-part 'timerConf.g.dart';
+part 'timer_conf.freezed.dart';
+part 'timer_conf.g.dart';
 
 @freezed
 class TimerConf with _$TimerConf {
@@ -14,6 +14,8 @@ class TimerConf with _$TimerConf {
     required String endAudioPath,
     required String startCutoffAudioPath,
   }) = _TimerConf;
+
+  factory TimerConf.fromJson(Map<String, dynamic> json) => _$TimerConfFromJson(json);
 }
 
 @riverpod

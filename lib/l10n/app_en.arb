@@ -39,5 +39,14 @@
   "editMode": "Edit",
   "renderedMode": "Rendered",
   "markdownSupported": "Markdown syntax is supported",
-  "learnMore": "Learn more"
+  "learnMore": "Learn more",
+  "backToTimer": "Back to timer",
+  "language": "Language",
+  "languageSettingsDesc": "Select the language for the application",
+  "themeMode": "Theme Mode",
+  "importProfile": "Import profile",
+  "importProfileSuccess": "Profile successfully imported!",
+  "exportProfile": "Export profile",
+  "exportProfileSuccess": "Profile successfully exported!",
+  "somethingWrong": "Something went wrong"
 }

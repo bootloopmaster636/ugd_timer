@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timerConf.dart';
+part of 'autostart_logic.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timerConfLogicHash() => r'e9b6cb2d629d198766e10acfe4595067b8336994';
+String _$autoStartLogicHash() => r'bd6f9b973aad860c01009849fa862dbe48e2bd00';
 
-/// See also [TimerConfLogic].
-@ProviderFor(TimerConfLogic)
-final timerConfLogicProvider =
-    AutoDisposeNotifierProvider<TimerConfLogic, TimerConf>.internal(
-  TimerConfLogic.new,
-  name: r'timerConfLogicProvider',
+/// See also [AutoStartLogic].
+@ProviderFor(AutoStartLogic)
+final autoStartLogicProvider =
+    AutoDisposeNotifierProvider<AutoStartLogic, AutoStartClock>.internal(
+  AutoStartLogic.new,
+  name: r'autoStartLogicProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$timerConfLogicHash,
+      : _$autoStartLogicHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TimerConfLogic = AutoDisposeNotifier<TimerConf>;
+typedef _$AutoStartLogic = AutoDisposeNotifier<AutoStartClock>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
